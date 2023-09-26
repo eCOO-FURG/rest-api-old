@@ -40,8 +40,12 @@ Built based on Clean Architecture & Domain-Driven Design principles.
 
 ```
 src                               → Application sources.
- └ domain                         → Core business layer such as domain model objects, use-cases and repository interfaces.
-     └ entities                   → Enterprise business rules.
+ └ core                           → Core business layer. Shared between all domains.
+    └ entities                    → Enterprise business Entities (reference Objects).
+          └ value-objects         → Complex attributes of an Entity.
+ └ domain                         → Domain layer such as domain model objects, use-cases and repository interfaces.
+     └ entities                   → Enterprise business Entities (reference Objects).
+          └ value-objects         → Complex attributes of an Entity.
      └ repositories               → Repositories interface or contracts.
      └ use-cases                  → Application business rules.
           └ errors                → Business rules exceptions.
