@@ -1,7 +1,11 @@
-import { HashService } from "@/domain/cryptography/hash-service";
+import { Hasher } from "@/domain/cryptography/hasher";
 
-export class FakeHasher implements HashService {
+export class FakeHasher implements Hasher {
   async hash(plain: string): Promise<string> {
     return plain.concat("-hashed");
+  }
+
+  async compare(plain: string, hash: string): Promise<boolean> {
+    return plain.concat("-hashed") === hash;
   }
 }
