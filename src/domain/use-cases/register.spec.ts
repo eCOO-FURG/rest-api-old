@@ -8,18 +8,18 @@ import { FakeHasher } from "test/cryptography/fake-hasher";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
-let hashService: FakeHasher;
+let fakeHasher: FakeHasher;
 let sut: RegisterUseCase;
 
 describe("register", () => {
   beforeEach(() => {
     inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryPeopleRepository = new InMemoryPeopleRepository();
-    hashService = new FakeHasher();
+    fakeHasher = new FakeHasher();
     sut = new RegisterUseCase(
       inMemoryAccountsRepository,
       inMemoryPeopleRepository,
-      hashService
+      fakeHasher
     );
   });
 
