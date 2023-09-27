@@ -1,4 +1,3 @@
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Encrypter } from "../cryptography/encrypter";
