@@ -1,3 +1,4 @@
+import { HashService } from "../cryptography/hash-service";
 import { Account } from "../entities/account";
 import { Person } from "../entities/person";
 import { Cpf } from "../entities/value-objects/cpf";
@@ -16,7 +17,8 @@ interface RegisterUseCaseRequest {
 export class RegisterUseCase {
   constructor(
     private accountsRepository: AccountsRepository,
-    private peopleRepository: PeopleRepository
+    private peopleRepository: PeopleRepository,
+    private hashService: HashService
   ) {}
 
   async execute({
@@ -42,7 +44,7 @@ export class RegisterUseCase {
       throw new AccountAlreadyExistsError(cpf);
     }
 
-    const hashedPassword = "hashed-password"; // implement hash
+    const hashedPassword = await this.hashService.hash(password);
 
     const account = Account.create({
       email,

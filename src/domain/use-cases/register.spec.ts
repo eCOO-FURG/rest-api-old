@@ -4,18 +4,22 @@ import { Account } from "../entities/account";
 import { AccountAlreadyExistsError } from "./errors/account-already-exists-error";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { Person } from "../entities/person";
+import { FakeHasher } from "test/cryptography/fake-hasher";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
+let hashService: FakeHasher;
 let sut: RegisterUseCase;
 
-describe("create account", () => {
+describe("register", () => {
   beforeEach(() => {
     inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryPeopleRepository = new InMemoryPeopleRepository();
+    hashService = new FakeHasher();
     sut = new RegisterUseCase(
       inMemoryAccountsRepository,
-      inMemoryPeopleRepository
+      inMemoryPeopleRepository,
+      hashService
     );
   });
 
@@ -54,7 +58,7 @@ describe("create account", () => {
     ).rejects.toBeInstanceOf(AccountAlreadyExistsError);
   });
 
-  it("should not be able to create an account with the same CPF twice", async () => {
+  it("should not be able to register with the same CPF twice", async () => {
     const cpf = "523.065.281-01";
 
     await sut.execute({
@@ -74,5 +78,19 @@ describe("create account", () => {
         cpf,
       })
     ).rejects.toBeInstanceOf(AccountAlreadyExistsError);
+  });
+
+  it("should hash the password", async () => {
+    const password = "123456";
+
+    await sut.execute({
+      email: "johndoe@example.com",
+      password,
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+    });
+
+    expect(inMemoryAccountsRepository.items[0].password === password).toBeFalsy;
   });
 });
