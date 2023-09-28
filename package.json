@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Rest API for eCOO environment.",
   "scripts": {
+    "start:dev": "tsx watch src/infra/server.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -11,8 +12,12 @@
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "^8.50.0",
+    "tsx": "^3.13.0",
     "typescript": "^5.2.2",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.32.0"
+  },
+  "dependencies": {
+    "fastify": "^4.23.2"
   }
 }
