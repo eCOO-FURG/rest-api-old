@@ -12,7 +12,7 @@ export class GetUserProfileUseCase {
     private peopleRepository: PeopleRepository
   ) {}
 
-  async exectute({ account_id }: GetUserProfileUseCaserRequest) {
+  async execute({ account_id }: GetUserProfileUseCaserRequest) {
     const account = await this.accountsRepository.findById(account_id);
 
     if (!account) {

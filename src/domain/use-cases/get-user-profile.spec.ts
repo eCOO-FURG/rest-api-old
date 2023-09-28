@@ -36,7 +36,7 @@ describe("get user", () => {
 
     inMemoryPeopleRepository.save(person);
 
-    const result = await sut.exectute({
+    const result = await sut.execute({
       account_id: account.id.toString(),
     });
 
