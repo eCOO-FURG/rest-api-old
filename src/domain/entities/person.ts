@@ -14,6 +14,10 @@ export class Person extends Entity<PersonProps> {
     return this.props.cpf;
   }
 
+  get account_id() {
+    return this.props.account_id;
+  }
+
   static create(props: PersonProps, id?: UniqueEntityID) {
     const person = new Person(props, id);
 

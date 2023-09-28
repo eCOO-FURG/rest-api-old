@@ -4,6 +4,14 @@ import { AccountsRepository } from "@/domain/repositories/accounts-repository";
 export class InMemoryAccountsRepository implements AccountsRepository {
   public items: Account[] = [];
 
+  async findById(id: string): Promise<Account | null> {
+    const account = this.items.find((item) => item.id.toString() === id);
+
+    if (!account) return null;
+
+    return account;
+  }
+
   async findByEmail(email: string): Promise<Account | null> {
     const account = this.items.find((item) => item.email === email);
 
