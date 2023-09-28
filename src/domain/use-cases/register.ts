@@ -4,7 +4,7 @@ import { Person } from "../entities/person";
 import { Cpf } from "../entities/value-objects/cpf";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { PeopleRepository } from "../repositories/people-repository";
-import { AccountAlreadyExistsError } from "./errors/account-already-exists-error";
+import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
 interface RegisterUseCaseRequest {
   email: string;
@@ -33,7 +33,7 @@ export class RegisterUseCase {
     );
 
     if (accountWithSameEmail) {
-      throw new AccountAlreadyExistsError(email);
+      throw new UserAlreadyExistsError(email);
     }
 
     const personWithSameCPF = await this.peopleRepository.findByCpf(
@@ -41,7 +41,7 @@ export class RegisterUseCase {
     );
 
     if (personWithSameCPF) {
-      throw new AccountAlreadyExistsError(cpf);
+      throw new UserAlreadyExistsError(cpf);
     }
 
     const hashedPassword = await this.hasher.hash(password);

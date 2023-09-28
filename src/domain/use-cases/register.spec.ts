@@ -1,10 +1,10 @@
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { RegisterUseCase } from "./register";
 import { Account } from "../entities/account";
-import { AccountAlreadyExistsError } from "./errors/account-already-exists-error";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { Person } from "../entities/person";
 import { FakeHasher } from "test/cryptography/fake-hasher";
+import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -55,7 +55,7 @@ describe("register", () => {
         last_name: "Goes",
         cpf: "523.065.281-02",
       })
-    ).rejects.toBeInstanceOf(AccountAlreadyExistsError);
+    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
   });
 
   it("should not be able to register with the same CPF twice", async () => {
@@ -77,7 +77,7 @@ describe("register", () => {
         last_name: "Goes",
         cpf,
       })
-    ).rejects.toBeInstanceOf(AccountAlreadyExistsError);
+    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
   });
 
   it("should hash the password", async () => {
