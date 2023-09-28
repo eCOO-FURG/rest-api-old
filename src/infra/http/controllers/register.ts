@@ -19,7 +19,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     const registerUseCase =
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
-    const result = await registerUseCase.execute({
+    await registerUseCase.execute({
       email,
       password,
       first_name,
@@ -27,7 +27,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       cpf,
     });
 
-    return result;
+    return reply.status(201);
   } catch (err) {
     if (err instanceof UserAlreadyExistsError) {
       return reply.status(409).send({ message: err.message });
