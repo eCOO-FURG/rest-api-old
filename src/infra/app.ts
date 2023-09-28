@@ -1,8 +1,24 @@
 import fastify from "fastify";
 import { env } from "./env";
 import { ZodError } from "zod";
+import { routes } from "./http/controllers/routes";
+import { fastifyAwilixPlugin } from "@fastify/awilix";
+import "./container";
+import { useCases } from "./container";
 
 export const app = fastify();
+
+app.register(fastifyAwilixPlugin, {
+  disposeOnClose: true,
+  disposeOnResponse: true,
+});
+
+app.register(routes);
+
+app.addHook("onRequest", (request, reply, done) => {
+  request.diScope.register(useCases);
+  done();
+});
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
