@@ -16,15 +16,15 @@ export class AuthenticateUseCase {
   ) {}
 
   async execute({ email, password }: AuthenticateRequest) {
-    const acount = await this.accountsRepository.findByEmail(email);
+    const account = await this.accountsRepository.findByEmail(email);
 
-    if (!acount) {
+    if (!account) {
       throw new WrongCredentialsError();
     }
 
     const isPasswordValid = await this.hasher.compare(
       password,
-      acount.password
+      account.password
     );
 
     if (!isPasswordValid) {
@@ -32,7 +32,7 @@ export class AuthenticateUseCase {
     }
 
     const token = await this.encrypter.encrypt({
-      sub: acount.id.toString(),
+      sub: account.id.toString(),
     });
 
     return token;
