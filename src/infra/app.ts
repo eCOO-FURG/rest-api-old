@@ -13,12 +13,12 @@ app.register(fastifyAwilixPlugin, {
   disposeOnResponse: true,
 });
 
-app.register(routes);
-
 app.addHook("onRequest", (request, reply, done) => {
   request.diScope.register(useCases);
   done();
 });
+
+app.register(routes);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

@@ -35,6 +35,8 @@ export class AuthenticateUseCase {
       sub: account.id.toString(),
     });
 
-    return token;
+    return {
+      token,
+    };
   }
 }
