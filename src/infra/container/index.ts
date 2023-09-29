@@ -17,24 +17,20 @@ container.register({
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
-  encrypter: asFunction(() => {
-    return new JwtEncrypter(JwtService);
-  }),
+  encrypter: asFunction(() => new JwtEncrypter(JwtService)),
 });
 
 // Use-cases instances
 export const useCases = {
   registerUseCase: asFunction(
-    ({ accontsRepository, peopleRepository, hasher }) => {
-      return new RegisterUseCase(accontsRepository, peopleRepository, hasher);
-    },
+    ({ accontsRepository, peopleRepository, hasher }) =>
+      new RegisterUseCase(accontsRepository, peopleRepository, hasher),
     {
       lifetime: Lifetime.SCOPED,
     }
   ),
   authenticateUseCase: asFunction(
-    ({ accontsRepository, hasher, encrypter }) => {
-      return new AuthenticateUseCase(accontsRepository, hasher, encrypter);
-    }
+    ({ accontsRepository, hasher, encrypter }) =>
+      new AuthenticateUseCase(accontsRepository, hasher, encrypter)
   ),
 };
