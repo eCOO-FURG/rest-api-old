@@ -18,6 +18,14 @@ export class Person extends Entity<PersonProps> {
     return this.props.account_id;
   }
 
+  get first_name() {
+    return this.props.first_name;
+  }
+
+  get last_name() {
+    return this.props.last_name;
+  }
+
   static create(props: PersonProps, id?: UniqueEntityID) {
     const person = new Person(props, id);
 

@@ -7,6 +7,7 @@ import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
 import { JwtEncrypter } from "../cryptography/jwt-encrypter";
 import * as JwtService from "jsonwebtoken";
+import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
 
 // Use-cases dependencies
 container.register({
@@ -32,5 +33,9 @@ export const useCases = {
   authenticateUseCase: asFunction(
     ({ accontsRepository, hasher, encrypter }) =>
       new AuthenticateUseCase(accontsRepository, hasher, encrypter)
+  ),
+  getUserProfileUseCase: asFunction(
+    ({ accontsRepository, peopleRepository }) =>
+      new GetUserProfileUseCase(accontsRepository, peopleRepository)
   ),
 };
