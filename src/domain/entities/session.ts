@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 
 interface SessionProps {
   account_id: UniqueEntityID;
+  ip_address: string;
   status: "VALID" | "EXPIRED";
   created_at: Date;
 }

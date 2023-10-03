@@ -27,7 +27,7 @@ describe("authenticate", () => {
     );
   });
 
-  it("should be able to create a session and return a access token", async () => {
+  it("should be able to authenticate an account", async () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
@@ -38,7 +38,7 @@ describe("authenticate", () => {
     const result = await sut.execute({
       email: "johndoe@example.com",
       password: "123456",
-      ip_address: "1",
+      ip_address: "127.0.0.1",
     });
 
     expect(inMemorySessionsRepository.items[0]).toBeInstanceOf(Session);

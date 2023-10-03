@@ -19,7 +19,7 @@ export class AuthenticateUseCase {
     private encrypter: Encrypter
   ) {}
 
-  async execute({ email, password }: AuthenticateRequest) {
+  async execute({ email, password, ip_address }: AuthenticateRequest) {
     const account = await this.accountsRepository.findByEmail(email);
 
     if (!account) {
@@ -37,6 +37,7 @@ export class AuthenticateUseCase {
 
     const session = Session.create({
       account_id: account.id,
+      ip_address,
       status: "VALID",
     });
 
