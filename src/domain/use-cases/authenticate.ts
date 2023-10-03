@@ -2,15 +2,19 @@ import { AccountsRepository } from "../repositories/accounts-repository";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Encrypter } from "../cryptography/encrypter";
 import { Hasher } from "../cryptography/hasher";
+import { SessionsRepository } from "../repositories/sessions-repository";
+import { Session } from "../entities/session";
 
 interface AuthenticateRequest {
   email: string;
   password: string;
+  ip_address: string;
 }
 
 export class AuthenticateUseCase {
   constructor(
     private accountsRepository: AccountsRepository,
+    private sessionsRepository: SessionsRepository,
     private hasher: Hasher,
     private encrypter: Encrypter
   ) {}
@@ -31,12 +35,19 @@ export class AuthenticateUseCase {
       throw new WrongCredentialsError();
     }
 
-    const token = await this.encrypter.encrypt({
+    const session = Session.create({
+      account_id: account.id,
+      status: "VALID",
+    });
+
+    await this.sessionsRepository.save(session);
+
+    const access_token = await this.encrypter.encrypt({
       sub: account.id.toString(),
     });
 
     return {
-      token,
+      access_token,
     };
   }
 }
