@@ -19,13 +19,14 @@ export async function authenticate(
       "authenticateUseCase"
     );
 
-    const { token } = await authenticateUseCase.execute({
+    const { access_token } = await authenticateUseCase.execute({
       email,
       password,
+      ip_address: request.ip,
     });
 
     return reply.status(200).send({
-      token,
+      access_token,
     });
   } catch (err) {
     if (err instanceof WrongCredentialsError) {
