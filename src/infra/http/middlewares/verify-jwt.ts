@@ -5,7 +5,6 @@ import { z } from "zod";
 
 const jwtPayloadSchema = z.object({
   sub: z.string(),
-  iat: z.number(),
 });
 
 export async function verifyJwt(request: FastifyRequest, reply: FastifyReply) {
@@ -20,11 +19,10 @@ export async function verifyJwt(request: FastifyRequest, reply: FastifyReply) {
 
     const payload = JwtService.verify(token, env.JWT_SECRET);
 
-    const { sub, iat } = jwtPayloadSchema.parse(payload);
+    const { sub } = jwtPayloadSchema.parse(payload);
 
     request.payload = {
       sub,
-      iat: iat.toString(),
     };
   } catch (err) {
     return reply.status(401).send({ message: "Unauthorized." });
