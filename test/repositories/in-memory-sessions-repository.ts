@@ -8,12 +8,15 @@ export class InMemorySessionsRepository implements SessionsRepository {
     this.items.push(session);
   }
 
-  async findValidSessionByAccountId(
-    account_id: string
+  async findValidSessionByAccountIdAndIpAddress(
+    account_id: string,
+    ip_address: string
   ): Promise<Session | null> {
     const session = this.items.find(
       (item) =>
-        item.account_id.toString() === account_id && item.status === "VALID"
+        item.account_id.toString() === account_id &&
+        item.status === "VALID" &&
+        item.ip_address === ip_address
     );
 
     if (!session) return null;

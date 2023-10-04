@@ -14,6 +14,10 @@ export class Session extends Entity<SessionProps> {
     return this.props.account_id;
   }
 
+  get ip_address() {
+    return this.props.ip_address;
+  }
+
   get status() {
     return this.props.status;
   }
