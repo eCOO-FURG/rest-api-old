@@ -2,11 +2,10 @@ import { Encrypter } from "../cryptography/encrypter";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { SessionsRepository } from "../repositories/sessions-repository";
 import { SessionExpiredError } from "./errors/session-expired-error";
-import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 
 interface RefreshRequest {
   access_token: string;
-  ip_adress: string;
+  ip_address: string;
 }
 
 export class RefreshUseCase {
@@ -16,19 +15,19 @@ export class RefreshUseCase {
     private encrypter: Encrypter
   ) {}
 
-  async execute({ access_token, ip_adress }: RefreshRequest) {
+  async execute({ access_token, ip_address }: RefreshRequest) {
     const { sub } = await this.encrypter.decode(access_token);
 
     const account = await this.accountsRepository.findById(sub);
 
     if (!account) {
-      throw new WrongCredentialsError();
+      throw new SessionExpiredError();
     }
 
     const session =
       await this.sessionsRepository.findValidSessionByAccountIdAndIpAddress(
         sub,
-        ip_adress
+        ip_address
       );
 
     if (!session) {

@@ -8,4 +8,8 @@ export class JwtEncrypter implements Encrypter {
   async encrypt(payload: Record<string, unknown>): Promise<string> {
     return this.jwtService.sign(payload, env.JWT_SECRET);
   }
+
+  async decode(value: string): Promise<Record<string, string>> {
+    return this.jwtService.decode(value) as Record<string, string>;
+  }
 }

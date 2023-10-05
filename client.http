@@ -1,8 +1,8 @@
-@baseUrl = http://localhost:3333
-@authToken = {{authenticate.response.body.token}}
+@base_url = http://localhost:3333
+@access_token = {{authenticate.response.body.access_token}}
 
 # @name register
-POST {{baseUrl}}/users
+POST {{base_url}}/users
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 ###
 
 # @name authenticate
-POST {{baseUrl}}/sessions
+POST {{base_url}}/sessions
 Content-Type: application/json
 
 {
@@ -26,7 +26,18 @@ Content-Type: application/json
 
 ###
 
-# @name get_user_profile
-GET {{baseUrl}}/me
+# @name refresh
+POST {{base_url}}/sessions/refresh
 Content-Type: application/json
-Authorization: Bearer {{authToken}}
+
+{
+  "access_token": "{{access_token}}",
+  "ip_address": "127.0.0.1"
+}
+
+###
+
+# @name get_user_profile
+GET {{base_url}}/me
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

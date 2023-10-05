@@ -8,6 +8,8 @@ import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
 import { JwtEncrypter } from "../cryptography/jwt-encrypter";
 import * as JwtService from "jsonwebtoken";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
+import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
+import { RefreshUseCase } from "@/domain/use-cases/refresh";
 
 // Use-cases dependencies
 container.register({
@@ -15,6 +17,9 @@ container.register({
     lifetime: Lifetime.SINGLETON,
   }),
   peopleRepository: asClass(InMemoryPeopleRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  sessionsRepository: asClass(InMemorySessionsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
@@ -31,11 +36,20 @@ export const useCases = {
     }
   ),
   authenticateUseCase: asFunction(
-    ({ accontsRepository, hasher, encrypter }) =>
-      new AuthenticateUseCase(accontsRepository, hasher, encrypter)
+    ({ accontsRepository, sessionsRepository, hasher, encrypter }) =>
+      new AuthenticateUseCase(
+        accontsRepository,
+        sessionsRepository,
+        hasher,
+        encrypter
+      )
   ),
   getUserProfileUseCase: asFunction(
     ({ accontsRepository, peopleRepository }) =>
       new GetUserProfileUseCase(accontsRepository, peopleRepository)
+  ),
+  refreshUseCase: asFunction(
+    ({ accontsRepository, sessionsRepository, encrypter }) =>
+      new RefreshUseCase(accontsRepository, sessionsRepository, encrypter)
   ),
 };

@@ -3,10 +3,12 @@ import { register } from "./register";
 import { authenticate } from "./authenticate";
 import { getUserProfile } from "./get-user-profile";
 import { verifyJwt } from "../middlewares/verify-jwt";
+import { refresh } from "./refresh";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
   app.post("/sessions", authenticate);
+  app.post("/sessions/refresh", refresh);
 
   app.get(
     "/me",
