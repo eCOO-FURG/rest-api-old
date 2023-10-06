@@ -8,15 +8,17 @@ export class InMemorySessionsRepository implements SessionsRepository {
     this.items.push(session);
   }
 
-  async findValidSessionByAccountIdAndIpAddress(
+  async findValidSessionByAccountIdAndUserAgent(
     account_id: string,
-    ip_address: string
+    user_agent: string
   ): Promise<Session | null> {
+    const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+
     const session = this.items.find(
       (item) =>
         item.account_id.toString() === account_id &&
-        item.status === "VALID" &&
-        item.ip_address === ip_address
+        item.user_agent === user_agent &&
+        item.created_at > tenDaysAgo
     );
 
     if (!session) return null;

@@ -5,7 +5,7 @@ import { SessionExpiredError } from "./errors/session-expired-error";
 
 interface RefreshRequest {
   access_token: string;
-  ip_address: string;
+  user_agent: string;
 }
 
 export class RefreshUseCase {
@@ -15,7 +15,7 @@ export class RefreshUseCase {
     private encrypter: Encrypter
   ) {}
 
-  async execute({ access_token, ip_address }: RefreshRequest) {
+  async execute({ access_token, user_agent }: RefreshRequest) {
     const { sub } = await this.encrypter.decode(access_token);
 
     const account = await this.accountsRepository.findById(sub);
@@ -25,9 +25,9 @@ export class RefreshUseCase {
     }
 
     const session =
-      await this.sessionsRepository.findValidSessionByAccountIdAndIpAddress(
+      await this.sessionsRepository.findValidSessionByAccountIdAndUserAgent(
         sub,
-        ip_address
+        user_agent
       );
 
     if (!session) {

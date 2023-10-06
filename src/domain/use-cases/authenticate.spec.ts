@@ -39,6 +39,7 @@ describe("authenticate", () => {
       email: "johndoe@example.com",
       password: "123456",
       ip_address: "127.0.0.1",
+      user_agent: "mozila-firefox 5.0",
     });
 
     expect(inMemorySessionsRepository.items[0]).toBeInstanceOf(Session);
@@ -58,6 +59,7 @@ describe("authenticate", () => {
         email: "wrong-email",
         password: "wrong-password",
         ip_address: "ip_address",
+        user_agent: "mozila-firefox 5.0",
       })
     ).rejects.toBeInstanceOf(WrongCredentialsError);
   });

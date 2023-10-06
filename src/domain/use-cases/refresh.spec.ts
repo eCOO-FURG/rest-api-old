@@ -32,7 +32,7 @@ describe("refresh", () => {
     const session = Session.create({
       account_id: account.id,
       ip_address: "127.0.0.1",
-      status: "VALID",
+      user_agent: "mozila-firefox 5.0",
     });
 
     inMemorySessionsRepository.save(session);
@@ -43,13 +43,13 @@ describe("refresh", () => {
 
     const result = await sut.execute({
       access_token,
-      ip_adress: "127.0.0.1",
+      user_agent: "mozila-firefox 5.0",
     });
 
     expectTypeOf(result).toMatchTypeOf<{ sub: string }>;
   });
 
-  it("should not be able to refresh an expired session", async () => {
+  it("should not be able to refresh an expired session (created more than 10 days ago)", async () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: "123456",
@@ -57,10 +57,13 @@ describe("refresh", () => {
 
     inMemoryAccountsRepository.save(account);
 
+    const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+
     const session = Session.create({
       account_id: account.id,
       ip_address: "127.0.0.1",
-      status: "EXPIRED",
+      user_agent: "mozila-firefox 5.0",
+      created_at: tenDaysAgo,
     });
 
     inMemorySessionsRepository.save(session);
@@ -72,7 +75,7 @@ describe("refresh", () => {
     await expect(() =>
       sut.execute({
         access_token,
-        ip_adress: "127.0.0.1",
+        user_agent: "mozila-firefox 5.0",
       })
     ).rejects.toBeInstanceOf(SessionExpiredError);
   });

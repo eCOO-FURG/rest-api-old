@@ -2,8 +2,8 @@ import { Session } from "../entities/session";
 
 export interface SessionsRepository {
   save(session: Session): Promise<void>;
-  findValidSessionByAccountIdAndIpAddress(
+  findValidSessionByAccountIdAndUserAgent(
     account_id: string,
-    ip_address: string
+    user_agent: string
   ): Promise<Session | null>;
 }

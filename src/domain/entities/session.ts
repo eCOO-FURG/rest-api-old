@@ -5,7 +5,7 @@ import { Optional } from "@/core/types/optional";
 interface SessionProps {
   account_id: UniqueEntityID;
   ip_address: string;
-  status: "VALID" | "EXPIRED";
+  user_agent: string;
   created_at: Date;
 }
 
@@ -18,8 +18,12 @@ export class Session extends Entity<SessionProps> {
     return this.props.ip_address;
   }
 
-  get status() {
-    return this.props.status;
+  get user_agent() {
+    return this.props.user_agent;
+  }
+
+  get created_at() {
+    return this.props.created_at;
   }
 
   static create(

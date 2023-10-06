@@ -9,6 +9,7 @@ interface AuthenticateRequest {
   email: string;
   password: string;
   ip_address: string;
+  user_agent: string;
 }
 
 export class AuthenticateUseCase {
@@ -19,7 +20,12 @@ export class AuthenticateUseCase {
     private encrypter: Encrypter
   ) {}
 
-  async execute({ email, password, ip_address }: AuthenticateRequest) {
+  async execute({
+    email,
+    password,
+    ip_address,
+    user_agent,
+  }: AuthenticateRequest) {
     const account = await this.accountsRepository.findByEmail(email);
 
     if (!account) {
@@ -38,7 +44,7 @@ export class AuthenticateUseCase {
     const session = Session.create({
       account_id: account.id,
       ip_address,
-      status: "VALID",
+      user_agent,
     });
 
     await this.sessionsRepository.save(session);
