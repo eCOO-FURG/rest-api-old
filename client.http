@@ -31,8 +31,7 @@ POST {{base_url}}/sessions/refresh
 Content-Type: application/json
 
 {
-  "access_token": "{{access_token}}",
-  "ip_address": "127.0.0.1"
+  "access_token": "{{access_token}}"
 }
 
 ###

@@ -23,6 +23,7 @@ export async function authenticate(
       email,
       password,
       ip_address: request.ip,
+      user_agent: request.headers["user-agent"] || "not-identified",
     });
 
     return reply.status(200).send({

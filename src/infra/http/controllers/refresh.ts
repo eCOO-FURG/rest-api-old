@@ -5,11 +5,10 @@ import { z } from "zod";
 
 const refreshBodySchema = z.object({
   access_token: z.string(),
-  ip_address: z.string(),
 });
 
 export async function refresh(request: FastifyRequest, reply: FastifyReply) {
-  const { access_token, ip_address } = refreshBodySchema.parse(request.body);
+  const { access_token } = refreshBodySchema.parse(request.body);
 
   try {
     const refreshUseCase =
@@ -17,7 +16,7 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
 
     const { newAccessToken } = await refreshUseCase.execute({
       access_token,
-      ip_address,
+      user_agent: request.headers["user-agent"] || "not-identified",
     });
 
     return reply.status(200).send({
