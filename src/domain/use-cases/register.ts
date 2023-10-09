@@ -1,3 +1,4 @@
+import { DomainEvents } from "@/core/events/domain-events";
 import { Hasher } from "../cryptography/hasher";
 import { Account } from "../entities/account";
 import { Person } from "../entities/person";
@@ -61,6 +62,6 @@ export class RegisterUseCase {
     await Promise.all([
       this.accountsRepository.save(account),
       this.peopleRepository.save(person),
-    ]);
+    ]).then(() => DomainEvents.dispatchEventsForAggregate(account.id));
   }
 }
