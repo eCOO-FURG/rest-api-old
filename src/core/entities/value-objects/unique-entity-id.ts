@@ -10,4 +10,8 @@ export class UniqueEntityID {
   toString() {
     return this.value;
   }
+
+  public equals(id: UniqueEntityID) {
+    return id.toString() === this.toString();
+  }
 }
