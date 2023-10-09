@@ -1,6 +1,6 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { EventHandler } from "@/core/events/event-handler";
-import { SendEmailUseCase } from "../use-cases/send-email";
+import { SendUserVerificationEmailUseCase } from "../use-cases/send-user-verification-email";
 import { Account } from "../entities/account";
 import { DomainEvent } from "@/core/events/domain-event";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
@@ -23,7 +23,7 @@ export class UserRegisteredEvent implements DomainEvent {
 export class OnUserRegistered implements EventHandler {
   constructor(
     private peopleRepository: PeopleRepository,
-    private sendEmailUseCase: SendEmailUseCase
+    private sendUserVerificationEmailUseCase: SendUserVerificationEmailUseCase
   ) {
     this.setupSubscriptions();
   }
@@ -41,7 +41,7 @@ export class OnUserRegistered implements EventHandler {
     );
 
     if (person) {
-      await this.sendEmailUseCase.execute({ account, person });
+      await this.sendUserVerificationEmailUseCase.execute({ account, person });
     }
   }
 }

@@ -1,18 +1,20 @@
 import { OnUserRegistered } from "./on-user-registered";
-import { SendEmailUseCase } from "../use-cases/send-email";
+import { SendUserVerificationEmailUseCase } from "../use-cases/send-user-verification-email";
 import { RegisterUseCase } from "../use-cases/register";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { SpyInstance } from "vitest";
+import { FakeMailer } from "test/mail/fake-mailer";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
 let fakeHasher: FakeHasher;
 let registerUseCase: RegisterUseCase;
+let fakeMailer: FakeMailer;
 
-let sendEmailUseCase: SendEmailUseCase;
-let sendEmailUseCaseSpy: SpyInstance;
+let sendUserVerificationEmailUseCase: SendUserVerificationEmailUseCase;
+let sendUserVerificationEmailUseCaseSpy: SpyInstance;
 
 describe("on user registered", () => {
   beforeEach(() => {
@@ -25,10 +27,19 @@ describe("on user registered", () => {
       fakeHasher
     );
 
-    sendEmailUseCase = new SendEmailUseCase();
-    sendEmailUseCaseSpy = vi.spyOn(sendEmailUseCase, "execute");
+    fakeMailer = new FakeMailer();
+    sendUserVerificationEmailUseCase = new SendUserVerificationEmailUseCase(
+      fakeMailer
+    );
+    sendUserVerificationEmailUseCaseSpy = vi.spyOn(
+      sendUserVerificationEmailUseCase,
+      "execute"
+    );
 
-    new OnUserRegistered(inMemoryPeopleRepository, sendEmailUseCase);
+    new OnUserRegistered(
+      inMemoryPeopleRepository,
+      sendUserVerificationEmailUseCase
+    );
   });
 
   it("should send a email when a new user is registered", async () => {
@@ -40,6 +51,6 @@ describe("on user registered", () => {
       cpf: "523.065.281-01",
     });
 
-    expect(sendEmailUseCaseSpy).toHaveBeenCalled();
+    expect(sendUserVerificationEmailUseCaseSpy).toHaveBeenCalled();
   });
 });

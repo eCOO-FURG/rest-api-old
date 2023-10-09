@@ -7,6 +7,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
+  ECOO_EMAIL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
