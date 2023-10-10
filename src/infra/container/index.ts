@@ -16,6 +16,7 @@ import { OnUserRegistered } from "@/domain/events/on-user-registered";
 import { FakeMailer } from "test/mail/fake-mailer";
 import { env } from "../env";
 import { Nodemailer } from "../mail/nodemailer";
+import { EjsLoader } from "../mail/ejs-loader";
 
 // Dependencies
 container.register({
@@ -37,6 +38,7 @@ container.register({
     });
     return new Nodemailer(transporter);
   }),
+  viewLoader: asFunction(() => new EjsLoader()),
 });
 
 // Events
@@ -74,6 +76,7 @@ export const useCases = {
       new RefreshUseCase(accontsRepository, sessionsRepository, encrypter)
   ),
   sendUserVerificationEmailUseCase: asFunction(
-    ({ mailer }) => new SendUserVerificationEmailUseCase(mailer)
+    ({ mailer, viewLoader }) =>
+      new SendUserVerificationEmailUseCase(mailer, viewLoader)
   ),
 };

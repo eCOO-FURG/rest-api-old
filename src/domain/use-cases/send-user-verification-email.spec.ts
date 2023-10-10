@@ -3,14 +3,17 @@ import { SendUserVerificationEmailUseCase } from "./send-user-verification-email
 import { Account } from "../entities/account";
 import { Person } from "../entities/person";
 import { Cpf } from "../entities/value-objects/cpf";
+import { FakeViewLoader } from "test/mail/fake-view-loader";
 
 let fakeMailer: FakeMailer;
+let fakeViewLoader: FakeViewLoader;
 let sut: SendUserVerificationEmailUseCase;
 
 describe("send user verification email", () => {
   beforeEach(() => {
     fakeMailer = new FakeMailer();
-    sut = new SendUserVerificationEmailUseCase(fakeMailer);
+    fakeViewLoader = new FakeViewLoader();
+    sut = new SendUserVerificationEmailUseCase(fakeMailer, fakeViewLoader);
   });
 
   it("should be able to send a user verification email", async () => {
