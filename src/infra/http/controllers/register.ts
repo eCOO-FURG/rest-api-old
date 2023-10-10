@@ -19,6 +19,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     const registerUseCase =
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
+    request.diScope.resolve("onUserRegistered");
+
     await registerUseCase.execute({
       email,
       password,
