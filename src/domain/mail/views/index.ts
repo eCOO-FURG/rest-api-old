@@ -1,3 +1,3 @@
 export const Views = {
-  verifyAcccount: "verify-account",
+  verifyAccount: "verify-account",
 };

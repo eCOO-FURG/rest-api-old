@@ -26,7 +26,7 @@ export class SendUserVerificationEmailUseCase {
     const email = Email.create({
       from: env.ECOO_EMAIL,
       to: account.email,
-      html: await this.viewLoader.load("verifyAcccount", {
+      html: await this.viewLoader.load("verifyAccount", {
         first_name: person.first_name,
         url: `${env.SERVER_URL}/verify?code=${code}`,
       }),
