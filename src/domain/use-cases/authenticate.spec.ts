@@ -6,6 +6,7 @@ import { Account } from "../entities/account";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { Session } from "../entities/session";
+import { AccountNotVerified } from "./errors/account-not-verified";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemorySessionsRepository: InMemorySessionsRepository;
@@ -27,10 +28,11 @@ describe("authenticate", () => {
     );
   });
 
-  it("should be able to authenticate an account", async () => {
+  it("should be able to authenticate an verified account", async () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
+      verified_at: new Date(),
     });
 
     inMemoryAccountsRepository.save(account);
@@ -50,6 +52,7 @@ describe("authenticate", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
+      verified_at: new Date(),
     });
 
     inMemoryAccountsRepository.save(account);
@@ -62,5 +65,23 @@ describe("authenticate", () => {
         user_agent: "mozila-firefox 5.0",
       })
     ).rejects.toBeInstanceOf(WrongCredentialsError);
+  });
+
+  it("should not be able to authenticate an account that is not verified", async () => {
+    const account = Account.create({
+      email: "johndoe@example.com",
+      password: await fakeHasher.hash("123456"),
+    });
+
+    inMemoryAccountsRepository.save(account);
+
+    await expect(() =>
+      sut.execute({
+        email: "johndoe@example.com",
+        password: "123456",
+        ip_address: "ip_address",
+        user_agent: "mozila-firefox 5.0",
+      })
+    ).rejects.toBeInstanceOf(AccountNotVerified);
   });
 });

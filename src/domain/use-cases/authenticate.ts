@@ -4,6 +4,7 @@ import { Encrypter } from "../cryptography/encrypter";
 import { Hasher } from "../cryptography/hasher";
 import { SessionsRepository } from "../repositories/sessions-repository";
 import { Session } from "../entities/session";
+import { AccountNotVerified } from "./errors/account-not-verified";
 
 interface AuthenticateRequest {
   email: string;
@@ -39,6 +40,10 @@ export class AuthenticateUseCase {
 
     if (!isPasswordValid) {
       throw new WrongCredentialsError();
+    }
+
+    if (!account.verified_at) {
+      throw new AccountNotVerified();
     }
 
     const session = Session.create({
