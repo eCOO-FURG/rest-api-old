@@ -1,0 +1,20 @@
+version: "3"
+services:
+  smtp4dev:
+    container_name: smtp-server
+    image: rnwood/smtp4dev:v3
+    ports:
+      - "3010:80"
+      - "2525:25"
+    restart: unless-stopped
+
+  node-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      - SMTP_HOST=smtp4dev
+      - SMTP_PORT=25
+    restart: unless-stopped
