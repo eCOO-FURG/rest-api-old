@@ -5,6 +5,7 @@ import { UserRegisteredEvent } from "../events/on-user-registered";
 interface AccountProps {
   email: string;
   password: string;
+  verified_at?: Date;
 }
 
 export class Account extends AggregateRoot<AccountProps> {
@@ -14,6 +15,14 @@ export class Account extends AggregateRoot<AccountProps> {
 
   get password() {
     return this.props.password;
+  }
+
+  get verified_at() {
+    return this.props.verified_at;
+  }
+
+  verify() {
+    this.props.verified_at = new Date();
   }
 
   static create(props: AccountProps, id?: UniqueEntityID) {

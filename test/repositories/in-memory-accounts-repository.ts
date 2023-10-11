@@ -23,4 +23,10 @@ export class InMemoryAccountsRepository implements AccountsRepository {
   async save(account: Account): Promise<void> {
     this.items.push(account);
   }
+
+  async update(account: Account): Promise<void> {
+    const itemIndex = this.items.findIndex((item) => item.id === account.id);
+
+    this.items[itemIndex] = account;
+  }
 }
