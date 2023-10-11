@@ -4,6 +4,7 @@ import { authenticate } from "./authenticate";
 import { getUserProfile } from "./get-user-profile";
 import { verifyJwt } from "../middlewares/verify-jwt";
 import { refresh } from "./refresh";
+import { verify } from "./verify";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -17,4 +18,5 @@ export async function routes(app: FastifyInstance) {
     },
     getUserProfile
   );
+  app.get("/verify", verify);
 }

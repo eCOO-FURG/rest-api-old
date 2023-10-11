@@ -17,6 +17,7 @@ import { FakeMailer } from "test/mail/fake-mailer";
 import { env } from "../env";
 import { Nodemailer } from "../mail/nodemailer";
 import { EjsLoader } from "../mail/ejs-loader";
+import { VerifyUseCase } from "@/domain/use-cases/verify";
 
 // Dependencies
 container.register({
@@ -76,7 +77,11 @@ export const useCases = {
       new RefreshUseCase(accontsRepository, sessionsRepository, encrypter)
   ),
   sendUserVerificationEmailUseCase: asFunction(
-    ({ mailer, viewLoader }) =>
-      new SendUserVerificationEmailUseCase(mailer, viewLoader)
+    ({ mailer, viewLoader, encrypter }) =>
+      new SendUserVerificationEmailUseCase(mailer, viewLoader, encrypter)
+  ),
+  verifyUseCase: asFunction(
+    ({ accontsRepository, encrypter }) =>
+      new VerifyUseCase(accontsRepository, encrypter)
   ),
 };
