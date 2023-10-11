@@ -7,6 +7,7 @@ import { FakeHasher } from "test/cryptography/fake-hasher";
 import { SpyInstance } from "vitest";
 import { FakeMailer } from "test/mail/fake-mailer";
 import { FakeViewLoader } from "test/mail/fake-view-loader";
+import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -14,6 +15,7 @@ let fakeHasher: FakeHasher;
 let registerUseCase: RegisterUseCase;
 let fakeMailer: FakeMailer;
 let fakeViewLoader: FakeViewLoader;
+let fakeEncrypter: FakeEncrypter;
 
 let sendUserVerificationEmailUseCase: SendUserVerificationEmailUseCase;
 let sendUserVerificationEmailUseCaseSpy: SpyInstance;
@@ -31,9 +33,11 @@ describe("on user registered", () => {
 
     fakeMailer = new FakeMailer();
     fakeViewLoader = new FakeViewLoader();
+    fakeEncrypter = new FakeEncrypter();
     sendUserVerificationEmailUseCase = new SendUserVerificationEmailUseCase(
       fakeMailer,
-      fakeViewLoader
+      fakeViewLoader,
+      fakeEncrypter
     );
     sendUserVerificationEmailUseCaseSpy = vi.spyOn(
       sendUserVerificationEmailUseCase,
