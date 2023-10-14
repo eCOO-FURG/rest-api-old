@@ -9,8 +9,14 @@ Built based on Clean Architecture & Domain-Driven Design principles.
 
 ### 📌 How To Use
 
+Clone repository
 ```bash
   git clone git@github.com:eCOO-FURG/rest-api.git && cd rest-api
+```
+
+Run using docker-compose in detached mode
+```bash
+  docker-compose up -d
 ```
 
 ### 🧪 Testing
@@ -29,10 +35,10 @@ Built based on Clean Architecture & Domain-Driven Design principles.
 
 ### 📝 Functional Requirements
 
-#### Accounts
-
-- [x] Must be able to be created;
-- [ ] Must be able to be authenticate;
+- [x] Must be to create an account;
+- [x] Must be able to be authenticate;
+- [ ] Must be able to register as a producer;
+- [ ] Must be able to create an offer;
 
 ---
 
