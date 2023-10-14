@@ -6,9 +6,9 @@ services:
     ports:
       - "3010:80"
       - "2525:25"
-    restart: unless-stopped
 
-  node-app:
+  node-server:
+    container_name: node-server
     build:
       context: .
       dockerfile: Dockerfile
@@ -17,4 +17,6 @@ services:
     environment:
       - SMTP_HOST=smtp4dev
       - SMTP_PORT=25
-    restart: unless-stopped
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
