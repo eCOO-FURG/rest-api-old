@@ -13,18 +13,19 @@ import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { SendUserVerificationEmailUseCase } from "@/domain/use-cases/send-user-verification-email";
 import { createTransport } from "nodemailer";
 import { OnUserRegistered } from "@/domain/events/on-user-registered";
-import { FakeMailer } from "test/mail/fake-mailer";
 import { env } from "../env";
 import { Nodemailer } from "../mail/nodemailer";
 import { EjsLoader } from "../mail/ejs-loader";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
+import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
+import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 
 // Dependencies
 container.register({
-  accontsRepository: asClass(InMemoryAccountsRepository, {
+  accontsRepository: asClass(PrismaAccountsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  peopleRepository: asClass(InMemoryPeopleRepository, {
+  peopleRepository: asClass(PrismaPeopleRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   sessionsRepository: asClass(InMemorySessionsRepository, {

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@fastify/awilix": "^3.2.0",
+    "@prisma/client": "^5.4.2",
     "awilix": "^8.0.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",

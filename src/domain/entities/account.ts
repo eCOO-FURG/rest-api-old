@@ -5,7 +5,7 @@ import { UserRegisteredEvent } from "../events/on-user-registered";
 interface AccountProps {
   email: string;
   password: string;
-  verified_at?: Date;
+  verified_at?: Date | null;
 }
 
 export class Account extends AggregateRoot<AccountProps> {
