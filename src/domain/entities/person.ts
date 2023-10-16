@@ -1,3 +1,4 @@
+import { Optional } from "@/core/types/optional";
 import { Entity } from "../../core/entities/entity";
 import { UniqueEntityID } from "../../core/entities/value-objects/unique-entity-id";
 import { Cpf } from "./value-objects/cpf";
@@ -7,6 +8,8 @@ interface PersonProps {
   first_name: string;
   last_name: string;
   cpf: Cpf;
+  created_at: Date;
+  updated_at?: Date | null;
 }
 
 export class Person extends Entity<PersonProps> {
@@ -26,8 +29,17 @@ export class Person extends Entity<PersonProps> {
     return this.props.last_name;
   }
 
-  static create(props: PersonProps, id?: UniqueEntityID) {
-    const person = new Person(props, id);
+  static create(
+    props: Optional<PersonProps, "created_at">,
+    id?: UniqueEntityID
+  ) {
+    const person = new Person(
+      {
+        ...props,
+        created_at: props.created_at ?? new Date(),
+      },
+      id
+    );
 
     return person;
   }

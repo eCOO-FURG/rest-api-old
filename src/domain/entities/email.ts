@@ -6,6 +6,8 @@ interface EmailProps {
   from: string;
   subject: string;
   html: string;
+  created_at: Date;
+  updated_at?: Date | null;
 }
 
 export class Email extends Entity<EmailProps> {

@@ -59,9 +59,9 @@ export class RegisterUseCase {
       account_id: account.id,
     });
 
-    await Promise.all([
-      this.accountsRepository.save(account),
-      this.peopleRepository.save(person),
-    ]).then(() => DomainEvents.dispatchEventsForAggregate(account.id));
+    await this.accountsRepository.save(account);
+    await this.peopleRepository.save(person);
+
+    DomainEvents.dispatchEventsForAggregate(account.id);
   }
 }
