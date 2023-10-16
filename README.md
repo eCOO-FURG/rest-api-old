@@ -14,10 +14,17 @@ Clone repository
   git clone git@github.com:eCOO-FURG/rest-api.git && cd rest-api
 ```
 
-Run using docker-compose in detached mode
+Run using docker-compose
 ```bash
-  docker-compose up -d
+  docker-compose up
 ```
+
+It is recommended using Prisma Studio
+```bash
+  npx prisma studio
+```
+
+A [SMTP Server](http://localhost:3010/) will be created on Local Network
 
 ### 🧪 Testing
 
