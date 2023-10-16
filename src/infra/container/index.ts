@@ -19,6 +19,7 @@ import { EjsLoader } from "../mail/ejs-loader";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
 import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
+import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 
 // Dependencies
 container.register({
@@ -28,7 +29,7 @@ container.register({
   peopleRepository: asClass(PrismaPeopleRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  sessionsRepository: asClass(InMemorySessionsRepository, {
+  sessionsRepository: asClass(PrismaSessionsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),

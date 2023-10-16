@@ -14,7 +14,8 @@ model Account {
   password    String
   verified_at DateTime?
 
-  Person Person?
+  Person  Person?
+  Session Session[]
 
   @@map("accounts")
 }
@@ -29,4 +30,14 @@ model Person {
   account    Account @relation(fields: [account_id], references: [id])
 
   @@map("people")
+}
+
+model Session {
+  id         String   @id @default(uuid())
+  ip_address String
+  user_agent String
+  created_at DateTime @default(now())
+
+  account_id String
+  account    Account @relation(fields: [account_id], references: [id])
 }

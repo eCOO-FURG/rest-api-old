@@ -9,6 +9,7 @@ const envSchema = z.object({
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
   ECOO_EMAIL: z.string(),
+  SESSION_DURATION_IN_DAYS: z.coerce.number(),
 });
 
 const _env = envSchema.safeParse(process.env);
