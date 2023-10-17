@@ -4,7 +4,7 @@ import { Account } from "../entities/account";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { Person } from "../entities/person";
 import { FakeHasher } from "test/cryptography/fake-hasher";
-import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
+import { ResourceAlreadyExistsError } from "../../core/errors/resource-already-exists-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -55,7 +55,7 @@ describe("register", () => {
         last_name: "Goes",
         cpf: "523.065.281-02",
       })
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+    ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });
 
   it("should not be able to register with the same CPF twice", async () => {
@@ -77,7 +77,7 @@ describe("register", () => {
         last_name: "Goes",
         cpf,
       })
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+    ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });
 
   it("should hash the password", async () => {

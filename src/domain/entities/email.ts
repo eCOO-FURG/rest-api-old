@@ -28,7 +28,13 @@ export class Email extends Entity<EmailProps> {
   }
 
   static create(props: EmailProps, id?: UniqueEntityID) {
-    const email = new Email(props, id);
+    const email = new Email(
+      {
+        ...props,
+        created_at: props.created_at ?? new Date(),
+      },
+      id
+    );
 
     return email;
   }
