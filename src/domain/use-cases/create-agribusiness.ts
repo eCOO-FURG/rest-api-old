@@ -33,7 +33,7 @@ export class CreateAgribusinessUseCase {
     }
 
     const agribusiness = Agribusiness.create({
-      account_id: new UniqueEntityID(account_id),
+      admin_id: new UniqueEntityID(account_id),
       caf,
       name,
     });

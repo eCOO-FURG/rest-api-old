@@ -5,7 +5,7 @@ import { Optional } from "@/core/types/optional";
 interface AgribusinessProps {
   name: string;
   caf: string;
-  account_id: UniqueEntityID;
+  admin_id: UniqueEntityID;
   created_at: Date;
   updated_at?: Date | null;
 }
