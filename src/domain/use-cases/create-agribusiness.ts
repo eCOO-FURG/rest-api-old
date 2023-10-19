@@ -1,9 +1,9 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { AccountsRepository } from "../repositories/accounts-repository";
-import { AgribusinessRepository } from "../repositories/agribusiness-repository";
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { Agribusiness } from "../entities/agribusiness";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 
 interface CreateAgribusinessUseCaseRequest {
   account_id: string;
@@ -14,7 +14,7 @@ interface CreateAgribusinessUseCaseRequest {
 export class CreateAgribusinessUseCase {
   constructor(
     private accountsRepository: AccountsRepository,
-    private agribusinessRepository: AgribusinessRepository
+    private agribusinessesRepository: AgribusinessesRepository
   ) {}
 
   async execute({ account_id, caf, name }: CreateAgribusinessUseCaseRequest) {
@@ -24,9 +24,8 @@ export class CreateAgribusinessUseCase {
       throw new ResourceNotFoundError(account_id);
     }
 
-    const agribusinessWithSameCaf = await this.agribusinessRepository.findByCaf(
-      caf
-    );
+    const agribusinessWithSameCaf =
+      await this.agribusinessesRepository.findByCaf(caf);
 
     if (agribusinessWithSameCaf) {
       throw new ResourceAlreadyExistsError(caf);
@@ -38,6 +37,6 @@ export class CreateAgribusinessUseCase {
       name,
     });
 
-    await this.agribusinessRepository.save(agribusiness);
+    await this.agribusinessesRepository.save(agribusiness);
   }
 }

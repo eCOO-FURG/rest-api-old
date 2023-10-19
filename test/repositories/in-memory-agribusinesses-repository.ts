@@ -1,10 +1,18 @@
 import { Agribusiness } from "@/domain/entities/agribusiness";
-import { AgribusinessRepository } from "@/domain/repositories/agribusiness-repository";
+import { AgribusinessesRepository } from "@/domain/repositories/agribusinesses-repository";
 
 export class InMemoryAgribusinessesRepository
-  implements AgribusinessRepository
+  implements AgribusinessesRepository
 {
   items: Agribusiness[] = [];
+
+  async findById(id: string): Promise<Agribusiness | null> {
+    const agribusiness = this.items.find((item) => item.id.toString() === id);
+
+    if (!agribusiness) return null;
+
+    return agribusiness;
+  }
 
   async findByCaf(caf: string): Promise<Agribusiness | null> {
     const agribusiness = this.items.find((item) => item.caf === item.caf);
