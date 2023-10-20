@@ -6,7 +6,7 @@ interface EmailProps {
   to: string;
   from: string;
   subject: string;
-  html: string;
+  view: string;
   created_at: Date;
   updated_at?: Date | null;
 }
@@ -25,7 +25,7 @@ export class Email extends Entity<EmailProps> {
   }
 
   get html() {
-    return this.props.html;
+    return this.props.view;
   }
 
   static create(

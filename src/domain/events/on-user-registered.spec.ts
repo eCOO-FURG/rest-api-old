@@ -1,5 +1,5 @@
 import { OnUserRegistered } from "./on-user-registered";
-import { SendUserVerificationEmailUseCase } from "../use-cases/send-user-verification-email";
+import { SendEmailUseCase } from "../use-cases/send-email";
 import { RegisterUseCase } from "../use-cases/register";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
@@ -8,6 +8,7 @@ import { SpyInstance } from "vitest";
 import { FakeMailer } from "test/mail/fake-mailer";
 import { FakeViewLoader } from "test/mail/fake-view-loader";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
+import { waitFor } from "test/utils/wait-for";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -17,8 +18,8 @@ let fakeMailer: FakeMailer;
 let fakeViewLoader: FakeViewLoader;
 let fakeEncrypter: FakeEncrypter;
 
-let sendUserVerificationEmailUseCase: SendUserVerificationEmailUseCase;
-let sendUserVerificationEmailUseCaseSpy: SpyInstance;
+let sendEmailUseCase: SendEmailUseCase;
+let sendEmailUseCaseSpy: SpyInstance;
 
 describe("on user registered", () => {
   beforeEach(() => {
@@ -34,19 +35,15 @@ describe("on user registered", () => {
     fakeMailer = new FakeMailer();
     fakeViewLoader = new FakeViewLoader();
     fakeEncrypter = new FakeEncrypter();
-    sendUserVerificationEmailUseCase = new SendUserVerificationEmailUseCase(
-      fakeMailer,
-      fakeViewLoader,
-      fakeEncrypter
-    );
-    sendUserVerificationEmailUseCaseSpy = vi.spyOn(
-      sendUserVerificationEmailUseCase,
-      "execute"
-    );
+
+    sendEmailUseCase = new SendEmailUseCase(fakeMailer);
+    sendEmailUseCaseSpy = vi.spyOn(sendEmailUseCase, "execute");
 
     new OnUserRegistered(
+      sendEmailUseCase,
       inMemoryPeopleRepository,
-      sendUserVerificationEmailUseCase
+      fakeEncrypter,
+      fakeViewLoader
     );
   });
 
@@ -59,6 +56,8 @@ describe("on user registered", () => {
       cpf: "523.065.281-01",
     });
 
-    expect(sendUserVerificationEmailUseCaseSpy).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(sendEmailUseCaseSpy).toHaveBeenCalled();
+    });
   });
 });
