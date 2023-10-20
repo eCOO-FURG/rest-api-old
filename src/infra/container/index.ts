@@ -1,16 +1,12 @@
 import { diContainer as container } from "@fastify/awilix";
 import { Lifetime, asClass, asFunction, asValue } from "awilix";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
 import { JwtEncrypter } from "../cryptography/jwt-encrypter";
 import * as JwtService from "jsonwebtoken";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
-import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
-import { SendUserVerificationEmailUseCase } from "@/domain/use-cases/send-user-verification-email";
 import { createTransport } from "nodemailer";
 import { OnUserRegistered } from "@/domain/events/on-user-registered";
 import { env } from "../env";
@@ -20,6 +16,7 @@ import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
 import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
+import { SendEmailUseCase } from "@/domain/use-cases/send-email";
 
 // Dependencies
 container.register({
@@ -47,8 +44,13 @@ container.register({
 // Events
 container.register({
   onUserRegistered: asFunction(
-    ({ peopleRepository, sendUserVerificationEmailUseCase }) =>
-      new OnUserRegistered(peopleRepository, sendUserVerificationEmailUseCase)
+    ({ sendEmailUseCase, peopleRepository, encrypter, viewLoader }) =>
+      new OnUserRegistered(
+        sendEmailUseCase,
+        peopleRepository,
+        encrypter,
+        viewLoader
+      )
   ),
 });
 
@@ -78,10 +80,7 @@ export const useCases = {
     ({ accontsRepository, sessionsRepository, encrypter }) =>
       new RefreshUseCase(accontsRepository, sessionsRepository, encrypter)
   ),
-  sendUserVerificationEmailUseCase: asFunction(
-    ({ mailer, viewLoader, encrypter }) =>
-      new SendUserVerificationEmailUseCase(mailer, viewLoader, encrypter)
-  ),
+  sendEmailUseCase: asFunction(({ mailer }) => new SendEmailUseCase(mailer)),
   verifyUseCase: asFunction(
     ({ accontsRepository, encrypter }) =>
       new VerifyUseCase(accontsRepository, encrypter)

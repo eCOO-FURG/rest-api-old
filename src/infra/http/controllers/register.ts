@@ -1,4 +1,4 @@
-import { UserAlreadyExistsError } from "@/domain/use-cases/errors/user-already-exists-error";
+import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -31,7 +31,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     return reply.status(201).send();
   } catch (err) {
-    if (err instanceof UserAlreadyExistsError) {
+    if (err instanceof ResourceAlreadyExistsError) {
       return reply.status(409).send({ message: err.message });
     }
     throw err;
