@@ -1,5 +1,6 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Optional } from "@/core/types/optional";
 
 interface EmailProps {
   to: string;
@@ -27,7 +28,10 @@ export class Email extends Entity<EmailProps> {
     return this.props.html;
   }
 
-  static create(props: EmailProps, id?: UniqueEntityID) {
+  static create(
+    props: Optional<EmailProps, "created_at">,
+    id?: UniqueEntityID
+  ) {
     const email = new Email(
       {
         ...props,
