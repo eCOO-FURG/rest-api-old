@@ -15,7 +15,7 @@ export class InMemoryAgribusinessesRepository
   }
 
   async findByCaf(caf: string): Promise<Agribusiness | null> {
-    const agribusiness = this.items.find((item) => item.caf === item.caf);
+    const agribusiness = this.items.find((item) => item.caf === caf);
 
     if (!agribusiness) return null;
 

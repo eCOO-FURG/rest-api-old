@@ -5,19 +5,19 @@ import { Agribusiness } from "../entities/agribusiness";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 
-interface CreateAgribusinessUseCaseRequest {
+interface RegisterAgribusinessUseCaseRequest {
   account_id: string;
   caf: string;
   name: string;
 }
 
-export class CreateAgribusinessUseCase {
+export class RegisterAgribusinessUseCase {
   constructor(
     private accountsRepository: AccountsRepository,
     private agribusinessesRepository: AgribusinessesRepository
   ) {}
 
-  async execute({ account_id, caf, name }: CreateAgribusinessUseCaseRequest) {
+  async execute({ account_id, caf, name }: RegisterAgribusinessUseCaseRequest) {
     const account = await this.accountsRepository.findById(account_id);
 
     if (!account) {

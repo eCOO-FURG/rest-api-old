@@ -7,7 +7,7 @@ const registerProductBodySchema = z.object({
   name: z.string(),
 });
 
-export async function RegisterProduct(
+export async function registerProduct(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

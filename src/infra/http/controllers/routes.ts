@@ -5,8 +5,9 @@ import { getUserProfile } from "./get-user-profile";
 import { verifyJwt } from "../middlewares/verify-jwt";
 import { refresh } from "./refresh";
 import { verify } from "./verify";
-import { RegisterProduct } from "./register-product";
-import { OfferProducts } from "./offer-products";
+import { registerProduct } from "./register-product";
+import { offerProducts } from "./offer-products";
+import { registerAgribusiness } from "./register-agribusiness";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -17,14 +18,21 @@ export async function routes(app: FastifyInstance) {
     {
       onRequest: [verifyJwt],
     },
-    RegisterProduct
+    registerProduct
+  );
+  app.post(
+    "/agribusinesses",
+    {
+      onRequest: [verifyJwt],
+    },
+    registerAgribusiness
   );
   app.post(
     "/offers",
     {
       onRequest: [verifyJwt],
     },
-    OfferProducts
+    offerProducts
   );
 
   app.get(

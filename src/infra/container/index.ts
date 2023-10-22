@@ -23,6 +23,7 @@ import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
+import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 
 // Dependencies
 container.register({
@@ -102,6 +103,13 @@ export const useCases = {
   verifyUseCase: asFunction(
     ({ accountsRepository, encrypter }) =>
       new VerifyUseCase(accountsRepository, encrypter)
+  ),
+  registerAgribusinessUseCase: asFunction(
+    ({ accountsRepository, agribusinessesRepository }) =>
+      new RegisterAgribusinessUseCase(
+        accountsRepository,
+        agribusinessesRepository
+      )
   ),
   registerProductUseCase: asFunction(
     ({ productsRepository }) => new RegisterProductUseCase(productsRepository)

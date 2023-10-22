@@ -55,6 +55,18 @@ Authorization: Bearer {{access_token}}
 
 ###
 
+# @name register_agribusiness
+POST {{base_url}}/agribusinesses
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+ "caf": "agribusiness-caf",
+ "name": "name of the agribusiness" 
+}
+
+###
+
 # @name offer_products
 POST {{base_url}}/offers
 Content-Type: application/json

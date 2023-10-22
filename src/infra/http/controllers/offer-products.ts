@@ -19,7 +19,7 @@ const offerProductsBodySchema = z.object({
     }),
 });
 
-export async function OfferProducts(
+export async function offerProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

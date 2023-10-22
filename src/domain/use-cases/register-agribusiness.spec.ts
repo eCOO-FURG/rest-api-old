@@ -1,5 +1,5 @@
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
-import { CreateAgribusinessUseCase } from "./create-agribusiness";
+import { RegisterAgribusinessUseCase } from "./register-agribusiness";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
 import { Agribusiness } from "../entities/agribusiness";
@@ -7,13 +7,13 @@ import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exist
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
-let sut: CreateAgribusinessUseCase;
+let sut: RegisterAgribusinessUseCase;
 
 describe("create agribusiness", () => {
   beforeEach(() => {
     inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
-    sut = new CreateAgribusinessUseCase(
+    sut = new RegisterAgribusinessUseCase(
       inMemoryAccountsRepository,
       inMemoryAgribusinessesRepository
     );
