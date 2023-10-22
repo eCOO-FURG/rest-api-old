@@ -8,11 +8,10 @@ export async function getUserProfile(
   reply: FastifyReply
 ) {
   try {
-    const getUserProfile = request.diScope.resolve<GetUserProfileUseCase>(
-      "getUserProfileUseCase"
-    );
+    const getUserProfileUseCase =
+      request.diScope.resolve<GetUserProfileUseCase>("getUserProfileUseCase");
 
-    const { account, person } = await getUserProfile.execute({
+    const { account, person } = await getUserProfileUseCase.execute({
       account_id: request.payload.sub,
     });
 
