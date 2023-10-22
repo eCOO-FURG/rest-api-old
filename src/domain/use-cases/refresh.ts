@@ -16,7 +16,11 @@ export class RefreshUseCase {
   ) {}
 
   async execute({ access_token, user_agent }: RefreshRequest) {
-    const { sub } = await this.encrypter.decode(access_token);
+    const { sub } = (await this.encrypter.decode(access_token)) ?? {};
+
+    if (!sub) {
+      throw new SessionExpiredError();
+    }
 
     const account = await this.accountsRepository.findById(sub);
 
