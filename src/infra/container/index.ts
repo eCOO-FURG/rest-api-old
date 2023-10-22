@@ -19,10 +19,14 @@ import { PrismaSessionsRepository } from "../database/repositories/prisma-sessio
 import { SendEmailUseCase } from "@/domain/use-cases/send-email";
 import { RegisterProductUseCase } from "@/domain/use-cases/register-product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
+import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
+import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
+import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
+import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
 
 // Dependencies
 container.register({
-  accontsRepository: asClass(PrismaAccountsRepository, {
+  accountsRepository: asClass(PrismaAccountsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   peopleRepository: asClass(PrismaPeopleRepository, {
@@ -32,6 +36,15 @@ container.register({
     lifetime: Lifetime.SINGLETON,
   }),
   productsRepository: asClass(InMemoryProductsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  agribusinessesRepository: asClass(InMemoryAgribusinessesRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  offersRepository: asClass(InMemoryOffersRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  offersProductsRepository: asClass(InMemoryOffersProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
@@ -62,35 +75,51 @@ container.register({
 // Use-cases
 export const useCases = {
   registerUseCase: asFunction(
-    ({ accontsRepository, peopleRepository, hasher }) =>
-      new RegisterUseCase(accontsRepository, peopleRepository, hasher),
+    ({ accountsRepository, peopleRepository, hasher }) =>
+      new RegisterUseCase(accountsRepository, peopleRepository, hasher),
     {
       lifetime: Lifetime.SCOPED,
     }
   ),
   authenticateUseCase: asFunction(
-    ({ accontsRepository, sessionsRepository, hasher, encrypter }) =>
+    ({ accountsRepository, sessionsRepository, hasher, encrypter }) =>
       new AuthenticateUseCase(
-        accontsRepository,
+        accountsRepository,
         sessionsRepository,
         hasher,
         encrypter
       )
   ),
   getUserProfileUseCase: asFunction(
-    ({ accontsRepository, peopleRepository }) =>
-      new GetUserProfileUseCase(accontsRepository, peopleRepository)
+    ({ accountsRepository, peopleRepository }) =>
+      new GetUserProfileUseCase(accountsRepository, peopleRepository)
   ),
   refreshUseCase: asFunction(
-    ({ accontsRepository, sessionsRepository, encrypter }) =>
-      new RefreshUseCase(accontsRepository, sessionsRepository, encrypter)
+    ({ accountsRepository, sessionsRepository, encrypter }) =>
+      new RefreshUseCase(accountsRepository, sessionsRepository, encrypter)
   ),
   sendEmailUseCase: asFunction(({ mailer }) => new SendEmailUseCase(mailer)),
   verifyUseCase: asFunction(
-    ({ accontsRepository, encrypter }) =>
-      new VerifyUseCase(accontsRepository, encrypter)
+    ({ accountsRepository, encrypter }) =>
+      new VerifyUseCase(accountsRepository, encrypter)
   ),
   registerProductUseCase: asFunction(
     ({ productsRepository }) => new RegisterProductUseCase(productsRepository)
+  ),
+  offerProductsUseCase: asFunction(
+    ({
+      accountsRepository,
+      agribusinessesRepository,
+      offersRepository,
+      offersProductsRepository,
+      productsRepository,
+    }) =>
+      new OfferProductsUseCase(
+        accountsRepository,
+        agribusinessesRepository,
+        offersRepository,
+        offersProductsRepository,
+        productsRepository
+      )
   ),
 };

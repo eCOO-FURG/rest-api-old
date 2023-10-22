@@ -1,5 +1,6 @@
 @base_url = http://localhost:3333
 @access_token = {{authenticate.response.body.access_token}}
+@access_token = {{refresh.response.body.access_token}}
 
 # @name register
 POST {{base_url}}/users
@@ -50,4 +51,24 @@ Authorization: Bearer {{access_token}}
 
 {
   "name": "Batata"
+}
+
+###
+
+# @name offer_products
+POST {{base_url}}/offers
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "product_id": "",
+  "agribusiness_id": "",
+  "products": [
+    {
+      "product_id": "",
+      "weight": "",
+      "quantity": "",
+      "amount": ""
+    }
+  ]
 }

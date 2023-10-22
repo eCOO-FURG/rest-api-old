@@ -6,6 +6,7 @@ import { verifyJwt } from "../middlewares/verify-jwt";
 import { refresh } from "./refresh";
 import { verify } from "./verify";
 import { RegisterProduct } from "./register-product";
+import { OfferProducts } from "./offer-products";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -17,6 +18,13 @@ export async function routes(app: FastifyInstance) {
       onRequest: [verifyJwt],
     },
     RegisterProduct
+  );
+  app.post(
+    "/offers",
+    {
+      onRequest: [verifyJwt],
+    },
+    OfferProducts
   );
 
   app.get(
