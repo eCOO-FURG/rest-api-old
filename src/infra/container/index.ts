@@ -17,6 +17,8 @@ import { PrismaAccountsRepository } from "../database/repositories/prisma-accoun
 import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 import { SendEmailUseCase } from "@/domain/use-cases/send-email";
+import { RegisterProductUseCase } from "@/domain/use-cases/register-product";
+import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 
 // Dependencies
 container.register({
@@ -27,6 +29,9 @@ container.register({
     lifetime: Lifetime.SINGLETON,
   }),
   sessionsRepository: asClass(PrismaSessionsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  productsRepository: asClass(InMemoryProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
@@ -84,5 +89,8 @@ export const useCases = {
   verifyUseCase: asFunction(
     ({ accontsRepository, encrypter }) =>
       new VerifyUseCase(accontsRepository, encrypter)
+  ),
+  registerProductUseCase: asFunction(
+    ({ productsRepository }) => new RegisterProductUseCase(productsRepository)
   ),
 };

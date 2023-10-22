@@ -2,14 +2,14 @@ import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exist
 import { ProductsRepository } from "../repositories/products-repository";
 import { Product } from "../entities/product";
 
-interface CreateProductUseCaseRequest {
+interface RegisterProductUseCaseRequest {
   name: string;
 }
 
-export class CreateProductUseCase {
+export class RegisterProductUseCase {
   constructor(private productsRepository: ProductsRepository) {}
 
-  async execute({ name }: CreateProductUseCaseRequest) {
+  async execute({ name }: RegisterProductUseCaseRequest) {
     const productWithSameName = await this.productsRepository.findByName(name);
 
     if (productWithSameName) {

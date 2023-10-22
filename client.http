@@ -40,3 +40,14 @@ Content-Type: application/json
 GET {{base_url}}/me
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+###
+
+# @name register_product
+POST {{base_url}}/products
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "Batata"
+}

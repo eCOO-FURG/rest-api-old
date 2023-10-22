@@ -1,15 +1,15 @@
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
-import { CreateProductUseCase } from "./create-product";
 import { Product } from "../entities/product";
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
+import { RegisterProductUseCase } from "./register-product";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
-let sut: CreateProductUseCase;
+let sut: RegisterProductUseCase;
 
 describe("create product", () => {
   beforeEach(() => {
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    sut = new CreateProductUseCase(inMemoryProductsRepository);
+    sut = new RegisterProductUseCase(inMemoryProductsRepository);
   });
 
   it("should be able to create a product", async () => {
