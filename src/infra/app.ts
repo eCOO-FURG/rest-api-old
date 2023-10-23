@@ -13,7 +13,7 @@ app.register(fastifyAwilixPlugin, {
   disposeOnResponse: true,
 });
 
-app.addHook("onRequest", (request, reply, done) => {
+app.addHook("onRequest", (request, _, done) => {
   request.diScope.register(useCases);
   done();
 });
