@@ -14,16 +14,18 @@ export class VerifyUseCase {
   ) {}
 
   async execute({ code }: VerifyUseCaseRequest) {
-    const query = await this.encrypter.decode(code);
+    const decryptedCode = await this.encrypter.decode(code);
 
-    if (!query || query.account_id === null) {
+    if (!decryptedCode || decryptedCode.account_id === null) {
       throw new ResourceNotFoundError(code);
     }
 
-    const account = await this.accountsRepository.findById(query.account_id);
+    const account = await this.accountsRepository.findById(
+      decryptedCode.account_id
+    );
 
     if (!account) {
-      throw new ResourceNotFoundError(query.account_id);
+      throw new ResourceNotFoundError(decryptedCode.account_id);
     }
 
     if (account.verified_at) {
