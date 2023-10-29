@@ -1,7 +1,7 @@
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { Encrypter } from "../cryptography/encrypter";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { AccountAlreadyVerified } from "./errors/account-already-verified-error";
+import { InvalidValidationCode } from "./errors/invalid-validation-code";
 
 interface VerifyUseCaseRequest {
   code: string;
@@ -17,7 +17,7 @@ export class VerifyUseCase {
     const decryptedCode = await this.encrypter.decode(code);
 
     if (!decryptedCode || decryptedCode.account_id === null) {
-      throw new ResourceNotFoundError(code);
+      throw new InvalidValidationCode();
     }
 
     const account = await this.accountsRepository.findById(
@@ -25,7 +25,7 @@ export class VerifyUseCase {
     );
 
     if (!account) {
-      throw new ResourceNotFoundError(decryptedCode.account_id);
+      throw new InvalidValidationCode();
     }
 
     if (account.verified_at) {
