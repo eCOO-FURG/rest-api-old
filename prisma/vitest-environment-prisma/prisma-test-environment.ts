@@ -38,6 +38,15 @@ export default <Environment>{
       },
     });
 
+    await prisma.person.create({
+      data: {
+        cpf: "58267172033",
+        first_name: "test",
+        last_name: "account",
+        account_id: "test-account",
+      },
+    });
+
     await prisma.session.create({
       data: {
         ip_address: "",
