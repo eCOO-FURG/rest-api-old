@@ -1,6 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
-import { error } from "console";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
