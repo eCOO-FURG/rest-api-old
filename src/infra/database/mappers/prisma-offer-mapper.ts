@@ -17,6 +17,7 @@ export class PrismaOfferMapper {
 
   static toPrisma(offer: Offer): Prisma.OfferUncheckedCreateInput {
     return {
+      id: offer.id.toString(),
       agribusiness_id: offer.agribusiness_id.toString(),
       status: offer.status,
     };
