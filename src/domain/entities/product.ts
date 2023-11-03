@@ -9,6 +9,14 @@ interface ProductProps {
 }
 
 export class Product extends Entity<ProductProps> {
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
+  }
+
   get name() {
     return this.props.name;
   }
