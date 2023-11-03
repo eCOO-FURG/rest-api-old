@@ -10,6 +10,10 @@ interface OfferProps {
 }
 
 export class Offer extends AggregateRoot<OfferProps> {
+  get agribusiness_id() {
+    return this.props.agribusiness_id;
+  }
+
   get status() {
     return this.props.status;
   }
