@@ -11,6 +11,10 @@ interface AgribusinessProps {
 }
 
 export class Agribusiness extends AggregateRoot<AgribusinessProps> {
+  get name() {
+    return this.props.name;
+  }
+
   get admin_id() {
     return this.props.admin_id;
   }
