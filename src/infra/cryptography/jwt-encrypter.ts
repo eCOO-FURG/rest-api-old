@@ -7,7 +7,7 @@ export class JwtEncrypter implements Encrypter {
 
   async encrypt(payload: Record<string, unknown>): Promise<string> {
     return this.jwtService.sign(payload, env.JWT_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "0.5h",
     });
   }
 
