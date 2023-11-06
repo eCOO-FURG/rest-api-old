@@ -31,7 +31,7 @@ export default <Environment>{
 
     await prisma.account.create({
       data: {
-        id: "test-account",
+        id: "fake-account-id",
         email: "test-account@example.com",
         password: await hash("12345678", 8),
         verified_at: new Date(),
@@ -40,19 +40,36 @@ export default <Environment>{
 
     await prisma.person.create({
       data: {
+        id: "fake-person-id",
         cpf: "58267172033",
         first_name: "test",
         last_name: "account",
-        account_id: "test-account",
+        account_id: "fake-account-id",
       },
     });
 
     await prisma.session.create({
       data: {
         ip_address: "",
-        user_agent: "fake-agent",
-        account_id: "test-account",
+        user_agent: "agent",
+        account_id: "fake-account-id",
         created_at: new Date(),
+      },
+    });
+
+    await prisma.agribusiness.create({
+      data: {
+        id: "fake-agribusiness-id",
+        admin_id: "fake-account-id",
+        caf: "fake-caf",
+        name: "agribusiness",
+      },
+    });
+
+    await prisma.product.create({
+      data: {
+        id: "fake-product-id",
+        name: "product",
       },
     });
 
