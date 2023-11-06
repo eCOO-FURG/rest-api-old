@@ -13,8 +13,24 @@ interface OfferProductProps {
 }
 
 export class OfferProduct extends Entity<OfferProductProps> {
+  get weight() {
+    return this.props.weight;
+  }
+
+  get quantity() {
+    return this.props.quantity;
+  }
+
+  get amount() {
+    return this.props.amount;
+  }
+
   get product_id() {
     return this.props.product_id;
+  }
+
+  get offer_id() {
+    return this.props.offer_id;
   }
 
   static create(
