@@ -13,6 +13,9 @@
     "test:e2e": "vitest run --dir src/infra/http",
     "test:e2e:watch": "vitest --dir src/infra/http"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.4",
     "@types/ejs": "^3.1.3",
