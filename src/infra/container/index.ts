@@ -18,12 +18,12 @@ import { PrismaPeopleRepository } from "../database/repositories/prisma-people-r
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 import { SendEmailUseCase } from "@/domain/use-cases/send-email";
 import { RegisterProductUseCase } from "@/domain/use-cases/register-product";
-import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
-import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
-import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
-import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
+import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
+import { PrismaOffersProductsRepository } from "../database/repositories/prisma-offers-products.repository";
+import { PrismaOffersRepository } from "../database/repositories/prisma-offers-repository";
+import { PrismaProductsRepository } from "../database/repositories/prisma-products-repository";
 
 // Dependencies
 container.register({
@@ -36,16 +36,16 @@ container.register({
   sessionsRepository: asClass(PrismaSessionsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  productsRepository: asClass(InMemoryProductsRepository, {
+  productsRepository: asClass(PrismaProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  agribusinessesRepository: asClass(InMemoryAgribusinessesRepository, {
+  agribusinessesRepository: asClass(PrismaAgribusinessesRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  offersRepository: asClass(InMemoryOffersRepository, {
+  offersRepository: asClass(PrismaOffersRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  offersProductsRepository: asClass(InMemoryOffersProductsRepository, {
+  offersProductsRepository: asClass(PrismaOffersProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),

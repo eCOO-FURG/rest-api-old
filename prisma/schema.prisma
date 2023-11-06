@@ -17,8 +17,9 @@ model Account {
   created_at DateTime  @default(now())
   updated_at DateTime?
 
-  Person  Person?
-  Session Session[]
+  person       Person?
+  sessions     Session[]
+  agribusiness Agribusiness?
 
   @@map("accounts")
 }
@@ -48,4 +49,73 @@ model Session {
 
   created_at DateTime  @default(now())
   updated_at DateTime?
+
+  @@map("sessions")
+}
+
+model Agribusiness {
+  id   String @id @default(uuid())
+  name String
+  caf  String @unique
+
+  admin_id String  @unique
+  admin    Account @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  offers Offer[]
+
+  @@map("agribusinesses")
+}
+
+model Product {
+  id   String @id @default(uuid())
+  name String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  offers OfferProduct[]
+
+  @@map("products")
+}
+
+enum OFFER_STATUS {
+  SETTLED
+  DECLINED
+  PENDING
+}
+
+model Offer {
+  id     String       @id @default(uuid())
+  status OFFER_STATUS @default(DECLINED)
+
+  agribusiness_id String
+  agribusiness    Agribusiness @relation(fields: [agribusiness_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  items OfferProduct[]
+
+  @@map("offers")
+}
+
+model OfferProduct {
+  id       String @id @default(uuid())
+  amount   String
+  quantity String
+  weight   String
+
+  offer_id String
+  offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
+
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  @@map("offerProducts")
 }
