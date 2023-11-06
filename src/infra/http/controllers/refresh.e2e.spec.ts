@@ -1,5 +1,4 @@
 import { app } from "@/infra/app";
-import { generateAccessToken } from "test/factories/generate-access-token";
 
 describe("", () => {
   beforeAll(async () => {
