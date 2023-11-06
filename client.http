@@ -73,14 +73,19 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "product_id": "",
   "agribusiness_id": "",
   "products": [
     {
       "product_id": "",
-      "weight": "",
-      "quantity": "",
-      "amount": ""
-    }
+      "weight": "2",
+      "quantity": "2",
+      "amount": "2"
+    },
+    {
+      "product_id": "",
+      "weight": "2",
+      "quantity": "2",
+      "amount": "2"
+    },
   ]
 }
