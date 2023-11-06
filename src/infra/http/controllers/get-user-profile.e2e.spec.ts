@@ -11,7 +11,7 @@ describe("", () => {
   });
 
   test("[GET] /me", async () => {
-    const access_token = await generateAccessToken();
+    const access_token = await generateAccessToken("fake-account-id");
 
     const reply = await app.inject({
       method: "GET",
