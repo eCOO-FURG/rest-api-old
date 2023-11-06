@@ -16,7 +16,15 @@ Clone repository
 
 Run using docker-compose
 ```bash
+  docker-compose build
+```
+
+```bash
   docker-compose up
+```
+
+```bash
+  npx prisma migrate dev && npx prisma db seed
 ```
 
 It is recommended using Prisma Studio
