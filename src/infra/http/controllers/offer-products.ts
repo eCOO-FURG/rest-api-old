@@ -4,7 +4,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 const offerProductsBodySchema = z.object({
-  agribusiness_id: z.string(),
   products: z
     .array(
       z.object({
@@ -19,13 +18,17 @@ const offerProductsBodySchema = z.object({
     }),
 });
 
+const offerProductsPayloadSchema = z.object({
+  agribusiness_id: z.string(),
+});
+
 export async function offerProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { agribusiness_id, products } = offerProductsBodySchema.parse(
-    request.body
-  );
+  const { products } = offerProductsBodySchema.parse(request.body);
+
+  const { agribusiness_id } = offerProductsPayloadSchema.parse(request.payload);
 
   try {
     const offerProductsUseCase = request.diScope.resolve<OfferProductsUseCase>(
@@ -33,8 +36,7 @@ export async function offerProducts(
     );
 
     await offerProductsUseCase.execute({
-      account_id: request.payload.sub,
-      agribusiness_id: agribusiness_id,
+      agribusiness_id,
       products,
     });
 

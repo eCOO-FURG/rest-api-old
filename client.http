@@ -1,6 +1,5 @@
 @base_url = http://localhost:3333
 @access_token = {{authenticate.response.body.access_token}}
-@access_token = {{refresh.response.body.access_token}}
 
 # @name register
 POST {{base_url}}/users
@@ -73,19 +72,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "agribusiness_id": "",
   "products": [
     {
-      "product_id": "",
-      "weight": "2",
+      "product_id": "03026f2a-d023-41fe-84ce-7c9600aa2d33",
       "quantity": "2",
       "amount": "2"
-    },
-    {
-      "product_id": "",
-      "weight": "2",
-      "quantity": "2",
-      "amount": "2"
-    },
+    }
   ]
 }

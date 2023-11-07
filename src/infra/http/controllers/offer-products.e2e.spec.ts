@@ -20,7 +20,6 @@ describe("", () => {
         authorization: `Bearer ${access_token}`,
       },
       payload: {
-        agribusiness_id: "fake-agribusiness-id",
         products: [
           {
             product_id: "fake-product-id",

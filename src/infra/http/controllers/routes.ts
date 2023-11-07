@@ -8,6 +8,7 @@ import { verify } from "./verify";
 import { registerProduct } from "./register-product";
 import { offerProducts } from "./offer-products";
 import { registerAgribusiness } from "./register-agribusiness";
+import { ensureProducer } from "../middlewares/ensure-producer";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -30,7 +31,7 @@ export async function routes(app: FastifyInstance) {
   app.post(
     "/offers",
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, ensureProducer],
     },
     offerProducts
   );

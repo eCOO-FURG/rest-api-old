@@ -115,16 +115,8 @@ export const useCases = {
     ({ productsRepository }) => new RegisterProductUseCase(productsRepository)
   ),
   offerProductsUseCase: asFunction(
-    ({
-      accountsRepository,
-      agribusinessesRepository,
-      offersRepository,
-      offersProductsRepository,
-      productsRepository,
-    }) =>
+    ({ offersRepository, offersProductsRepository, productsRepository }) =>
       new OfferProductsUseCase(
-        accountsRepository,
-        agribusinessesRepository,
         offersRepository,
         offersProductsRepository,
         productsRepository
