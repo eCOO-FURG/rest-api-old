@@ -1,5 +1,3 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { Account } from "../entities/account";
 import { OfferProductsUseCase } from "./offer-products";
 import { Agribusiness } from "../entities/agribusiness";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
@@ -9,8 +7,8 @@ import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-of
 import { Product } from "../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepostory: InMemoryAgribusinessesRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
@@ -19,15 +17,12 @@ let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
-    inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryAgribusinessesRepostory = new InMemoryAgribusinessesRepository();
+    inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
 
     sut = new OfferProductsUseCase(
-      inMemoryAccountsRepository,
-      inMemoryAgribusinessesRepostory,
       inMemoryOffersRepository,
       inMemoryOffersProductsRepository,
       inMemoryProductsRepository
@@ -35,16 +30,8 @@ describe("offer product", () => {
   });
 
   it("should be able to offer products", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
-      password: "123456",
-      verified_at: new Date(),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
     const agribussines = Agribusiness.create({
-      admin_id: account.id,
+      admin_id: new UniqueEntityID("fake-id"),
       caf: "123456",
       name: "fake name",
     });
@@ -59,7 +46,6 @@ describe("offer product", () => {
 
     await sut.execute({
       agribusiness_id: agribussines.id.toString(),
-      account_id: account.id.toString(),
       products: [
         {
           product_id: product.id.toString(),
@@ -78,16 +64,8 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer products that do not exist", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
-      password: "123456",
-      verified_at: new Date(),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
     const agribussines = Agribusiness.create({
-      admin_id: account.id,
+      admin_id: new UniqueEntityID("fake-id"),
       caf: "123456",
       name: "fake name",
     });
@@ -97,7 +75,6 @@ describe("offer product", () => {
     await expect(async () =>
       sut.execute({
         agribusiness_id: agribussines.id.toString(),
-        account_id: account.id.toString(),
         products: [
           {
             product_id: "wrong-id",
