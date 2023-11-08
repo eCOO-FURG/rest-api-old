@@ -5,6 +5,7 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { OffersProductsRepository } from "../repositories/offers-products";
 import { ProductsRepository } from "../repositories/products-repository";
+import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
@@ -18,12 +19,19 @@ interface OfferProductsUseCaseRequest {
 
 export class OfferProductsUseCase {
   constructor(
+    private agribusinessRepository: AgribusinessesRepository,
     private offersRepository: OffersRepository,
     private offersProductsRepository: OffersProductsRepository,
     private productsRepository: ProductsRepository
   ) {}
 
   async execute({ agribusiness_id, products }: OfferProductsUseCaseRequest) {
+    const agribusiness = this.agribusinessRepository.findById(agribusiness_id);
+
+    if (!agribusiness) {
+      throw new ResourceNotFoundError(agribusiness_id);
+    }
+
     const offer = Offer.create({
       agribusiness_id: new UniqueEntityID(agribusiness_id),
     });

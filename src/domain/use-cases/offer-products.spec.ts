@@ -10,19 +10,20 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
 let inMemoryOffersRepository: InMemoryOffersRepository;
-let inMemoryAgribusinessesRepostory: InMemoryAgribusinessesRepository;
+let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
   beforeEach(() => {
-    inMemoryAgribusinessesRepostory = new InMemoryAgribusinessesRepository();
+    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
 
     sut = new OfferProductsUseCase(
+      inMemoryAgribusinessesRepository,
       inMemoryOffersRepository,
       inMemoryOffersProductsRepository,
       inMemoryProductsRepository
@@ -36,7 +37,7 @@ describe("offer product", () => {
       name: "fake name",
     });
 
-    inMemoryAgribusinessesRepostory.save(agribussines);
+    inMemoryAgribusinessesRepository.save(agribussines);
 
     const product = Product.create({
       name: "potato",
