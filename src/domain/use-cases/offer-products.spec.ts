@@ -71,7 +71,7 @@ describe("offer product", () => {
       name: "fake name",
     });
 
-    inMemoryAgribusinessesRepostory.save(agribussines);
+    inMemoryAgribusinessesRepository.save(agribussines);
 
     await expect(async () =>
       sut.execute({
