@@ -1,5 +1,8 @@
 import { Product } from "@/domain/entities/product";
-import { ProductsRepository } from "@/domain/repositories/products-repository";
+import {
+  ProductsRepository,
+  SearchParams,
+} from "@/domain/repositories/products-repository";
 
 export class InMemoryProductsRepository implements ProductsRepository {
   items: Product[] = [];
@@ -24,5 +27,13 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
   async save(product: Product): Promise<void> {
     this.items.push(product);
+  }
+
+  async search(params: SearchParams): Promise<Product[]> {
+    const products = this.items.filter((item) =>
+      params.name === "" ? true : item.name.includes(params.name)
+    );
+
+    return products;
   }
 }
