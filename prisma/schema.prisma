@@ -81,15 +81,8 @@ model Product {
   @@map("products")
 }
 
-enum OFFER_STATUS {
-  SETTLED
-  DECLINED
-  PENDING
-}
-
 model Offer {
-  id     String       @id @default(uuid())
-  status OFFER_STATUS @default(DECLINED)
+  id String @id @default(uuid())
 
   agribusiness_id String
   agribusiness    Agribusiness @relation(fields: [agribusiness_id], references: [id], onDelete: Cascade)
@@ -102,11 +95,18 @@ model Offer {
   @@map("offers")
 }
 
+enum OFFER_PRODUCT_STATUS {
+  APPROVED
+  DECLINED
+  PENDING
+}
+
 model OfferProduct {
-  id       String @id @default(uuid())
+  id       String               @id @default(uuid())
   amount   String
   quantity String
   weight   String
+  status   OFFER_PRODUCT_STATUS @default(DECLINED)
 
   offer_id String
   offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)

@@ -11,6 +11,7 @@ export class PrismaOfferProductMaper {
         amount: raw.amount,
         quantity: raw.quantity,
         weight: raw.weight,
+        status: raw.status,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
@@ -26,6 +27,7 @@ export class PrismaOfferProductMaper {
       amount: offerProduct.amount,
       quantity: offerProduct.quantity,
       weight: offerProduct.weight,
+      status: offerProduct.status,
       offer_id: offerProduct.offer_id.toString(),
       product_id: offerProduct.product_id.toString(),
     };

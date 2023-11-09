@@ -8,11 +8,16 @@ interface OfferProductProps {
   amount: string;
   quantity: string;
   weight: string;
+  status: "APPROVED" | "DECLINED" | "PENDING";
   created_at: Date;
   updated_at?: Date | null;
 }
 
 export class OfferProduct extends Entity<OfferProductProps> {
+  get status() {
+    return this.props.status;
+  }
+
   get weight() {
     return this.props.weight;
   }
@@ -34,13 +39,14 @@ export class OfferProduct extends Entity<OfferProductProps> {
   }
 
   static create(
-    props: Optional<OfferProductProps, "created_at">,
+    props: Optional<OfferProductProps, "created_at" | "status">,
     id?: UniqueEntityID
   ) {
     const offerProduct = new OfferProduct(
       {
         ...props,
         created_at: props.created_at ?? new Date(),
+        status: props.status ?? "PENDING",
       },
       id
     );
