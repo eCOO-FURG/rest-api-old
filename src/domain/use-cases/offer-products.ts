@@ -3,7 +3,7 @@ import { OffersRepository } from "../repositories/offers-repository";
 import { Offer } from "../entities/offer";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
-import { OffersProductsRepository } from "../repositories/offers-products";
+import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 

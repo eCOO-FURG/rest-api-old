@@ -1,5 +1,5 @@
 import { string, unknown } from "zod";
-import { OffersProductsRepository } from "../repositories/offers-products";
+import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { ProductsRepository } from "../repositories/products-repository";
 import { OfferProduct } from "../entities/offer-product";
 
