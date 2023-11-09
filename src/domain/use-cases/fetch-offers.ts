@@ -1,11 +1,10 @@
+import { string, unknown } from "zod";
 import { OffersProductsRepository } from "../repositories/offers-products";
 import { ProductsRepository } from "../repositories/products-repository";
+import { OfferProduct } from "../entities/offer-product";
 
 interface FetchOffersUseCaseRequest {
-  // page: number;
-  params: {
-    name: string;
-  };
+  name: string;
 }
 
 export class FetchOffersUseCase {
@@ -14,12 +13,9 @@ export class FetchOffersUseCase {
     private offersProductsRepository: OffersProductsRepository
   ) {}
 
-  async execute({
-    // page,
-    params,
-  }: FetchOffersUseCaseRequest) {
+  async execute({ name }: FetchOffersUseCaseRequest) {
     const products = await this.productsRepository.search({
-      name: params.name,
+      name: name,
     });
 
     const offeredProducts =
@@ -27,10 +23,24 @@ export class FetchOffersUseCase {
         products.map((product) => product.id.toString())
       );
 
-    console.log(offeredProducts);
+    const offersForEachProduct: OfferProduct[][] = offeredProducts.reduce(
+      (acc: OfferProduct[][], current) => {
+        const found = acc.find(
+          (itemArray) =>
+            itemArray[0].product_id.toString() === current.product_id.toString()
+        );
 
-    // const offers = await this.offersRepository.search(page, params);
+        if (found) {
+          found.push(current);
+        } else {
+          acc.push([current]);
+        }
 
-    // console.log(offers);
+        return acc;
+      },
+      []
+    );
+
+    return offersForEachProduct;
   }
 }

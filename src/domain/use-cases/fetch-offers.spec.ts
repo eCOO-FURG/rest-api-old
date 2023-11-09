@@ -19,30 +19,59 @@ describe("fetch offers", () => {
     );
   });
 
-  it("should be able to list offers by page", async () => {
-    const product = Product.create(
-      {
-        name: "product",
-      },
-      new UniqueEntityID("1")
+  it("should be able to fetch offers by product name", async () => {
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "potato",
+        },
+        new UniqueEntityID("1")
+      )
     );
 
-    await inMemoryProductsRepository.save(product);
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "apple",
+        },
+        new UniqueEntityID("2")
+      )
+    );
 
-    const offerProduct = OfferProduct.create({
-      offer_id: new UniqueEntityID("1"),
-      product_id: new UniqueEntityID("1"),
-      amount: "1",
-      quantity: "1",
-      weight: "1",
+    await inMemoryOffersProductsRepository.save(
+      OfferProduct.create({
+        offer_id: new UniqueEntityID("1"),
+        product_id: new UniqueEntityID("1"),
+        amount: "1",
+        quantity: "1",
+        weight: "1",
+      })
+    );
+
+    await inMemoryOffersProductsRepository.save(
+      OfferProduct.create({
+        offer_id: new UniqueEntityID("2"),
+        product_id: new UniqueEntityID("2"),
+        amount: "1",
+        quantity: "1",
+        weight: "1",
+      })
+    );
+
+    await inMemoryOffersProductsRepository.save(
+      OfferProduct.create({
+        offer_id: new UniqueEntityID("3"),
+        product_id: new UniqueEntityID("2"),
+        amount: "1",
+        quantity: "1",
+        weight: "1",
+      })
+    );
+
+    const result = await sut.execute({
+      name: "",
     });
 
-    await inMemoryOffersProductsRepository.save(offerProduct);
-
-    await sut.execute({
-      params: {
-        name: "product",
-      },
-    });
+    expect(result).toBeInstanceOf<OfferProduct[][]>;
   });
 });
