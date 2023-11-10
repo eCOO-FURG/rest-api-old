@@ -13,6 +13,14 @@ export class Offer extends AggregateRoot<OfferProps> {
     return this.props.agribusiness_id;
   }
 
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
+  }
+
   static create(
     props: Optional<OfferProps, "created_at">,
     id?: UniqueEntityID

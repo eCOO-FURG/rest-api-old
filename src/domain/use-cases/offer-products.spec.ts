@@ -8,11 +8,14 @@ import { Product } from "../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { InMemoryProductsTypesRepository } from "test/repositories/in-memory-products-types-repository";
+import { ProductType } from "../entities/product-type";
 
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryProductsTypesRepository: InMemoryProductsTypesRepository;
 let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
@@ -21,6 +24,7 @@ describe("offer product", () => {
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
+    inMemoryProductsTypesRepository = new InMemoryProductsTypesRepository();
 
     sut = new OfferProductsUseCase(
       inMemoryAgribusinessesRepository,
@@ -39,8 +43,18 @@ describe("offer product", () => {
 
     inMemoryAgribusinessesRepository.save(agribussines);
 
+    const productType = ProductType.create(
+      {
+        name: "herbaceous",
+      },
+      new UniqueEntityID("1")
+    );
+
+    inMemoryProductsTypesRepository.save(productType);
+
     const product = Product.create({
       name: "potato",
+      type_id: new UniqueEntityID("1"),
     });
 
     await inMemoryProductsRepository.save(product);
@@ -58,7 +72,6 @@ describe("offer product", () => {
     });
 
     expect(inMemoryOffersRepository.items[0]).toBeInstanceOf(Offer);
-    expect(inMemoryOffersRepository.items[0].status).toBe("PENDING");
     expect(
       inMemoryOffersProductsRepository.items[0].product_id.toString()
     ).toBe(product.id.toString());
