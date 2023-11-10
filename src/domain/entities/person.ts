@@ -13,10 +13,6 @@ interface PersonProps {
 }
 
 export class Person extends Entity<PersonProps> {
-  get cpf() {
-    return this.props.cpf;
-  }
-
   get account_id() {
     return this.props.account_id;
   }
@@ -27,6 +23,18 @@ export class Person extends Entity<PersonProps> {
 
   get last_name() {
     return this.props.last_name;
+  }
+
+  get cpf() {
+    return this.props.cpf;
+  }
+
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
   }
 
   static create(

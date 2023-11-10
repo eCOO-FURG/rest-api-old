@@ -7,8 +7,6 @@ interface EmailProps {
   from: string;
   subject: string;
   view: string;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class Email extends Entity<EmailProps> {
@@ -28,14 +26,10 @@ export class Email extends Entity<EmailProps> {
     return this.props.view;
   }
 
-  static create(
-    props: Optional<EmailProps, "created_at">,
-    id?: UniqueEntityID
-  ) {
+  static create(props: EmailProps, id?: UniqueEntityID) {
     const email = new Email(
       {
         ...props,
-        created_at: props.created_at ?? new Date(),
       },
       id
     );

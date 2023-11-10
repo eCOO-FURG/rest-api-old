@@ -24,13 +24,21 @@ export class Account extends AggregateRoot<AccountProps> {
     return this.props.verified_at;
   }
 
-  private touch() {
-    this.props.updated_at = new Date();
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
   }
 
   verify() {
     this.props.verified_at = new Date();
     this.touch();
+  }
+
+  private touch() {
+    this.props.updated_at = new Date();
   }
 
   static create(

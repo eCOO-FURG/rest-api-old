@@ -15,12 +15,20 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     return this.props.name;
   }
 
+  get caf() {
+    return this.props.caf;
+  }
+
   get admin_id() {
     return this.props.admin_id;
   }
 
-  get caf() {
-    return this.props.caf;
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
   }
 
   static create(
