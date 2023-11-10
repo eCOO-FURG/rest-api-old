@@ -17,7 +17,6 @@ import { PrismaAccountsRepository } from "../database/repositories/prisma-accoun
 import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 import { SendEmailUseCase } from "@/domain/use-cases/send-email";
-import { RegisterProductUseCase } from "@/domain/use-cases/register-product";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
@@ -110,9 +109,6 @@ export const useCases = {
         accountsRepository,
         agribusinessesRepository
       )
-  ),
-  registerProductUseCase: asFunction(
-    ({ productsRepository }) => new RegisterProductUseCase(productsRepository)
   ),
   offerProductsUseCase: asFunction(
     ({
