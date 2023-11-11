@@ -69,9 +69,24 @@ model Agribusiness {
   @@map("agribusinesses")
 }
 
+model ProductType {
+  id   String @id @default(uuid())
+  name String @unique
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  products Product[]
+
+  @@map("products_types")
+}
+
 model Product {
   id   String @id @default(uuid())
   name String @unique
+
+  type_id String
+  type    ProductType @relation(fields: [type_id], references: [id], onDelete: Cascade)
 
   created_at DateTime  @default(now())
   updated_at DateTime?
@@ -95,18 +110,11 @@ model Offer {
   @@map("offers")
 }
 
-enum OFFER_PRODUCT_STATUS {
-  APPROVED
-  DECLINED
-  PENDING
-}
-
 model OfferProduct {
-  id       String               @id @default(uuid())
+  id       String @id @default(uuid())
   amount   String
   quantity String
   weight   String
-  status   OFFER_PRODUCT_STATUS @default(DECLINED)
 
   offer_id String
   offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
@@ -117,5 +125,5 @@ model OfferProduct {
   created_at DateTime  @default(now())
   updated_at DateTime?
 
-  @@map("offerProducts")
+  @@map("offer_products")
 }
