@@ -14,7 +14,7 @@ describe("", () => {
       method: "POST",
       url: "/sessions",
       payload: {
-        email: "test-account@example.com",
+        email: "account@ecoo.com",
         password: "12345678",
       },
     });

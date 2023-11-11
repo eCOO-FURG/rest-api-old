@@ -1,7 +1,7 @@
 import { app } from "@/infra/app";
 import { prisma } from "@/infra/database/prisma-service";
 import { hash } from "bcryptjs";
-import { generateAccessToken } from "test/factories/generate-access-token";
+import { makeAccessToken } from "test/factories/make-access-token";
 
 describe("", () => {
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe("", () => {
       },
     });
 
-    const access_token = await generateAccessToken("1");
+    const access_token = await makeAccessToken("1");
 
     const reply = await app.inject({
       method: "POST",
@@ -31,8 +31,8 @@ describe("", () => {
         authorization: `Bearer ${access_token}`,
       },
       payload: {
-        caf: "agribusiness-caf",
-        name: "agribusiness name",
+        caf: "new-caf",
+        name: "new-agribusiness-name",
       },
     });
 

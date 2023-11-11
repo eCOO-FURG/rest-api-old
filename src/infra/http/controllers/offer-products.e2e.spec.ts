@@ -1,5 +1,5 @@
 import { app } from "@/infra/app";
-import { generateAccessToken } from "test/factories/generate-access-token";
+import { makeAccessToken } from "test/factories/make-access-token";
 
 describe("", () => {
   beforeAll(async () => {
@@ -11,7 +11,7 @@ describe("", () => {
   });
 
   test("[POST] /offers", async () => {
-    const access_token = await generateAccessToken("fake-account-id");
+    const access_token = await makeAccessToken("account-id");
 
     const reply = await app.inject({
       method: "POST",
@@ -22,7 +22,7 @@ describe("", () => {
       payload: {
         products: [
           {
-            product_id: "fake-product-id",
+            product_id: "product-id",
             weight: "2",
             quantity: "2",
             amount: "2",
