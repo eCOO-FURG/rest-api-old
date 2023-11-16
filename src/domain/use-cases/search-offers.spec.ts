@@ -1,4 +1,3 @@
-import { InMemoryProductsCollection } from "test/search/in-memory-products-collection";
 import { SearchOffersUseCase } from "./search-offers";
 import { FakeNaturalLanguageProcessor } from "test/search/fake-natural-language-processor";
 import { CollectionRecord } from "../entities/collection-record";
@@ -7,6 +6,7 @@ import { Product } from "../entities/product";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
 import { OfferProduct } from "../entities/offer-product";
+import { InMemoryProductsCollection } from "test/collections/in-memory-products-collection";
 
 let fakeNaturalLanguageProcessor: FakeNaturalLanguageProcessor;
 let inMemoryProductsCollection: InMemoryProductsCollection;
@@ -35,7 +35,7 @@ describe("search offers", () => {
       products.map(async (name, index) => {
         await inMemoryProductsCollection.save(
           CollectionRecord.create({
-            embeeding: await fakeNaturalLanguageProcessor.embeed(name),
+            embeeding: await fakeNaturalLanguageProcessor.embed(name),
             payload: { name },
           })
         );

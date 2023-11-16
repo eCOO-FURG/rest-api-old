@@ -1,5 +1,5 @@
 import { CollectionRecord } from "@/domain/entities/collection-record";
-import { Collection } from "@/domain/search/collection";
+import { Collection } from "@/domain/repositories/collection";
 
 export class InMemoryProductsCollection implements Collection {
   public items: CollectionRecord[] = [];

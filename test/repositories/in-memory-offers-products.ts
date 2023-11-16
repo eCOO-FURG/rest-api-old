@@ -1,5 +1,5 @@
 import { OfferProduct } from "@/domain/entities/offer-product";
-import { OffersProductsRepository } from "@/domain/repositories/offers-products";
+import { OffersProductsRepository } from "@/domain/repositories/offers-products-repository";
 
 export class InMemoryOffersProductsRepository
   implements OffersProductsRepository

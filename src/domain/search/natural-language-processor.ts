@@ -1,3 +1,3 @@
 export interface NaturalLanguageProcessor {
-  embeed(value: string): Promise<number[]>;
+  embed(value: string): Promise<number[]>;
 }

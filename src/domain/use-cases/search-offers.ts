@@ -1,4 +1,4 @@
-import { Collection } from "../search/collection";
+import { Collection } from "../repositories/collection";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { ProductsRepository } from "../repositories/products-repository";
 import { OfferProduct } from "../entities/offer-product";
@@ -18,7 +18,7 @@ export class SearchOffersUseCase {
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    const queryVector = await this.naturalLanguageProcessor.embeed(product);
+    const queryVector = await this.naturalLanguageProcessor.embed(product);
 
     const similarProducts = await this.productsCollection.findSimilar(
       queryVector
