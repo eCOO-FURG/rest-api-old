@@ -6,6 +6,6 @@ app
     host: "0.0.0.0",
     port: env.PORT,
   })
-  .then(() => {
+  .then(async () => {
     console.log("🚀 HTTP Server Running!");
   });

@@ -11,6 +11,8 @@ const envSchema = z.object({
   SMTP_PORT: z.coerce.number(),
   ECOO_EMAIL: z.string(),
   SESSION_DURATION_IN_DAYS: z.coerce.number(),
+  EXPECTED_SIMILARITY_SCORE: z.coerce.number().default(0.8),
+  QDRANT_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

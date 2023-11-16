@@ -1,3 +1,4 @@
+import "@tensorflow/tfjs-node";
 import fastify from "fastify";
 import { env } from "./env";
 import { ZodError } from "zod";

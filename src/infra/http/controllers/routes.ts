@@ -8,12 +8,12 @@ import { verify } from "./verify";
 import { offerProducts } from "./offer-products";
 import { registerAgribusiness } from "./register-agribusiness";
 import { ensureProducer } from "../middlewares/ensure-producer";
+import { searchOffers } from "./search-offers";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
   app.post("/sessions", authenticate);
   app.post("/sessions/refresh", refresh);
-
   app.post(
     "/agribusinesses",
     {
@@ -37,4 +37,5 @@ export async function routes(app: FastifyInstance) {
     getUserProfile
   );
   app.get("/verify", verify);
+  app.get("/offers", { onRequest: [verifyJwt] }, searchOffers);
 }

@@ -36,14 +36,14 @@ Content-Type: application/json
 
 ###
 
-# @name get_user_profile
+# @name get_user-profile
 GET {{base_url}}/me
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
-# @name register_product
+# @name register-product
 POST {{base_url}}/products
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -54,7 +54,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-# @name register_agribusiness
+# @name register-agribusiness
 POST {{base_url}}/agribusinesses
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -66,7 +66,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-# @name offer_products
+# @name offer-products
 POST {{base_url}}/offers
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -74,9 +74,17 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "product_id": "03026f2a-d023-41fe-84ce-7c9600aa2d33",
+      "product_id": "891399b5-e591-464a-b42a-c64eb13f85a2",
       "quantity": "2",
-      "amount": "2"
+      "amount": "2",
+      "weight": "3"
     }
   ]
 }
+
+###
+
+# @name search-offers
+GET {{base_url}}/offers?product=banana
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
