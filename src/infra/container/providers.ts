@@ -1,0 +1,50 @@
+import { diContainer } from "@fastify/awilix";
+import { Lifetime, asClass, asFunction } from "awilix";
+import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
+import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
+import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
+import { PrismaProductsRepository } from "../database/repositories/prisma-products-repository";
+import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
+import { PrismaOffersRepository } from "../database/repositories/prisma-offers-repository";
+import { PrismaOffersProductsRepository } from "../database/repositories/prisma-offers-products.repository";
+import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
+import { createTransport } from "nodemailer";
+import { JwtEncrypter } from "../cryptography/jwt-encrypter";
+import { env } from "../env";
+import { EjsLoader } from "../mail/ejs-loader";
+import { Nodemailer } from "../mail/nodemailer";
+import * as JwtService from "jsonwebtoken";
+
+diContainer.register({
+  accountsRepository: asClass(PrismaAccountsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  peopleRepository: asClass(PrismaPeopleRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  sessionsRepository: asClass(PrismaSessionsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  productsRepository: asClass(PrismaProductsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  agribusinessesRepository: asClass(PrismaAgribusinessesRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  offersRepository: asClass(PrismaOffersRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  offersProductsRepository: asClass(PrismaOffersProductsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  hasher: asClass(BcrypterHasher),
+  encrypter: asFunction(() => new JwtEncrypter(JwtService)),
+  mailer: asFunction(() => {
+    const transporter = createTransport({
+      host: env.SMTP_HOST,
+      port: env.SMTP_PORT,
+    });
+    return new Nodemailer(transporter);
+  }),
+  viewLoader: asFunction(() => new EjsLoader()),
+});
