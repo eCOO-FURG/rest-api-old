@@ -4,6 +4,7 @@ import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
+import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { SendEmailUseCase } from "@/domain/use-cases/send-email";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
@@ -58,6 +59,20 @@ diContainer.register({
         offersRepository,
         offersProductsRepository,
         productsRepository
+      )
+  ),
+  searchOffersUseCase: asFunction(
+    ({
+      naturalLanguageProcessor,
+      productsCollection,
+      productsRepository,
+      offersProductsRepository,
+    }) =>
+      new SearchOffersUseCase(
+        naturalLanguageProcessor,
+        productsCollection,
+        productsRepository,
+        offersProductsRepository
       )
   ),
 });

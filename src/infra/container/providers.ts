@@ -14,6 +14,8 @@ import { env } from "../env";
 import { EjsLoader } from "../mail/ejs-loader";
 import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
+import { TfUseModel } from "../search/tf-use-model";
+import { QdrantProductsCollection } from "../database/collections/qdrant-products-collection";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
@@ -37,6 +39,9 @@ diContainer.register({
   offersProductsRepository: asClass(PrismaOffersProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
+  productsCollection: asClass(QdrantProductsCollection, {
+    lifetime: "SINGLETON",
+  }),
   hasher: asClass(BcrypterHasher),
   encrypter: asFunction(() => new JwtEncrypter(JwtService)),
   mailer: asFunction(() => {
@@ -47,4 +52,8 @@ diContainer.register({
     return new Nodemailer(transporter);
   }),
   viewLoader: asFunction(() => new EjsLoader()),
+  naturalLanguageProcessor: asClass(TfUseModel, {
+    lifetime: "SINGLETON",
+    asyncInit: "init",
+  }),
 });

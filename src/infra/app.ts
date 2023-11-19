@@ -11,8 +11,6 @@ export const app = fastify();
 app
   .register(fastifyAwilixPlugin, {
     asyncInit: true,
-    asyncDispose: true,
-    eagerInject: true,
   })
   .then(() => {
     app.register(routes);
