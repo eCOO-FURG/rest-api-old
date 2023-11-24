@@ -1,6 +1,6 @@
 import { CollectionRecord } from "@/domain/entities/collection-record";
 import { Collection } from "@/domain/repositories/collection";
-import { qdrant } from "../../search/qdrant-service";
+import { qdrant } from "../qdrant-service";
 import { env } from "../../env";
 import { QdrantProductMapper } from "../mappers/qdrant-product-mapper";
 
