@@ -24,7 +24,7 @@ Run using docker-compose
 ```
 
 ```bash
-  npx prisma migrate dev && npx prisma db seed
+  npx prisma migrate dev && npx prisma db seed && npm qdrant:seed
 ```
 
 It is recommended using Prisma Studio
@@ -67,15 +67,18 @@ src                             → Application sources.
     └ events                    → Enterprise business Events (actions triggered by use-cases).
     └ mail                      → Mail service related contracts and views.
     └ repositories              → Repositories interfaces or contracts.
+    └ search                    → Natural language processor contract.
     └ use-cases                 → Application business rules.
   └ infra                       → Technology implementation of the domain layer.
     └ @types                    → Fastify types related.
-    └ container                 → Dependency Injeticion modules registration index.
+    └ container                 → Dependency injection modules registration.
     └ cryptography              → Cryptography module implementation.
-    └ database                  → Prisma service, entity mappers and repositories.
+    └ database                  → Prisma service, Qdrant service, entity mappers, repositories and collections.
     └ env                       → Environment variables build-time validation.
     └ http                      → HTTP layer.
     └ mail                      → Mail module implementation.
+    └ search                    → Tensor-flow universal sentence encoder model.
+    └ utils                     → DRY ensurance.
 test
   └ cryptography                → Mock cryptography services instances.
   └ factories                   → Use cases common proccess.
@@ -91,3 +94,4 @@ test
 - [x] Authenticate;
 - [x] Create an agribusiness;
 - [x] Offer products;
+- [x] Search offers by semantic search;
