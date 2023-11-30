@@ -37,5 +37,5 @@ export async function routes(app: FastifyInstance) {
     getUserProfile
   );
   app.get("/verify", verify);
-  app.get("/offers", { onRequest: [verifyJwt] }, searchOffers);
+  app.get("/offers", searchOffers);
 }
