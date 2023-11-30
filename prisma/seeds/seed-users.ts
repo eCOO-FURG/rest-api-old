@@ -2,6 +2,9 @@ import { prisma } from "../../src/infra/database/prisma-service";
 import { hash } from "bcryptjs";
 
 export async function seedUsers() {
+  await prisma.person.deleteMany();
+  await prisma.account.deleteMany();
+
   const account = await prisma.account.create({
     data: {
       id: "test-account",

@@ -24,6 +24,8 @@ export class SearchOffersUseCase {
       queryVector
     );
 
+    similarProducts.map((item) => console.log(item.payload));
+
     const similarProductsNames = similarProducts.map(
       (item) => item.payload.name
     );

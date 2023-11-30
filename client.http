@@ -74,7 +74,7 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "product_id": "3e1d0cc5-e329-4911-98db-5ec3e8356642",
+      "product_id": "a00453c0-7f14-484f-b0a0-8b9c7e5b5b9c",
       "quantity": "2",
       "amount": "2",
       "weight": "3"
@@ -85,6 +85,6 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name search-offers
-GET {{base_url}}/offers?product=banana
+GET {{base_url}}/offers?product=bananas
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

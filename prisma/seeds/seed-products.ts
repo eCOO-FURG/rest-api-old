@@ -157,6 +157,9 @@ const productsData: { type: string; products: string[] }[] = [
 ];
 
 export async function seedProducts() {
+  await prisma.product.deleteMany();
+  await prisma.productType.deleteMany();
+
   await prisma.productType.createMany({
     data: productsData.map(({ type }) => ({ name: type })),
   });

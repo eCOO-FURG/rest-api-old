@@ -130,6 +130,10 @@ const products = [
   "Milho",
 ];
 
+function removeAccents(text: string) {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 export async function seed() {
   await client.recreateCollection("products", {
     vectors: {
@@ -140,7 +144,9 @@ export async function seed() {
 
   const model = await universalSenteceEncoder.load();
 
-  const embeddings = (await model.embed(products)).arraySync();
+  const processedProducts = products.map((product) => removeAccents(product));
+
+  const embeddings = (await model.embed(processedProducts)).arraySync();
 
   const productsWithEmbeddings = products.map((product, index) => ({
     name: product,
