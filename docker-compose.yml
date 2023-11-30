@@ -31,9 +31,7 @@ services:
     ports:
       - "3333:3333"
     environment:
-      - SMTP_HOST=smtp4dev
-      - SMTP_PORT=25
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ecoo_db?schema=public
+      - POSTGRES_URL=postgresql://postgres:postgres@postgres:5432/ecoo_db?schema=public
       - QDRANT_URL=http://qdrant:6333
     volumes:
       - ./src:/app/src

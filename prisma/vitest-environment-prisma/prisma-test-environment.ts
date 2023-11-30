@@ -8,11 +8,11 @@ import { hash } from "bcryptjs";
 const prisma = new PrismaClient();
 
 function generateDatabaseURL(schema: string) {
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.POSTGRES_URL) {
     throw new Error("Please provide a DATABASE_URL environment variable.");
   }
 
-  const url = new URL(process.env.DATABASE_URL);
+  const url = new URL(process.env.POSTGRES_URL);
 
   url.searchParams.set("schema", schema);
 
@@ -25,7 +25,9 @@ export default <Environment>{
     const schema = randomUUID();
     const databaseURL = generateDatabaseURL(schema);
 
-    process.env.DATABASE_URL = databaseURL;
+    process.env.POSTGRES_URL = databaseURL;
+    process.env.SMTP_SERVER = "127.0.0.1";
+    process.env.SMTP_HOST = "2525";
 
     execSync("npx prisma migrate deploy");
 

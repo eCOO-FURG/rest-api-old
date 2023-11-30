@@ -23,7 +23,7 @@ app.setErrorHandler((error, _, reply) => {
       .send({ message: "Validation error.", issues: error.format() });
   }
 
-  if (env.NODE_ENV !== "production") {
+  if (env.ENV !== "production") {
     console.error(error);
   } else {
     // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry

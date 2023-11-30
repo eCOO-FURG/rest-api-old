@@ -43,14 +43,14 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-# @name register-product
-POST {{base_url}}/products
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
+# # @name register-product
+# POST {{base_url}}/products
+# Content-Type: application/json
+# Authorization: Bearer {{access_token}}
 
-{
-  "name": "Batata"
-}
+# {
+#   "name": "Batata"
+# }
 
 ###
 
@@ -74,7 +74,7 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "product_id": "891399b5-e591-464a-b42a-c64eb13f85a2",
+      "product_id": "3e1d0cc5-e329-4911-98db-5ec3e8356642",
       "quantity": "2",
       "amount": "2",
       "weight": "3"

@@ -1,8 +1,9 @@
 import "@tensorflow/tfjs-node";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import * as universalSenteceEncoder from "@tensorflow-models/universal-sentence-encoder";
+import { env } from "../src/infra/env";
 
-const client = new QdrantClient({ url: "http://127.0.0.1:6333" });
+const client = new QdrantClient({ url: env.QDRANT_URL });
 
 const products = [
   "Abóbora Cabotiá",
