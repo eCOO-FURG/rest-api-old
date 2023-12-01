@@ -16,23 +16,21 @@ Clone repository
 
 Run using docker-compose
 ```bash
-  docker-compose build
-```
-
-```bash
   docker-compose up
 ```
 
+Ensure you have ts-node installed and run the seeds
 ```bash
   npx prisma migrate dev && npx prisma db seed && npm qdrant:seed
 ```
+*Different seeds will be created based on the environment
 
 It is recommended using Prisma Studio
 ```bash
   npx prisma studio
 ```
 
-A [SMTP Server](http://localhost:3010/) will be created on Local Network
+A [SMTP Server](http://localhost:3010/) will be created on Local Network 
 
 ### 🧪 Testing
 
@@ -47,8 +45,7 @@ A [SMTP Server](http://localhost:3010/) will be created on Local Network
 ```bash
   npm run test:e2e
 ```
-
-Do not forget the database must be running
+*Do not forget the database must be running
 
 ---
 
