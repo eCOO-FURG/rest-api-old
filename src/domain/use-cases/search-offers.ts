@@ -28,34 +28,40 @@ export class SearchOffersUseCase {
       (item) => item.payload.name
     );
 
-    const products = (await Promise.all(
-      similarProductsNames.map(
-        async (name) => await this.productsRepository.findByName(name)
-      )
-    ).then((data) => data.filter((product) => product))) as Product[];
-
-    const offeredProducts =
-      await this.offersProductsRepository.findManyByProductsIds(
-        products.map((product) => product.id.toString())
-      );
-
-    const offersForEachProduct: OfferProduct[][] = offeredProducts.reduce(
-      (acc: OfferProduct[][], current: OfferProduct) => {
-        const found = acc.find(
-          (itemArray) =>
-            itemArray[0].product_id.toString() === current.product_id.toString()
-        );
-
-        if (found) {
-          found.push(current);
-        } else {
-          acc.push([current]);
-        }
-
-        return acc;
-      },
-      []
+    const products = await this.productsRepository.findManyByName(
+      similarProductsNames
     );
+
+    const productsIds = products.map((product) => product.id.toString());
+
+    const offers = await this.offersProductsRepository.findManyByProductsIds(
+      productsIds
+    );
+
+    const offersForEachProduct: { product: string; offers: OfferProduct[] }[] =
+      offers.reduce(
+        (acc: { product: string; offers: OfferProduct[] }[], current) => {
+          const { name } = products.find(
+            (product) => product.id.toString() === current.product_id.toString()
+          )!;
+
+          const productIndexOnTheArray = acc.findIndex(
+            ({ product }) => name === product
+          );
+
+          if (productIndexOnTheArray != -1) {
+            acc[productIndexOnTheArray].offers.push(current);
+          } else {
+            acc.push({
+              product: name,
+              offers: [current],
+            });
+          }
+
+          return acc;
+        },
+        []
+      );
 
     return offersForEachProduct;
   }

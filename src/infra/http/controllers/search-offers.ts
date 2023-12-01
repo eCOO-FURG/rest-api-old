@@ -20,29 +20,15 @@ export async function searchOffers(
   const { product } = searchOffersQuerySchema.parse(request.query);
 
   try {
-    // const model = await load();
-
-    // const naturalLanguageProcessor = new TfUseModel(model);
-    // const productsCollection = new QdrantProductsCollection();
-    // const productsRepository = new PrismaProductsRepository();
-    // const offersProductsRepository = new PrismaOffersProductsRepository();
-
-    // const searchOffersUseCase = new SearchOffersUseCase(
-    //   naturalLanguageProcessor,
-    //   productsCollection,
-    //   productsRepository,
-    //   offersProductsRepository
-    // );
-
     const searchOffersUseCase = request.diScope.resolve<SearchOffersUseCase>(
       "searchOffersUseCase"
     );
 
-    const offers = await searchOffersUseCase.execute({
+    const offersForEachProduct = await searchOffersUseCase.execute({
       product,
     });
 
-    return reply.status(200).send(OffersPresenter.toHttp(offers));
+    return reply.status(200).send(OffersPresenter.toHttp(offersForEachProduct));
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });

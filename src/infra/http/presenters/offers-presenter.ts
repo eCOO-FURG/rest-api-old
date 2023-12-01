@@ -1,29 +1,39 @@
 import { OfferProduct } from "@/domain/entities/offer-product";
-import { calculateAveragePrice } from "@/infra/utils/calculate-average-price";
 
 export class OffersPresenter {
-  static toHttp(offers: OfferProduct[][]) {
-    return offers.map((products) => {
-      const totalQuantity = products.reduce(
-        (acc, curr) => acc + parseFloat(curr.quantity),
-        0
-      );
+  static toHttp(
+    offersForEachProduct: { product: string; offers: OfferProduct[] }[]
+  ) {
+    const formattedOffers: { [key: string]: any } = {};
 
-      const totalWeight = products.reduce(
-        (acc, curr) => acc + parseFloat(curr.weight),
-        0
-      );
+    offersForEachProduct.forEach((productOffers) => {
+      const { product, offers } = productOffers;
 
-      const averageAmount = calculateAveragePrice(products);
+      if (formattedOffers[product]) {
+        offers.forEach((offer) => {
+          formattedOffers[product].amount += parseInt(offer.amount);
+          formattedOffers[product].quantity += parseInt(offer.quantity);
+          formattedOffers[product].weight += parseInt(offer.weight);
+        });
+      } else {
+        formattedOffers[product] = {
+          product,
+          amount: 0,
+          quantity: 0,
+          weight: 0,
+        };
 
-      return {
-        product_id: products[0].product_id.toString(),
-        amount: averageAmount.toString(),
-        quantity: totalQuantity.toString(),
-        weight: totalWeight.toString(),
-        created_at: products[0].created_at,
-        updated_at: products[0].updated_at || null,
-      };
+        offers.forEach((offer) => {
+          formattedOffers[product].amount += parseInt(offer.amount);
+          formattedOffers[product].quantity += parseInt(offer.quantity);
+          formattedOffers[product].weight += parseInt(offer.weight);
+        });
+      }
     });
+
+    const result = Object.keys(formattedOffers).map(
+      (key) => formattedOffers[key]
+    );
+    return JSON.stringify(result);
   }
 }
