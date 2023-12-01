@@ -85,6 +85,6 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name search-offers
-GET {{base_url}}/offers?product=bananas
+GET {{base_url}}/offers?product=banana
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
