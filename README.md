@@ -21,7 +21,7 @@ Run using docker-compose
 
 Ensure you have ts-node installed and run the seeds
 ```bash
-  npx prisma migrate dev && npx prisma db seed && npm qdrant:seed
+  npx prisma migrate dev && npx prisma db seed && npm run qdrant:seed
 ```
 *Different seeds will be created based on the environment
 
