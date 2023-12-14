@@ -34,10 +34,13 @@ describe("search offers", () => {
     await Promise.all(
       products.map(async (name, index) => {
         await inMemoryProductsCollection.save(
-          CollectionRecord.create({
-            embeeding: await fakeNaturalLanguageProcessor.embed(name),
-            payload: { name },
-          })
+          CollectionRecord.create(
+            {
+              embeeding: await fakeNaturalLanguageProcessor.embed(name),
+              payload: { name },
+            },
+            new UniqueEntityID(index.toString())
+          )
         );
         await inMemoryProductsRepository.save(
           Product.create(
@@ -71,8 +74,8 @@ describe("search offers", () => {
       })
     );
 
-    const result = await sut.execute({ product: "Apple" });
+    const result = await sut.execute({ product: "Potato" });
 
-    expect(result[0]).toHaveLength(2);
+    expect(result[0].offers).toHaveLength(2);
   });
 });

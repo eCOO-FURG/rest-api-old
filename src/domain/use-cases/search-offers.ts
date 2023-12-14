@@ -24,12 +24,12 @@ export class SearchOffersUseCase {
       queryVector
     );
 
-    const similarProductsNames = similarProducts.map(
-      (item) => item.payload.name
+    const similarProductsIds = similarProducts.map((item) =>
+      item.id.toString()
     );
 
-    const products = await this.productsRepository.findManyByName(
-      similarProductsNames
+    const products = await this.productsRepository.findManyById(
+      similarProductsIds
     );
 
     const productsIds = products.map((product) => product.id.toString());

@@ -6,7 +6,6 @@ export interface SearchParams {
 
 export interface ProductsRepository {
   findById(id: string): Promise<Product | null>;
-  findByName(name: string): Promise<Product | null>;
-  findManyByName(names: string[]): Promise<Product[]>;
+  findManyById(ids: string[]): Promise<Product[]>;
   save(product: Product): Promise<void>;
 }

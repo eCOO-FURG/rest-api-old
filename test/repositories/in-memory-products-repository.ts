@@ -15,14 +15,12 @@ export class InMemoryProductsRepository implements ProductsRepository {
     return product;
   }
 
-  async findByName(name: string): Promise<Product | null> {
-    const product = this.items.find((item) => item.name === name);
+  async findManyById(ids: string[]): Promise<Product[]> {
+    const products = this.items.filter((item) =>
+      ids.includes(item.id.toString())
+    );
 
-    if (!product) {
-      return null;
-    }
-
-    return product;
+    return products;
   }
 
   async save(product: Product): Promise<void> {
