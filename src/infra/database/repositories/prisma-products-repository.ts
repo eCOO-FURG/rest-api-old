@@ -26,25 +26,11 @@ export class PrismaProductsRepository implements ProductsRepository {
     return PrismaProductMapper.toDomain(product);
   }
 
-  async findByName(name: string): Promise<Product | null> {
-    const product = await prisma.product.findFirst({
-      where: {
-        name,
-      },
-    });
-
-    if (!product) {
-      return null;
-    }
-
-    return PrismaProductMapper.toDomain(product);
-  }
-
-  async findManyByName(names: string[]): Promise<Product[]> {
+  async findManyById(ids: string[]): Promise<Product[]> {
     const products = await prisma.product.findMany({
       where: {
-        name: {
-          in: names,
+        id: {
+          in: ids,
         },
       },
     });

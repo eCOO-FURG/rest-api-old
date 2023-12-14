@@ -7,6 +7,7 @@ export class PrismaProductMapper {
     return Product.create(
       {
         name: raw.name,
+        type_id: new UniqueEntityID(raw.type_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
@@ -18,6 +19,7 @@ export class PrismaProductMapper {
     return {
       id: product.id.toString(),
       name: product.name,
+      type_id: product.type_id.toString(),
       created_at: product.created_at,
       updated_at: product.updated_at,
     };
