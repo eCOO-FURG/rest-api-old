@@ -2,6 +2,8 @@ import { prisma } from "../../src/infra/database/prisma-service";
 import { accountId } from "./seed-users";
 
 export async function seedOffers() {
+  await prisma.agribusiness.deleteMany();
+
   const products = await prisma.product.findMany();
 
   await prisma.agribusiness.create({

@@ -1,3 +1,4 @@
+import { qdrantSeedProducts } from "../../qdrant/seed-products";
 import { prisma } from "../../src/infra/database/prisma-service";
 
 const productsData: { type: string; products: string[] }[] = [
@@ -176,4 +177,8 @@ export async function seedProducts() {
       }))
     ),
   });
+
+  const products = await prisma.product.findMany();
+
+  await qdrantSeedProducts(products);
 }
