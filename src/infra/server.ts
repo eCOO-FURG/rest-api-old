@@ -7,5 +7,6 @@ app
     port: env.PORT,
   })
   .then(async () => {
+    app.swagger();
     console.log("🚀 HTTP Server Running!");
   });

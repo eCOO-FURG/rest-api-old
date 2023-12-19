@@ -4,7 +4,10 @@ import { env } from "./env";
 import { ZodError } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
+import swagger from "@fastify/swagger";
+import swaggerUI from "@fastify/swagger-ui";
 import "./container/";
+import { FastifySwaggerOptions } from "./config/swagger";
 
 export const app = fastify();
 
@@ -12,8 +15,12 @@ app
   .register(fastifyAwilixPlugin, {
     asyncInit: true,
   })
-  .then(() => {
+  .then(async () => {
     app.register(routes);
+    app.register(swagger, FastifySwaggerOptions);
+    app.register(swaggerUI, {
+      prefix: "/docs",
+    });
   });
 
 app.setErrorHandler((error, _, reply) => {

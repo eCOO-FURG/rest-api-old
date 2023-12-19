@@ -3,7 +3,7 @@ import { RegisterUseCase } from "@/domain/use-cases/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const registerBodySchema = z.object({
+export const registerBodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   first_name: z.string(),
