@@ -6,7 +6,7 @@ app
     host: "0.0.0.0",
     port: env.PORT,
   })
-  .then(async () => {
+  .then(() => {
     app.swagger();
     console.log("🚀 HTTP Server Running!");
   });
