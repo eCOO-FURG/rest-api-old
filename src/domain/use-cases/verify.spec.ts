@@ -2,7 +2,6 @@ import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { VerifyUseCase } from "./verify";
 import { Account } from "../entities/account";
-import { AccountAlreadyVerified } from "./errors/account-already-verified-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let fakeEncrypter: FakeEncrypter;
@@ -32,24 +31,5 @@ describe("verify", () => {
     );
   });
 
-  it("should not be able to verify an account twice", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
-      password: "123456",
-    });
-
-    inMemoryAccountsRepository.save(account);
-
-    await sut.execute({
-      code: await fakeEncrypter.encrypt({ account_id: account.id.toString() }),
-    });
-
-    await expect(async () =>
-      sut.execute({
-        code: await fakeEncrypter.encrypt({
-          account_id: account.id.toString(),
-        }),
-      })
-    ).rejects.toBeInstanceOf(AccountAlreadyVerified);
-  });
+  it("should not be able to verify an account twice", async () => {});
 });

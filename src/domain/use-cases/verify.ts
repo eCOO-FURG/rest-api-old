@@ -1,6 +1,5 @@
 import { Encrypter } from "../cryptography/encrypter";
 import { AccountsRepository } from "../repositories/accounts-repository";
-import { AccountAlreadyVerified } from "./errors/account-already-verified-error";
 import { InvalidValidationCode } from "./errors/invalid-validation-code";
 
 interface VerifyUseCaseRequest {
@@ -29,7 +28,7 @@ export class VerifyUseCase {
     }
 
     if (account.verified_at) {
-      throw new AccountAlreadyVerified();
+      return;
     }
 
     account.verify();

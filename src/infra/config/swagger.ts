@@ -64,7 +64,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
             {
               name: "user",
               in: "body",
-              description: "user object",
+              description: "Authentication object",
               type: "object",
               schema: {
                 type: "object",
@@ -112,7 +112,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               description: "Agribusiness already exists.",
             },
             401: {
-              description: "Not logged in",
+              description: "Not logged in.",
             },
           },
           parameters: [
@@ -141,7 +141,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               description: "Products not found.",
             },
             401: {
-              description: "Not logged in",
+              description: "Not logged in.",
             },
           },
           parameters: [
@@ -187,7 +187,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               description: "Account found successfully.",
             },
             404: {
-              description: "Resource not found.",
+              description: "User not found.",
             },
             401: {
               description: "Not logged in",
