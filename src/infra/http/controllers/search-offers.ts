@@ -4,7 +4,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { OffersPresenter } from "../presenters/offers-presenter";
 
-const searchOffersQuerySchema = z.object({
+export const searchOffersQuerySchema = z.object({
   product: z.string(),
 });
 

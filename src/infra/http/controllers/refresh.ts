@@ -3,7 +3,7 @@ import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
-const refreshBodySchema = z.object({
+export const refreshBodySchema = z.object({
   access_token: z.string(),
 });
 

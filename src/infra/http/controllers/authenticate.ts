@@ -4,7 +4,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { AccountNotVerified } from "@/domain/use-cases/errors/account-not-verified";
 
-const authenticateBodySchema = z.object({
+export const authenticateBodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });

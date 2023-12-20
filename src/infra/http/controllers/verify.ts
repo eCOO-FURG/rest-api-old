@@ -4,7 +4,7 @@ import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const vefiryQuerySchema = z.object({
+export const vefiryQuerySchema = z.object({
   code: z.string(),
 });
 
