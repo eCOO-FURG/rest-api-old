@@ -21,7 +21,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
     paths: {
       "/users": {
         post: {
-          tags: ["POST routes"],
+          tags: ["USER"],
           description: "Route for creating an user.",
           responses: {
             201: {
@@ -50,7 +50,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/sessions": {
         post: {
-          tags: ["POST routes"],
+          tags: ["USER"],
           description: "Route for authenticating an user.",
           responses: {
             200: {
@@ -76,7 +76,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/sessions/refresh": {
         post: {
-          tags: ["POST routes"],
+          tags: ["USER"],
           description: "Route to refreshing an session.",
           responses: {
             200: {
@@ -102,7 +102,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/agribusinesses": {
         post: {
-          tags: ["POST routes"],
+          tags: ["AGRIBUSINESS"],
           description: "Route to register an agribusiness.",
           responses: {
             201: {
@@ -131,7 +131,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/offers": {
         post: {
-          tags: ["POST routes"],
+          tags: ["OFFERS"],
           description: "Route to offer products.",
           responses: {
             201: {
@@ -158,7 +158,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
           ],
         },
         get: {
-          tags: ["GET routes"],
+          tags: ["OFFERS"],
           description: "Route to search offers.",
           responses: {
             200: {
@@ -180,7 +180,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/me": {
         get: {
-          tags: ["GET routes"],
+          tags: ["USER"],
           description: "Route to view user profile.",
           responses: {
             200: {
@@ -197,7 +197,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       },
       "/verify": {
         get: {
-          tags: ["GET routes"],
+          tags: ["USER"],
           description: "Route to verify an accout.",
           responses: {
             200: {
