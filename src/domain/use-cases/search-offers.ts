@@ -1,9 +1,8 @@
 import { Collection } from "../repositories/collection";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { ProductsRepository } from "../repositories/products-repository";
-import { OfferProduct } from "../entities/offer-product";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
-import { Product } from "../entities/product";
+import { reduceProductOffers } from "../utils/reduce-product-offers";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -18,17 +17,17 @@ export class SearchOffersUseCase {
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    const queryVector = await this.naturalLanguageProcessor.embed(product);
+    const productEmbedding = await this.naturalLanguageProcessor.embed(product);
 
     const similarProducts = await this.productsCollection.findSimilar(
-      queryVector
+      productEmbedding
     );
 
     const similarProductsIds = similarProducts.map((item) =>
       item.id.toString()
     );
 
-    const products = await this.productsRepository.findManyById(
+    const products = await this.productsRepository.findManyByIds(
       similarProductsIds
     );
 
@@ -38,30 +37,7 @@ export class SearchOffersUseCase {
       productsIds
     );
 
-    const offersForEachProduct: { product: string; offers: OfferProduct[] }[] =
-      offers.reduce(
-        (acc: { product: string; offers: OfferProduct[] }[], current) => {
-          const { name } = products.find(
-            (product) => product.id.toString() === current.product_id.toString()
-          )!;
-
-          const productIndexOnTheArray = acc.findIndex(
-            ({ product }) => name === product
-          );
-
-          if (productIndexOnTheArray != -1) {
-            acc[productIndexOnTheArray].offers.push(current);
-          } else {
-            acc.push({
-              product: name,
-              offers: [current],
-            });
-          }
-
-          return acc;
-        },
-        []
-      );
+    const offersForEachProduct = reduceProductOffers(offers, products);
 
     return offersForEachProduct;
   }

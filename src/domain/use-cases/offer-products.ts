@@ -32,10 +32,6 @@ export class OfferProductsUseCase {
       throw new ResourceNotFoundError(agribusiness_id);
     }
 
-    const offer = Offer.create({
-      agribusiness_id: new UniqueEntityID(agribusiness_id),
-    });
-
     const productsIds = products.map((product) => product.product_id);
 
     await Promise.all(
@@ -48,9 +44,13 @@ export class OfferProductsUseCase {
       })
     );
 
+    const offer = Offer.create({
+      agribusiness_id: new UniqueEntityID(agribusiness_id),
+    });
+
     await this.offersRepository.save(offer);
 
-    products.map(async ({ product_id, amount, quantity, weight }) => {
+    products.forEach(async ({ product_id, amount, quantity, weight }) => {
       const offerProduct = OfferProduct.create({
         offer_id: offer.id,
         product_id: new UniqueEntityID(product_id),

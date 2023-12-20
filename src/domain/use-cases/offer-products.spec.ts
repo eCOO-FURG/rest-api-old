@@ -3,7 +3,7 @@ import { Agribusiness } from "../entities/agribusiness";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { Offer } from "../entities/offer";
-import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
+import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
 import { Product } from "../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";

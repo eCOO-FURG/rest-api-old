@@ -4,7 +4,7 @@ import { CollectionRecord } from "../entities/collection-record";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { Product } from "../entities/product";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
-import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products";
+import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
 import { OfferProduct } from "../entities/offer-product";
 import { InMemoryProductsCollection } from "test/collections/in-memory-products-collection";
 
