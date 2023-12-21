@@ -41,9 +41,29 @@ describe("order products", () => {
       )
     );
 
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "apple",
+          type_id: new UniqueEntityID("1"),
+        },
+        new UniqueEntityID("2")
+      )
+    );
+
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
+        amount: "1",
+        offer_id: new UniqueEntityID("1"),
+        quantity: "2",
+        weight: "2",
+      })
+    );
+
+    await inMemoryOffersProductsRepository.save(
+      OfferProduct.create({
+        product_id: new UniqueEntityID("2"),
         amount: "1",
         offer_id: new UniqueEntityID("1"),
         quantity: "2",
@@ -56,6 +76,10 @@ describe("order products", () => {
       order: [
         {
           product_id: "1",
+          quantity: 2,
+        },
+        {
+          product_id: "2",
           quantity: 2,
         },
       ],

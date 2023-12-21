@@ -29,7 +29,9 @@ export class OrderProductsUseCase {
     account_id,
     order: orderedItens,
   }: OrderProductsUseCaseRequest) {
-    const productsIds = orderedItens.map((product) => product.product_id);
+    const productsIds = [
+      ...new Set(orderedItens.map((product) => product.product_id)),
+    ];
 
     await Promise.all(
       productsIds.map(async (id) => {
