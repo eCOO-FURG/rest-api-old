@@ -40,9 +40,17 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               in: "body",
               description: "user object",
               type: "object",
+
               schema: {
                 type: "object",
                 properties: registerBodySchema.shape,
+                example: {
+                  email: "john@email.com",
+                  password: "12345678",
+                  first_name: "John",
+                  last_name: "Doe",
+                  cpf: "523.065.281-01",
+                },
               },
             },
           ],
@@ -69,6 +77,10 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               schema: {
                 type: "object",
                 properties: authenticateBodySchema.shape,
+                example: {
+                  email: "john@email.com",
+                  password: "12345678",
+                },
               },
             },
           ],
@@ -124,6 +136,10 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               schema: {
                 type: "object",
                 properties: registerAgribusinessBodySchema.shape,
+                example: {
+                  caf: "UF000000.00.000000000CAF",
+                  name: "Agribusiness name",
+                },
               },
             },
           ],
