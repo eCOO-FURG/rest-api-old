@@ -169,6 +169,22 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
               schema: {
                 type: "object",
                 properties: offerProductsBodySchema.shape,
+                example: {
+                  products: [
+                    {
+                      product_id: "123",
+                      weight: "1 kg",
+                      quantity: "10",
+                      amount: "50.00",
+                    },
+                    {
+                      product_id: "456",
+                      weight: "0.5 kg",
+                      quantity: "5",
+                      amount: "25.00",
+                    },
+                  ],
+                },
               },
             },
           ],
