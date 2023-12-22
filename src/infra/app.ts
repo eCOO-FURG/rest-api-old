@@ -7,7 +7,7 @@ import { fastifyAwilixPlugin } from "@fastify/awilix";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import "./container/";
-import { FastifySwaggerOptions } from "./config/swagger";
+import { FastifySwaggerOptions } from "./helpers/swagger";
 
 export const app = fastify();
 

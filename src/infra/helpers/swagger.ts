@@ -22,7 +22,8 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       "/users": {
         post: {
           tags: ["USER"],
-          description: "Route for creating an user.",
+          description:
+            "Route for creating an user. It does not return any information.",
           responses: {
             201: {
               description: "Successfully created a new account.",
@@ -59,7 +60,8 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       "/sessions": {
         post: {
           tags: ["USER"],
-          description: "Route for authenticating an user.",
+          description:
+            "Route for authenticating an user. It returns an encrypted access token used to access other application routes.",
           responses: {
             200: {
               description: "Account authenticated successfully.",
@@ -89,7 +91,8 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       "/sessions/refresh": {
         post: {
           tags: ["USER"],
-          description: "Route to refreshing an session.",
+          description:
+            "Route to refreshing an session. It returns a new valid access token and create a new session for the user.",
           responses: {
             200: {
               description: "Session refreshed successfully.",
@@ -115,7 +118,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       "/agribusinesses": {
         post: {
           tags: ["AGRIBUSINESS"],
-          description: "Route to register an agribusiness.",
+          description: "Route to register an agribusiness. It has no return.",
           responses: {
             201: {
               description: "Agribusiness registered successfully.",
@@ -148,7 +151,7 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
       "/offers": {
         post: {
           tags: ["OFFERS"],
-          description: "Route to offer products.",
+          description: "Route to offer products. It has no return.",
           responses: {
             201: {
               description: "Products successfully offered.",
@@ -191,10 +194,11 @@ export const FastifySwaggerOptions: FastifyDynamicSwaggerOptions = {
         },
         get: {
           tags: ["OFFERS"],
-          description: "Route to search offers.",
+          description:
+            "Route to search offers. It returns a list with the semantic similar orders found.",
           responses: {
             200: {
-              description: "Products found sucessfully.",
+              description: "Offers found sucessfully.",
             },
             404: {
               description: "Products not found.",
