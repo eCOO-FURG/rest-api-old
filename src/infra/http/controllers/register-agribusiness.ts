@@ -3,7 +3,7 @@ import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribus
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const registerAgribusinessBodySchema = z.object({
+export const registerAgribusinessBodySchema = z.object({
   caf: z.string(),
   name: z.string(),
 });

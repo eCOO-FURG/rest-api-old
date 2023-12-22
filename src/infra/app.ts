@@ -7,7 +7,7 @@ import { env } from "./env";
 import { ZodError } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
-import { FastifySwaggerOptions } from "./config/swagger";
+import { FastifySwaggerOptions } from "./helpers/swagger";
 
 export const app = fastify();
 

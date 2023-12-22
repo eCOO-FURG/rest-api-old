@@ -3,7 +3,7 @@ import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const offerProductsBodySchema = z.object({
+export const offerProductsBodySchema = z.object({
   products: z
     .array(
       z.object({
