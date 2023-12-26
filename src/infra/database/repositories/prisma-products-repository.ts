@@ -26,7 +26,7 @@ export class PrismaProductsRepository implements ProductsRepository {
     return PrismaProductMapper.toDomain(product);
   }
 
-  async findManyById(ids: string[]): Promise<Product[]> {
+  async findManyByIds(ids: string[]): Promise<Product[]> {
     const products = await prisma.product.findMany({
       where: {
         id: {

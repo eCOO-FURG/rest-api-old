@@ -11,8 +11,10 @@ export class InMemoryOffersProductsRepository
   }
 
   async findManyByProductsIds(product_ids: string[]): Promise<OfferProduct[]> {
-    const offerProducts = this.items.filter((item) =>
-      product_ids.includes(item.product_id.toString())
+    const offerProducts = this.items.filter(
+      (item) =>
+        product_ids.includes(item.product_id.toString()) &&
+        Number(item.quantity) > 0
     );
 
     return offerProducts;
