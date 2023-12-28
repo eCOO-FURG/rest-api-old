@@ -2,7 +2,7 @@ import { Collection } from "../repositories/collection";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { ProductsRepository } from "../repositories/products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
-import { reduceProductOffers } from "../utils/reduce-product-offers";
+import { orderProductOffers } from "../utils/order-product-offers";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -37,7 +37,7 @@ export class SearchOffersUseCase {
       productsIds
     );
 
-    const offersForEachProduct = reduceProductOffers(offers, products);
+    const offersForEachProduct = orderProductOffers(offers, products);
 
     return offersForEachProduct;
   }

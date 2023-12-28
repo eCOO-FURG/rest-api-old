@@ -2,7 +2,7 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { Product } from "../entities/product";
 
-export function reduceProductOffers(
+export function orderProductOffers(
   offers: OfferProduct[],
   products: Product[]
 ) {
