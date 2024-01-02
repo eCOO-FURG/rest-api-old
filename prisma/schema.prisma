@@ -96,8 +96,14 @@ model Product {
   @@map("products")
 }
 
+enum OFFER_STATUS {
+  READY
+  ON_HOLD
+}
+
 model Offer {
-  id String @id @default(uuid())
+  id     String       @id @default(uuid())
+  status OFFER_STATUS
 
   agribusiness_id String
   agribusiness    Agribusiness @relation(fields: [agribusiness_id], references: [id], onDelete: Cascade)

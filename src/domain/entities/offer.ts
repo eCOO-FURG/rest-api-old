@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 
 interface OfferProps {
   agribusiness_id: UniqueEntityID;
+  status: "READY" | "ON_HOLD";
   created_at: Date;
   updated_at?: Date | null;
 }
@@ -11,6 +12,10 @@ interface OfferProps {
 export class Offer extends AggregateRoot<OfferProps> {
   get agribusiness_id() {
     return this.props.agribusiness_id;
+  }
+
+  get status() {
+    return this.props.status;
   }
 
   get created_at() {

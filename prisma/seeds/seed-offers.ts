@@ -13,6 +13,7 @@ export async function seedOffers() {
       admin_id: accountId,
       offers: {
         create: {
+          status: "READY",
           items: {
             create: products.map((product) => ({
               product_id: product.id,

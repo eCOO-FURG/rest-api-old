@@ -7,6 +7,7 @@ export class PrismaOfferMapper {
     return Offer.create(
       {
         agribusiness_id: new UniqueEntityID(raw.agribusiness_id),
+        status: raw.status,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
@@ -18,6 +19,7 @@ export class PrismaOfferMapper {
     return {
       id: offer.id.toString(),
       agribusiness_id: offer.agribusiness_id.toString(),
+      status: offer.status,
     };
   }
 }

@@ -44,8 +44,13 @@ export class OfferProductsUseCase {
       })
     );
 
+    const weekday = new Date().getDate();
+
+    const offerStatus = weekday === 0 || weekday === 1 ? "READY" : "ON HOLD";
+
     const offer = Offer.create({
       agribusiness_id: new UniqueEntityID(agribusiness_id),
+      status: offerStatus,
     });
 
     await this.offersRepository.save(offer);
