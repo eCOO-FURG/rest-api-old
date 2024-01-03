@@ -2,7 +2,8 @@ import { Collection } from "../repositories/collection";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { ProductsRepository } from "../repositories/products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
-import { orderProductOffers } from "../utils/order-product-offers";
+import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { OfferProduct } from "../entities/offer-product";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -37,7 +38,33 @@ export class SearchOffersUseCase {
       productsIds
     );
 
-    const offersForEachProduct = orderProductOffers(offers, products);
+    const offersForEachProduct = offers.reduce(
+      (
+        acc: { id: UniqueEntityID; name: string; offers: OfferProduct[] }[],
+        current
+      ) => {
+        const { id, name } = products.find(
+          (product) => product.id.toString() === current.product_id.toString()
+        )!;
+
+        const productIndexOnTheArray = acc.findIndex(
+          (product) => name === product.name
+        );
+
+        if (productIndexOnTheArray != -1) {
+          acc[productIndexOnTheArray].offers.push(current);
+        } else {
+          acc.push({
+            id,
+            name,
+            offers: [current],
+          });
+        }
+
+        return acc;
+      },
+      []
+    );
 
     return offersForEachProduct;
   }
