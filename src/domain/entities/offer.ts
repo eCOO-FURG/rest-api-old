@@ -1,6 +1,7 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Optional } from "@/core/types/optional";
+import { getDayOfTheWeek, weekend } from "../utils/get-day-of-the-week";
 
 interface OfferProps {
   agribusiness_id: UniqueEntityID;
@@ -27,12 +28,16 @@ export class Offer extends AggregateRoot<OfferProps> {
   }
 
   static create(
-    props: Optional<OfferProps, "created_at">,
+    props: Optional<OfferProps, "created_at" | "status">,
     id?: UniqueEntityID
   ) {
+    const offerStatus =
+      props.status ?? getDayOfTheWeek() in weekend ? "ON_HOLD" : "READY";
+
     const offer = new Offer(
       {
         ...props,
+        status: offerStatus,
         created_at: props.created_at ?? new Date(),
       },
       id
