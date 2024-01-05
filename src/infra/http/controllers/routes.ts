@@ -9,11 +9,14 @@ import { offerProducts } from "./offer-products";
 import { registerAgribusiness } from "./register-agribusiness";
 import { ensureProducer } from "../middlewares/ensure-producer";
 import { searchOffers } from "./search-offers";
+import { orderProducts } from "./order-products";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
-  app.post("/sessions", authenticate);
-  app.post("/sessions/refresh", refresh);
+  app.post("/auth", authenticate);
+  app.post("/auth/refresh", refresh);
+  app.get("/users/verify", verify);
+
   app.post(
     "/agribusinesses",
     {
@@ -21,6 +24,7 @@ export async function routes(app: FastifyInstance) {
     },
     registerAgribusiness
   );
+
   app.post(
     "/offers",
     {
@@ -28,6 +32,7 @@ export async function routes(app: FastifyInstance) {
     },
     offerProducts
   );
+  app.get("/offers", searchOffers);
 
   app.get(
     "/me",
@@ -36,6 +41,12 @@ export async function routes(app: FastifyInstance) {
     },
     getUserProfile
   );
-  app.get("/verify", verify);
-  app.get("/offers", searchOffers);
+
+  app.post(
+    "/orders",
+    {
+      onRequest: [verifyJwt],
+    },
+    orderProducts
+  );
 }

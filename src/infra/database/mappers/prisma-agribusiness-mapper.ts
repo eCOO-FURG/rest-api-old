@@ -24,6 +24,8 @@ export class PrismaAgribusinessMapper {
       name: agribusiness.name,
       caf: agribusiness.caf,
       admin_id: agribusiness.admin_id.toString(),
+      created_at: agribusiness.created_at,
+      updated_at: agribusiness.updated_at,
     };
   }
 }

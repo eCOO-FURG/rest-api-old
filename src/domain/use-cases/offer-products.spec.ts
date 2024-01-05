@@ -22,7 +22,9 @@ describe("offer product", () => {
   beforeEach(() => {
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
+    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+      inMemoryOffersRepository
+    );
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryProductsTypesRepository = new InMemoryProductsTypesRepository();
 
@@ -64,8 +66,8 @@ describe("offer product", () => {
       products: [
         {
           product_id: product.id.toString(),
-          amount: "6.60",
-          quantity: "10",
+          price: "6.60",
+          quantity: 10,
           weight: "1.2",
         },
       ],
@@ -92,8 +94,8 @@ describe("offer product", () => {
         products: [
           {
             product_id: "wrong-id",
-            amount: "6.60",
-            quantity: "10",
+            price: "6.60",
+            quantity: 10,
             weight: "1.2",
           },
         ],

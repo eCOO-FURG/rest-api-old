@@ -5,8 +5,8 @@ import { Optional } from "@/core/types/optional";
 interface OfferProductProps {
   offer_id: UniqueEntityID;
   product_id: UniqueEntityID;
-  amount: string;
-  quantity: string;
+  price: string;
+  quantity: number;
   weight: string;
   created_at: Date;
   updated_at?: Date | null;
@@ -21,8 +21,8 @@ export class OfferProduct extends Entity<OfferProductProps> {
     return this.props.product_id;
   }
 
-  get amount() {
-    return this.props.amount;
+  get price() {
+    return this.props.price;
   }
 
   get quantity() {

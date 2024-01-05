@@ -1,13 +1,15 @@
 import { ProductsRepository } from "../repositories/products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InsufficientOffers } from "./errors/insufficient-offers";
 import { Order } from "../entities/order";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OrdersRepository } from "../repositories/orders-repository";
 import { OrderProduct } from "../entities/order-products";
 import { OrdersProductsRepository } from "../repositories/orders-products-repository";
 import { DomainEvents } from "@/core/events/domain-events";
+import { DayRestrictedError } from "./errors/day-restricted-error";
+import { getDayOfTheWeek } from "../utils/get-day-of-the-week";
+import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
 
 interface OrderProductsUseCaseRequest {
   account_id: string;
@@ -29,6 +31,12 @@ export class OrderProductsUseCase {
     account_id,
     order: orderedItens,
   }: OrderProductsUseCaseRequest) {
+    const dayOfTheWeek = getDayOfTheWeek();
+
+    if (dayOfTheWeek === "sunday" || dayOfTheWeek === "saturday") {
+      throw new DayRestrictedError("order");
+    }
+
     const productsIds = [
       ...new Set(orderedItens.map((product) => product.product_id)),
     ];
@@ -43,9 +51,10 @@ export class OrderProductsUseCase {
       })
     );
 
-    const offers = await this.offersProductsRepository.findManyByProductsIds(
-      productsIds
-    );
+    const offers =
+      await this.offersProductsRepository.findManyAvailableByProductsIds(
+        productsIds
+      );
 
     const offersByProduct: { product_id: string; quantity: number }[] =
       offers.reduce((acc, offer) => {
@@ -54,11 +63,11 @@ export class OrderProductsUseCase {
         );
 
         if (productIndex !== -1) {
-          acc[productIndex].quantity += parseInt(offer.quantity);
+          acc[productIndex].quantity += offer.quantity;
         } else {
           acc.push({
             product_id: offer.product_id.toString(),
-            quantity: parseInt(offer.quantity),
+            quantity: offer.quantity,
           });
         }
 
@@ -73,7 +82,9 @@ export class OrderProductsUseCase {
       const offerAvailableQuantity = offersByProduct[offerIndex].quantity;
 
       if (orderedProduct.quantity > offerAvailableQuantity) {
-        throw new InsufficientOffers(offersByProduct[offerIndex].product_id);
+        throw new InsufficientProductQuantityError(
+          offersByProduct[offerIndex].product_id
+        );
       }
     });
 
@@ -96,5 +107,7 @@ export class OrderProductsUseCase {
     });
 
     DomainEvents.dispatchEventsForAggregate(order.id);
+
+    // return qrcode
   }
 }

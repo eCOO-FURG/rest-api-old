@@ -11,6 +11,26 @@ interface OrderProductProps {
 }
 
 export class OrderProduct extends Entity<OrderProductProps> {
+  get order_id() {
+    return this.props.order_id;
+  }
+
+  get product_id() {
+    return this.props.product_id;
+  }
+
+  get quantity() {
+    return this.props.quantity;
+  }
+
+  get created_at() {
+    return this.props.created_at;
+  }
+
+  get updated_at() {
+    return this.props.updated_at;
+  }
+
   static create(
     props: Optional<OrderProductProps, "created_at">,
     id?: UniqueEntityID

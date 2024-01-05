@@ -5,7 +5,7 @@ import { getDayOfTheWeek, weekend } from "../utils/get-day-of-the-week";
 
 interface OfferProps {
   agribusiness_id: UniqueEntityID;
-  status: "READY" | "ON_HOLD";
+  status: "AVAILABLE" | "ON_HOLD";
   created_at: Date;
   updated_at?: Date | null;
 }
@@ -32,7 +32,7 @@ export class Offer extends AggregateRoot<OfferProps> {
     id?: UniqueEntityID
   ) {
     const offerStatus =
-      props.status ?? getDayOfTheWeek() in weekend ? "ON_HOLD" : "READY";
+      props.status ?? (getDayOfTheWeek() in weekend ? "ON_HOLD" : "AVAILABLE");
 
     const offer = new Offer(
       {

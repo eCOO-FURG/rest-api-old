@@ -7,10 +7,13 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
 import { OfferProduct } from "../entities/offer-product";
 import { InMemoryProductsCollection } from "test/collections/in-memory-products-collection";
+import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
+import { Offer } from "../entities/offer";
 
 let fakeNaturalLanguageProcessor: FakeNaturalLanguageProcessor;
 let inMemoryProductsCollection: InMemoryProductsCollection;
 let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let sut: SearchOffersUseCase;
 
@@ -19,7 +22,10 @@ describe("search offers", () => {
     inMemoryProductsCollection = new InMemoryProductsCollection();
     fakeNaturalLanguageProcessor = new FakeNaturalLanguageProcessor();
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
+    inMemoryOffersRepository = new InMemoryOffersRepository();
+    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+      inMemoryOffersRepository
+    );
     sut = new SearchOffersUseCase(
       fakeNaturalLanguageProcessor,
       inMemoryProductsCollection,
@@ -54,12 +60,32 @@ describe("search offers", () => {
       })
     );
 
+    await inMemoryOffersRepository.save(
+      Offer.create(
+        {
+          agribusiness_id: new UniqueEntityID("1"),
+          status: "AVAILABLE",
+        },
+        new UniqueEntityID("1")
+      )
+    );
+
+    await inMemoryOffersRepository.save(
+      Offer.create(
+        {
+          agribusiness_id: new UniqueEntityID("1"),
+          status: "AVAILABLE",
+        },
+        new UniqueEntityID("2")
+      )
+    );
+
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         offer_id: new UniqueEntityID("1"),
         product_id: new UniqueEntityID("1"),
-        amount: "1",
-        quantity: "1",
+        price: "1",
+        quantity: 1,
         weight: "1",
       })
     );
@@ -68,8 +94,8 @@ describe("search offers", () => {
       OfferProduct.create({
         offer_id: new UniqueEntityID("2"),
         product_id: new UniqueEntityID("1"),
-        amount: "1",
-        quantity: "1",
+        price: "1",
+        quantity: 1,
         weight: "1",
       })
     );

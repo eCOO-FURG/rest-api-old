@@ -13,12 +13,12 @@ export async function seedOffers() {
       admin_id: accountId,
       offers: {
         create: {
-          status: "READY",
+          status: "AVAILABLE",
           items: {
             create: products.map((product) => ({
               product_id: product.id,
-              amount: "10",
-              quantity: "8",
+              price: "10",
+              quantity: 10,
               weight: (Math.floor(Math.random() * 6) + 1).toString(),
             })),
           },

@@ -6,7 +6,7 @@ import { Account } from "../entities/account";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { Session } from "../entities/session";
-import { AccountNotVerified } from "./errors/account-not-verified";
+import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemorySessionsRepository: InMemorySessionsRepository;
@@ -82,6 +82,6 @@ describe("authenticate", () => {
         ip_address: "ip_address",
         user_agent: "mozila-firefox 5.0",
       })
-    ).rejects.toBeInstanceOf(AccountNotVerified);
+    ).rejects.toBeInstanceOf(AccountNotVerifiedError);
   });
 });

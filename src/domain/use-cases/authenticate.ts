@@ -4,7 +4,7 @@ import { Encrypter } from "../cryptography/encrypter";
 import { Hasher } from "../cryptography/hasher";
 import { SessionsRepository } from "../repositories/sessions-repository";
 import { Session } from "../entities/session";
-import { AccountNotVerified } from "./errors/account-not-verified";
+import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 
 interface AuthenticateRequest {
   email: string;
@@ -43,7 +43,7 @@ export class AuthenticateUseCase {
     }
 
     if (!account.verified_at) {
-      throw new AccountNotVerified();
+      throw new AccountNotVerifiedError();
     }
 
     const session = Session.create({

@@ -7,10 +7,12 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Product } from "../entities/product";
 import { OfferProduct } from "../entities/offer-product";
 import { Order } from "../entities/order";
-import { InsufficientOffers } from "./errors/insufficient-offers";
+import { InsufficientOffers } from "./errors/insufficient-product-quantity-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
@@ -19,7 +21,10 @@ let sut: OrderProductsUseCase;
 describe("order products", () => {
   beforeEach(() => {
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
+    inMemoryOffersRepository = new InMemoryOffersRepository();
+    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+      inMemoryOffersRepository
+    );
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
     inMemoryOrdersProductsRepository = new InMemoryOrdersProductsRepository();
     sut = new OrderProductsUseCase(
@@ -54,9 +59,9 @@ describe("order products", () => {
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        amount: "1",
+        price: "1",
         offer_id: new UniqueEntityID("1"),
-        quantity: "2",
+        quantity: 2,
         weight: "2",
       })
     );
@@ -64,9 +69,9 @@ describe("order products", () => {
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("2"),
-        amount: "1",
+        price: "1",
         offer_id: new UniqueEntityID("1"),
-        quantity: "2",
+        quantity: 2,
         weight: "2",
       })
     );
@@ -102,9 +107,9 @@ describe("order products", () => {
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        amount: "1",
+        price: "1",
         offer_id: new UniqueEntityID("1"),
-        quantity: "2",
+        quantity: 2,
         weight: "2",
       })
     );
@@ -136,9 +141,9 @@ describe("order products", () => {
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        amount: "1",
+        price: "1",
         offer_id: new UniqueEntityID("1"),
-        quantity: "2",
+        quantity: 2,
         weight: "2",
       })
     );

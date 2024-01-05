@@ -56,7 +56,7 @@ export class OnUserRegistered implements EventHandler {
         subject: "Bem-vindo(a) - Verifique sua conta!",
         view: await this.viewLoader.load("verifyAccount", {
           first_name: person.first_name,
-          url: `${env.SERVER_URL}/verify?code=${code}`,
+          url: `${env.SERVER_URL}/users/verify?code=${code}`,
         }),
       });
     }

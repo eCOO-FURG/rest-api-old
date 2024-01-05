@@ -34,11 +34,12 @@ export class SearchOffersUseCase {
 
     const productsIds = products.map((product) => product.id.toString());
 
-    const offers = await this.offersProductsRepository.findManyByProductsIds(
-      productsIds
-    );
+    const availableOffersProducts =
+      await this.offersProductsRepository.findManyAvailableByProductsIds(
+        productsIds
+      );
 
-    const offersForEachProduct = offers.reduce(
+    const offersForEachProduct = availableOffersProducts.reduce(
       (
         acc: { id: UniqueEntityID; name: string; offers: OfferProduct[] }[],
         current

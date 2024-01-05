@@ -12,8 +12,8 @@ interface OfferProductsUseCaseRequest {
   products: {
     product_id: string;
     weight: string;
-    quantity: string;
-    amount: string;
+    quantity: number;
+    price: string;
   }[];
 }
 
@@ -50,11 +50,11 @@ export class OfferProductsUseCase {
 
     await this.offersRepository.save(offer);
 
-    products.forEach(async ({ product_id, amount, quantity, weight }) => {
+    products.forEach(async ({ product_id, price, quantity, weight }) => {
       const offerProduct = OfferProduct.create({
         offer_id: offer.id,
         product_id: new UniqueEntityID(product_id),
-        amount,
+        price,
         quantity,
         weight,
       });

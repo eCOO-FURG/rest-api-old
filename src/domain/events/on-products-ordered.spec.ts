@@ -10,12 +10,16 @@ import { waitFor } from "test/utils/wait-for";
 import { Product } from "../entities/product";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
+import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
+import { FakePaymentProcessor } from "test/payments/fake-payment-processor";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
 let orderProductsUseCase: OrderProductsUseCase;
+let fakePaymentProcessor: FakePaymentProcessor;
 
 let createTransactionUseCase: CreateTransactionUseCase;
 let createTransactionUseCaseSpy: SpyInstance;
@@ -23,7 +27,10 @@ let createTransactionUseCaseSpy: SpyInstance;
 describe("on products ordered", () => {
   beforeEach(() => {
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository();
+    inMemoryOffersRepository = new InMemoryOffersRepository();
+    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+      inMemoryOffersRepository
+    );
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
     inMemoryOrdersProductsRepository = new InMemoryOrdersProductsRepository();
     orderProductsUseCase = new OrderProductsUseCase(
@@ -33,7 +40,10 @@ describe("on products ordered", () => {
       inMemoryOrdersProductsRepository
     );
 
-    createTransactionUseCase = new CreateTransactionUseCase();
+    fakePaymentProcessor = new FakePaymentProcessor();
+    createTransactionUseCase = new CreateTransactionUseCase(
+      fakePaymentProcessor
+    );
     createTransactionUseCaseSpy = vi.spyOn(createTransactionUseCase, "execute");
 
     new OnProductsOrdered(createTransactionUseCase);
@@ -53,9 +63,9 @@ describe("on products ordered", () => {
     await inMemoryOffersProductsRepository.save(
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        amount: "1",
+        price: "1",
         offer_id: new UniqueEntityID("1"),
-        quantity: "2",
+        quantity: 2,
         weight: "2",
       })
     );

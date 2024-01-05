@@ -9,8 +9,8 @@ export const offerProductsBodySchema = z.object({
       z.object({
         product_id: z.string(),
         weight: z.string(),
-        quantity: z.string(),
-        amount: z.string(),
+        quantity: z.coerce.number(),
+        price: z.string(),
       })
     )
     .refine((products) => products.length > 0, {

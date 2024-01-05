@@ -7,4 +7,10 @@ export class InMemoryOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
     this.items.push(offer);
   }
+
+  async findManyByStatus(status: Offer["status"]) {
+    const offers = this.items.filter((offer) => offer.status === status);
+
+    return offers;
+  }
 }

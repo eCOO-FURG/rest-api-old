@@ -2,7 +2,7 @@ import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentia
 import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { AccountNotVerified } from "@/domain/use-cases/errors/account-not-verified";
+import { AccountNotVerifiedError } from "@/domain/use-cases/errors/account-not-verified-error";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -33,7 +33,7 @@ export async function authenticate(
   } catch (err) {
     if (
       err instanceof WrongCredentialsError ||
-      err instanceof AccountNotVerified
+      err instanceof AccountNotVerifiedError
     ) {
       return reply.status(400).send({ message: err.message });
     }

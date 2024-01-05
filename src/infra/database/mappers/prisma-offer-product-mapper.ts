@@ -2,13 +2,13 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "@/domain/entities/offer-product";
 import { Prisma, OfferProduct as PrismaOfferProduct } from "@prisma/client";
 
-export class PrismaOfferProductMaper {
+export class PrismaOfferProductMapper {
   static toDomain(raw: PrismaOfferProduct) {
     return OfferProduct.create(
       {
         offer_id: new UniqueEntityID(raw.offer_id),
         product_id: new UniqueEntityID(raw.product_id),
-        amount: raw.amount,
+        price: raw.price,
         quantity: raw.quantity,
         weight: raw.weight,
         created_at: raw.created_at,
@@ -23,7 +23,7 @@ export class PrismaOfferProductMaper {
   ): Prisma.OfferProductUncheckedCreateInput {
     return {
       id: offerProduct.id.toString(),
-      amount: offerProduct.amount,
+      price: offerProduct.price,
       quantity: offerProduct.quantity,
       weight: offerProduct.weight,
       offer_id: offerProduct.offer_id.toString(),

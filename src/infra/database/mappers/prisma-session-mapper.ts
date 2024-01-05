@@ -8,8 +8,9 @@ export class PrismaSessionMapper {
       {
         ip_address: raw.ip_address,
         user_agent: raw.user_agent,
-        created_at: raw.created_at,
         account_id: new UniqueEntityID(raw.account_id),
+        created_at: raw.created_at,
+        updated_at: raw.updated_at,
       },
       new UniqueEntityID(raw.id)
     );
@@ -22,6 +23,7 @@ export class PrismaSessionMapper {
       user_agent: session.user_agent,
       account_id: session.account_id.toString(),
       created_at: session.created_at,
+      updated_at: session.updated_at,
     };
   }
 }

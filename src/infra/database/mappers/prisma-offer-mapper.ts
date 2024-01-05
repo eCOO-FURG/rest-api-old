@@ -20,6 +20,8 @@ export class PrismaOfferMapper {
       id: offer.id.toString(),
       agribusiness_id: offer.agribusiness_id.toString(),
       status: offer.status,
+      created_at: offer.created_at,
+      updated_at: offer.updated_at,
     };
   }
 }
