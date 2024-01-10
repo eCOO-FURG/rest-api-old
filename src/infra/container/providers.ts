@@ -18,6 +18,7 @@ import { TfUseModel } from "../search/tf-use-model";
 import { QdrantProductsCollection } from "../database/collections/qdrant-products-collection";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
+import { Asaas } from "../payments/asaas-service";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
@@ -64,4 +65,5 @@ diContainer.register({
     lifetime: "SINGLETON",
     asyncInit: "init",
   }),
+  paymentsProcessor: asFunction(() => new Asaas()),
 });

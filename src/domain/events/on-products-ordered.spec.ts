@@ -11,7 +11,7 @@ import { Product } from "../entities/product";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
-import { FakePaymentProcessor } from "test/payments/fake-payment-processor";
+import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -19,7 +19,7 @@ let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
 let orderProductsUseCase: OrderProductsUseCase;
-let fakePaymentProcessor: FakePaymentProcessor;
+let fakePaymentProcessor: FakePaymentsProcessor;
 
 let createTransactionUseCase: CreateTransactionUseCase;
 let createTransactionUseCaseSpy: SpyInstance;
@@ -40,7 +40,7 @@ describe("on products ordered", () => {
       inMemoryOrdersProductsRepository
     );
 
-    fakePaymentProcessor = new FakePaymentProcessor();
+    fakePaymentProcessor = new FakePaymentsProcessor();
     createTransactionUseCase = new CreateTransactionUseCase(
       fakePaymentProcessor
     );

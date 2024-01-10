@@ -1,5 +1,4 @@
 import { OnUserRegistered } from "./on-user-registered";
-import { SendEmailUseCase } from "../use-cases/send-email";
 import { RegisterUseCase } from "../use-cases/register";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
@@ -9,6 +8,7 @@ import { FakeMailer } from "test/mail/fake-mailer";
 import { FakeViewLoader } from "test/mail/fake-view-loader";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { waitFor } from "test/utils/wait-for";
+import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -17,9 +17,10 @@ let registerUseCase: RegisterUseCase;
 let fakeMailer: FakeMailer;
 let fakeViewLoader: FakeViewLoader;
 let fakeEncrypter: FakeEncrypter;
+let fakePaymentsProcessor: FakePaymentsProcessor;
 
-let sendEmailUseCase: SendEmailUseCase;
-let sendEmailUseCaseSpy: SpyInstance;
+let fakeMailerSpy: SpyInstance;
+let fakePaymentsProcessorSpy: SpyInstance;
 
 describe("on user registered", () => {
   beforeEach(() => {
@@ -35,15 +36,20 @@ describe("on user registered", () => {
     fakeMailer = new FakeMailer();
     fakeViewLoader = new FakeViewLoader();
     fakeEncrypter = new FakeEncrypter();
+    fakePaymentsProcessor = new FakePaymentsProcessor();
 
-    sendEmailUseCase = new SendEmailUseCase(fakeMailer);
-    sendEmailUseCaseSpy = vi.spyOn(sendEmailUseCase, "execute");
+    fakeMailerSpy = vi.spyOn(fakeMailer, "send");
+    fakePaymentsProcessorSpy = vi.spyOn(
+      fakePaymentsProcessor,
+      "registerCustomer"
+    );
 
     new OnUserRegistered(
-      sendEmailUseCase,
+      fakeMailer,
       inMemoryPeopleRepository,
       fakeEncrypter,
-      fakeViewLoader
+      fakeViewLoader,
+      fakePaymentsProcessor
     );
   });
 
@@ -57,7 +63,21 @@ describe("on user registered", () => {
     });
 
     await waitFor(() => {
-      expect(sendEmailUseCaseSpy).toHaveBeenCalled();
+      expect(fakeMailerSpy).toHaveBeenCalled();
+    });
+  });
+
+  it("should register a new customer on payments processor gateway when a new user is registerd", async () => {
+    await registerUseCase.execute({
+      email: "johndoe@example.com",
+      password: "123456",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+    });
+
+    await waitFor(() => {
+      expect(fakePaymentsProcessorSpy).toHaveBeenCalled();
     });
   });
 });

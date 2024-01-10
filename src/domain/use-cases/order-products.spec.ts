@@ -7,9 +7,9 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Product } from "../entities/product";
 import { OfferProduct } from "../entities/offer-product";
 import { Order } from "../entities/order";
-import { InsufficientOffers } from "./errors/insufficient-product-quantity-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
+import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
 
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -124,7 +124,7 @@ describe("order products", () => {
           },
         ],
       })
-    ).rejects.toBeInstanceOf(InsufficientOffers);
+    ).rejects.toBeInstanceOf(InsufficientProductQuantityError);
   });
 
   it("should not be able to order products that do not exist", async () => {

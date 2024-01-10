@@ -6,7 +6,6 @@ import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
-import { SendEmailUseCase } from "@/domain/use-cases/send-email";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -36,7 +35,6 @@ diContainer.register({
     ({ accountsRepository, sessionsRepository, encrypter }) =>
       new RefreshUseCase(accountsRepository, sessionsRepository, encrypter)
   ),
-  sendEmailUseCase: asFunction(({ mailer }) => new SendEmailUseCase(mailer)),
   verifyUseCase: asFunction(
     ({ accountsRepository, encrypter }) =>
       new VerifyUseCase(accountsRepository, encrypter)

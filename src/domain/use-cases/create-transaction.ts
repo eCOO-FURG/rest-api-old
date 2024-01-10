@@ -1,9 +1,9 @@
-import { PaymentProcessor } from "../payments/payment-processor";
+import { PaymentsProcessor } from "../payments/payments-processor";
 
 interface CreateTransactionUseCaseRequest {}
 
 export class CreateTransactionUseCase {
-  constructor(paymentProcessor: PaymentProcessor) {}
+  constructor(paymentsProcessor: PaymentsProcessor) {}
 
   async execute({}: CreateTransactionUseCaseRequest) {
     console.log("PAGAMENTO EFETUADO");

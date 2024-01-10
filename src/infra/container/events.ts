@@ -4,12 +4,13 @@ import { asFunction } from "awilix";
 
 diContainer.register({
   onUserRegistered: asFunction(
-    ({ sendEmailUseCase, peopleRepository, encrypter, viewLoader }) =>
+    ({ mailer, peopleRepository, encrypter, viewLoader, paymentsProcessor }) =>
       new OnUserRegistered(
-        sendEmailUseCase,
+        mailer,
         peopleRepository,
         encrypter,
-        viewLoader
+        viewLoader,
+        paymentsProcessor
       )
   ),
 });

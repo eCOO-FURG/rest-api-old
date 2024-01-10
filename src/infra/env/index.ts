@@ -13,6 +13,7 @@ const envSchema = z.object({
   ECOO_EMAIL: z.string(),
   SESSION_DURATION_IN_DAYS: z.coerce.number(),
   EXPECTED_SIMILARITY_SCORE: z.coerce.number(),
+  PAYMENTS_PROCESSOR_API_KEY: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
