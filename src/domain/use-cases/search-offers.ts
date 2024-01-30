@@ -34,39 +34,46 @@ export class SearchOffersUseCase {
 
     const productsIds = products.map((product) => product.id.toString());
 
-    const availableOffersProducts =
-      await this.offersProductsRepository.findManyAvailableByProductsIds(
-        productsIds
+    const offersProductsWithRemainingQuantity =
+      await this.offersProductsRepository.findManyWithRemainingQuantityByProductsIdsAndStatus(
+        productsIds,
+        "AVAILABLE"
       );
 
-    const offersForEachProduct = availableOffersProducts.reduce(
+    const productsOffered = offersProductsWithRemainingQuantity.reduce(
       (
-        acc: { id: UniqueEntityID; name: string; offers: OfferProduct[] }[],
+        items: {
+          id: UniqueEntityID;
+          name: string;
+          offers: OfferProduct[];
+        }[],
         current
       ) => {
-        const { id, name } = products.find(
-          (product) => product.id.toString() === current.product_id.toString()
-        )!;
-
-        const productIndexOnTheArray = acc.findIndex(
-          (product) => name === product.name
+        const productIndex = items.findIndex((item) =>
+          item.id.equals(current.product_id)
         );
 
-        if (productIndexOnTheArray != -1) {
-          acc[productIndexOnTheArray].offers.push(current);
+        if (productIndex >= 0) {
+          items[productIndex].offers.push(current);
         } else {
-          acc.push({
-            id,
-            name,
-            offers: [current],
-          });
+          const product = products.find((product) =>
+            product.id.equals(current.product_id)
+          );
+
+          if (product) {
+            items.push({
+              id: product.id,
+              name: product.name,
+              offers: [current],
+            });
+          }
         }
 
-        return acc;
+        return items;
       },
       []
     );
 
-    return offersForEachProduct;
+    return productsOffered;
   }
 }

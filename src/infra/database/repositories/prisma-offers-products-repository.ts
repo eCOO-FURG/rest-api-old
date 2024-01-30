@@ -17,7 +17,7 @@ export class PrismaOffersProductsRepository
     });
   }
 
-  async findManyByProductsIdsAndStatus(
+  async findManyWithRemainingQuantityByProductsIdsAndStatus(
     product_ids: string[],
     status: Offer["status"]
   ): Promise<OfferProduct[]> {

@@ -12,7 +12,7 @@ import { FastifySwaggerOptions } from "./helpers/swagger";
 export const app = fastify();
 
 app.register(fastifyAwilixPlugin, {
-  // asyncInit: true,
+  asyncInit: true,
 });
 
 app.register(routes);
