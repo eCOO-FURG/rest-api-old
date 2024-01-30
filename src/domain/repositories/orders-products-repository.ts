@@ -1,5 +1,6 @@
 import { OrderProduct } from "../entities/order-products";
 
 export interface OrdersProductsRepository {
-  save(orderProduct: OrderProduct): Promise<void>;
+  save(items: OrderProduct[]): Promise<void>;
+  findManyByOrderId(order_id: string): Promise<OrderProduct[]>;
 }

@@ -2,14 +2,15 @@ import { FastifyInstance } from "fastify";
 import { register } from "./register";
 import { authenticate } from "./authenticate";
 import { getUserProfile } from "./get-user-profile";
-import { verifyJwt } from "../middlewares/verify-jwt";
+import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
 import { refresh } from "./refresh";
 import { verify } from "./verify";
 import { offerProducts } from "./offer-products";
 import { registerAgribusiness } from "./register-agribusiness";
-import { ensureProducer } from "../middlewares/ensure-producer";
+import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admin";
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
+import { handleOrder } from "./handle-order";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -20,7 +21,7 @@ export async function routes(app: FastifyInstance) {
   app.post(
     "/agribusinesses",
     {
-      onRequest: [verifyJwt],
+      onRequest: [ensureAuthenticated],
     },
     registerAgribusiness
   );
@@ -28,7 +29,7 @@ export async function routes(app: FastifyInstance) {
   app.post(
     "/offers",
     {
-      onRequest: [verifyJwt, ensureProducer],
+      onRequest: [ensureAuthenticated, ensureAgribusinessAdmin],
     },
     offerProducts
   );
@@ -37,7 +38,7 @@ export async function routes(app: FastifyInstance) {
   app.get(
     "/me",
     {
-      onRequest: [verifyJwt],
+      onRequest: [ensureAuthenticated],
     },
     getUserProfile
   );
@@ -45,8 +46,10 @@ export async function routes(app: FastifyInstance) {
   app.post(
     "/orders",
     {
-      onRequest: [verifyJwt],
+      onRequest: [ensureAuthenticated],
     },
     orderProducts
   );
+
+  app.post("/payments", handleOrder);
 }

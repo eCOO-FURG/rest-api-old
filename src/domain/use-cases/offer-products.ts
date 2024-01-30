@@ -1,16 +1,17 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OffersRepository } from "../repositories/offers-repository";
 import { Offer } from "../entities/offer";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
+import { NotAgrobusinessAdminError } from "./errors/not-agrobusiness-admin-error";
+import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
   products: {
-    product_id: string;
+    id: string;
     weight: string;
     quantity: number;
     price: string;
@@ -25,41 +26,50 @@ export class OfferProductsUseCase {
     private productsRepository: ProductsRepository
   ) {}
 
-  async execute({ agribusiness_id, products }: OfferProductsUseCaseRequest) {
-    const agribusiness = this.agribusinessRepository.findById(agribusiness_id);
-
-    if (!agribusiness) {
-      throw new ResourceNotFoundError(agribusiness_id);
-    }
-
-    const productsIds = products.map((product) => product.product_id);
-
-    await Promise.all(
-      productsIds.map(async (id) => {
-        const product = await this.productsRepository.findById(id);
-
-        if (!product) {
-          throw new ResourceNotFoundError(id);
-        }
-      })
+  async execute({
+    agribusiness_id,
+    products: offeredProducts,
+  }: OfferProductsUseCaseRequest) {
+    const agribusiness = await this.agribusinessRepository.findById(
+      agribusiness_id
     );
 
+    if (!agribusiness) {
+      throw new NotAgrobusinessAdminError();
+    }
+
+    const offeredProductsIds = offeredProducts.map(
+      (offeredProduct) => offeredProduct.id
+    );
+
+    const products = await this.productsRepository.findManyByIds(
+      offeredProductsIds
+    );
+
+    const productsIds = products.map((product) => product.id.toString());
+
+    for (const offeredProduct of offeredProducts) {
+      if (!productsIds.includes(offeredProduct.id)) {
+        throw new ResourceNotFoundError(offeredProduct.id);
+      }
+    }
+
     const offer = Offer.create({
-      agribusiness_id: new UniqueEntityID(agribusiness_id),
+      agribusiness_id: agribusiness.id,
     });
 
     await this.offersRepository.save(offer);
 
-    products.forEach(async ({ product_id, price, quantity, weight }) => {
-      const offerProduct = OfferProduct.create({
+    const offerProducts = offeredProducts.map((product) =>
+      OfferProduct.create({
         offer_id: offer.id,
-        product_id: new UniqueEntityID(product_id),
-        price,
-        quantity,
-        weight,
-      });
+        product_id: new UniqueEntityID(product.id),
+        price: product.price,
+        weight: product.weight,
+        quantity: product.quantity,
+      })
+    );
 
-      await this.offersProductsRepository.save(offerProduct);
-    });
+    await this.offersProductsRepository.save(offerProducts);
   }
 }

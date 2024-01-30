@@ -20,7 +20,7 @@ export async function authenticate(
       "authenticateUseCase"
     );
 
-    const { access_token } = await authenticateUseCase.execute({
+    const { accessToken } = await authenticateUseCase.execute({
       email,
       password,
       ip_address: request.ip,
@@ -28,7 +28,7 @@ export async function authenticate(
     });
 
     return reply.status(200).send({
-      access_token,
+      access_token: accessToken,
     });
   } catch (err) {
     if (

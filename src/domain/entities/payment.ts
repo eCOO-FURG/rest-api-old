@@ -2,13 +2,18 @@ import { Entity } from "@/core/entities/entity";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
 interface PaymentProps {
+  charge_id: UniqueEntityID;
   key: string;
   qrcode: string;
   value: string;
-  expirationDate: Date;
+  expiration_date: Date;
 }
 
 export class Payment extends Entity<PaymentProps> {
+  get charge_id() {
+    return this.props.charge_id;
+  }
+
   get key() {
     return this.props.key;
   }
@@ -21,8 +26,8 @@ export class Payment extends Entity<PaymentProps> {
     return this.props.value;
   }
 
-  get expirationDate() {
-    return this.props.expirationDate;
+  get expiration_date() {
+    return this.props.expiration_date;
   }
 
   static create(props: PaymentProps, id?: UniqueEntityID) {

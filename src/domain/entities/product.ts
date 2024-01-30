@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 
 interface ProductProps {
   name: string;
+  pricing: "UNIT" | "WEIGHT";
   type_id: UniqueEntityID;
   created_at: Date;
   updated_at?: Date | null;
@@ -12,6 +13,10 @@ interface ProductProps {
 export class Product extends Entity<ProductProps> {
   get name() {
     return this.props.name;
+  }
+
+  get pricing() {
+    return this.props.pricing;
   }
 
   get type_id() {

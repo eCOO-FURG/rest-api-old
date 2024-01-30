@@ -7,7 +7,7 @@ export const offerProductsBodySchema = z.object({
   products: z
     .array(
       z.object({
-        product_id: z.string(),
+        id: z.string(),
         weight: z.string(),
         quantity: z.coerce.number(),
         price: z.string(),

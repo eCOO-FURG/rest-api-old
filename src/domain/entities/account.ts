@@ -2,6 +2,7 @@ import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { UserRegisteredEvent } from "../events/on-user-registered";
 import { Optional } from "@/core/types/optional";
+import { UserVerifiedEvent } from "../events/on-user-verified";
 
 interface AccountProps {
   email: string;
@@ -39,6 +40,7 @@ export class Account extends AggregateRoot<AccountProps> {
 
   verify() {
     this.props.verified_at = new Date();
+    this.addDomainEvent(new UserVerifiedEvent(this));
     this.touch();
   }
 

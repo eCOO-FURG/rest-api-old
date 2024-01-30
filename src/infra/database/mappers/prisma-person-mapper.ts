@@ -2,7 +2,6 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Person } from "@/domain/entities/person";
 import { Cpf } from "@/domain/entities/value-objects/cpf";
 import { Person as PrismaPerson, Prisma } from "@prisma/client";
-import { raw } from "@prisma/client/runtime/library";
 
 export class PrismaPersonMapper {
   static toDomain(raw: PrismaPerson) {

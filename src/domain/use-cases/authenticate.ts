@@ -54,12 +54,12 @@ export class AuthenticateUseCase {
 
     await this.sessionsRepository.save(session);
 
-    const access_token = await this.encrypter.encrypt({
+    const accessToken = await this.encrypter.encrypt({
       sub: account.id.toString(),
     });
 
     return {
-      access_token,
+      accessToken,
     };
   }
 }

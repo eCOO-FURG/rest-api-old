@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 
 interface OrderProductProps {
   order_id: UniqueEntityID;
+  offer_product_id: UniqueEntityID;
   product_id: UniqueEntityID;
   quantity: number;
   created_at: Date;
@@ -11,6 +12,10 @@ interface OrderProductProps {
 }
 
 export class OrderProduct extends Entity<OrderProductProps> {
+  get offer_product_id() {
+    return this.props.offer_product_id;
+  }
+
   get order_id() {
     return this.props.order_id;
   }
@@ -21,6 +26,10 @@ export class OrderProduct extends Entity<OrderProductProps> {
 
   get quantity() {
     return this.props.quantity;
+  }
+
+  set quantity(quantity: number) {
+    this.props.quantity = quantity;
   }
 
   get created_at() {

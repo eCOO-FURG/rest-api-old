@@ -5,7 +5,6 @@ import { hash } from "bcryptjs";
 export const accountId = randomUUID();
 
 export async function seedUsers() {
-  await prisma.person.deleteMany();
   await prisma.account.deleteMany();
 
   await prisma.account.create({

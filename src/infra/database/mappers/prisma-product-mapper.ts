@@ -7,6 +7,7 @@ export class PrismaProductMapper {
     return Product.create(
       {
         name: raw.name,
+        pricing: "WEIGHT",
         type_id: new UniqueEntityID(raw.type_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
@@ -18,6 +19,7 @@ export class PrismaProductMapper {
   static toPrisma(product: Product): Prisma.ProductUncheckedCreateInput {
     return {
       id: product.id.toString(),
+      pricing: product.pricing,
       name: product.name,
       type_id: product.type_id.toString(),
       created_at: product.created_at,
