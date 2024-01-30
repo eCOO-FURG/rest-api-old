@@ -10,7 +10,7 @@ import { registerAgribusiness } from "./register-agribusiness";
 import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admin";
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
-import { handleOffer } from "./handle-offer";
+import { handleOrder } from "./handle-order";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -51,5 +51,5 @@ export async function routes(app: FastifyInstance) {
     orderProducts
   );
 
-  app.post("/payments", handleOffer);
+  app.post("/payments", handleOrder);
 }

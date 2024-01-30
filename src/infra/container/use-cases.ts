@@ -1,6 +1,6 @@
 import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
-import { HandleOfferUseCase } from "@/domain/use-cases/handle-offer";
+import { HandleOrderUseCase } from "@/domain/use-cases/handle-order";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -93,13 +93,13 @@ diContainer.register({
         accountsRepository
       )
   ),
-  handleOfferUseCase: asFunction(
+  handleOrderUseCase: asFunction(
     ({
       ordersRepository,
       ordersProductsRepository,
       offersProductsRepository,
     }) =>
-      new HandleOfferUseCase(
+      new HandleOrderUseCase(
         ordersRepository,
         ordersProductsRepository,
         offersProductsRepository

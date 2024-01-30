@@ -1,5 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { HandleOfferUseCase } from "@/domain/use-cases/handle-offer";
+import { HandleOrderUseCase } from "@/domain/use-cases/handle-order";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -10,16 +10,16 @@ export const confirmPaymentBodySchema = z.object({
   }),
 });
 
-export async function handleOffer(
+export async function handleOrder(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
   const { event, payment } = confirmPaymentBodySchema.parse(request.body);
 
   try {
-    const handleOfferUseCase =
-      request.diScope.resolve<HandleOfferUseCase>("handleOfferUseCase");
-    await handleOfferUseCase.execute({
+    const handleOrderUseCase =
+      request.diScope.resolve<HandleOrderUseCase>("handleOrderUseCase");
+    await handleOrderUseCase.execute({
       order_id: payment.externalReference,
       event: event as "PAYMENT_RECEIVED" | "PAYMENT_OVERDUE",
     });

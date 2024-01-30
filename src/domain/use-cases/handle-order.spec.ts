@@ -1,7 +1,7 @@
 import { InMemoryOrdersProductsRepository } from "test/repositories/in-memory-orders-products-repository";
 import { Account } from "../entities/account";
 import { Order } from "../entities/order";
-import { HandleOfferUseCase } from "./handle-offer";
+import { HandleOrderUseCase } from "./handle-order";
 import { InMemoryOrdersRepository } from "test/repositories/in-memory-orders-repository";
 import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
@@ -13,7 +13,7 @@ let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
-let sut: HandleOfferUseCase;
+let sut: HandleOrderUseCase;
 describe("handle offer", () => {
   beforeEach(() => {
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
@@ -22,7 +22,7 @@ describe("handle offer", () => {
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
       inMemoryOffersRepository
     );
-    sut = new HandleOfferUseCase(
+    sut = new HandleOrderUseCase(
       inMemoryOrdersRepository,
       inMemoryOrdersProductsRepository,
       inMemoryOffersProductsRepository

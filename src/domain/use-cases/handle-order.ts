@@ -4,19 +4,19 @@ import { getDayOfTheWeek } from "../utils/get-day-of-the-week";
 import { OrdersProductsRepository } from "../repositories/orders-products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
 
-interface HandleOfferUseCaseRequest {
+interface HandleOrderUseCaseRequest {
   order_id: string;
   event: "PAYMENT_RECEIVED" | "PAYMENT_OVERDUE";
 }
 
-export class HandleOfferUseCase {
+export class HandleOrderUseCase {
   constructor(
     private ordersRepository: OrdersRepository,
     private ordersProductsrRepository: OrdersProductsRepository,
     private offersProductsRepository: OffersProductsRepository
   ) {}
 
-  async execute({ order_id, event }: HandleOfferUseCaseRequest) {
+  async execute({ order_id, event }: HandleOrderUseCaseRequest) {
     const order = await this.ordersRepository.findById(order_id);
 
     if (!order) {
