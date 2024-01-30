@@ -3,13 +3,9 @@ import { RegisterUseCase } from "@/domain/use-cases/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const brazillianCellphoneRegex = new RegExp(
-  new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
-);
-
 export const registerBodySchema = z.object({
   email: z.string().email(),
-  cellphone: z.string().regex(brazillianCellphoneRegex),
+  cellphone: z.number(),
   password: z.string().min(8),
   first_name: z.string(),
   last_name: z.string(),
@@ -17,13 +13,8 @@ export const registerBodySchema = z.object({
 });
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
-  const body = {
-    ...(request.body as any),
-    cellphone: (request.body as { cellphone: number })?.cellphone.toString(),
-  };
-
   const { email, cellphone, password, first_name, last_name, cpf } =
-    registerBodySchema.parse(body);
+    registerBodySchema.parse(request.body);
 
   try {
     const registerUseCase =
@@ -33,7 +24,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     await registerUseCase.execute({
       email,
-      cellphone,
+      cellphone: cellphone.toString(),
       password,
       first_name,
       last_name,

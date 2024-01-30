@@ -1,4 +1,4 @@
-import { InvalidCpfFormatError } from "./errors/invalid-cpf-format-error";
+import { InvalidCpfFormatError } from "./errors/invalid-cpf-format-error copy";
 
 export class Cpf {
   public value: string;

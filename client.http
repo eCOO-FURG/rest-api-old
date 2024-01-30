@@ -6,12 +6,12 @@ POST {{base_url}}/users
 Content-Type: application/json
 
 {
-  "email": "johndoe@example.com",
-  "cellphone": 51987654321,
+  "email": "johndoe@example.cppam",
+  "cellphone": 519876543,
   "password": "12345678",
   "first_name": "John",
   "last_name": "Doe",
-  "cpf": "523.065.281-01"
+  "cpf": "103.202.243-41"
 }
 
 ###
