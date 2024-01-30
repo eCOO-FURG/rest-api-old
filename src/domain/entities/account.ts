@@ -3,11 +3,12 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { UserRegisteredEvent } from "../events/on-user-registered";
 import { Optional } from "@/core/types/optional";
 import { UserVerifiedEvent } from "../events/on-user-verified";
+import { Cellphone } from "./value-objects/cellphone";
 
 interface AccountProps {
   email: string;
   password: string;
-  cellphone: string;
+  cellphone: Cellphone;
   verified_at?: Date | null;
   created_at: Date;
   updated_at?: Date | null;

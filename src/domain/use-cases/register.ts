@@ -6,6 +6,7 @@ import { Cpf } from "../entities/value-objects/cpf";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { PeopleRepository } from "../repositories/people-repository";
 import { ResourceAlreadyExistsError } from "../../core/errors/resource-already-exists-error";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 interface RegisterUseCaseRequest {
   email: string;
@@ -39,6 +40,15 @@ export class RegisterUseCase {
       throw new ResourceAlreadyExistsError(email);
     }
 
+    const accountWithSameCellphone =
+      await this.accountsRepository.findByCellphone(
+        Cellphone.createFromText(cellphone)
+      );
+
+    if (accountWithSameCellphone) {
+      throw new ResourceAlreadyExistsError(cellphone);
+    }
+
     const personWithSameCPF = await this.peopleRepository.findByCpf(
       Cpf.createFromText(cpf)
     );
@@ -51,7 +61,7 @@ export class RegisterUseCase {
 
     const account = Account.create({
       email,
-      cellphone,
+      cellphone: Cellphone.createFromText(cellphone),
       password: hashedPassword,
     });
 
