@@ -11,17 +11,15 @@ import { FastifySwaggerOptions } from "./helpers/swagger";
 
 export const app = fastify();
 
-app
-  .register(fastifyAwilixPlugin, {
-    asyncInit: true,
-  })
-  .then(() => {
-    app.register(routes);
-    app.register(swagger, FastifySwaggerOptions);
-    app.register(swaggerUI, {
-      prefix: "/docs",
-    });
-  });
+app.register(fastifyAwilixPlugin, {
+  // asyncInit: true,
+});
+
+app.register(routes);
+app.register(swagger, FastifySwaggerOptions);
+app.register(swaggerUI, {
+  prefix: "/docs",
+});
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

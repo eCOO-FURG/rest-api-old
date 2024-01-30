@@ -1,3 +1,4 @@
+import { DomainEvents } from "@/core/events/domain-events";
 import { Encrypter } from "../cryptography/encrypter";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { InvalidValidationCodeError } from "./errors/invalid-validation-code-error";
@@ -34,5 +35,7 @@ export class VerifyUseCase {
     account.verify();
 
     await this.accountsRepository.update(account);
+
+    DomainEvents.dispatchEventsForAggregate(account.id);
   }
 }

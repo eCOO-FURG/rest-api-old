@@ -1,8 +1,12 @@
+import { Offer } from "../entities/offer";
 import { OfferProduct } from "../entities/offer-product";
 
 export interface OffersProductsRepository {
-  save(offerProduct: OfferProduct): Promise<void>;
-  findManyAvailableByProductsIds(
-    product_ids: string[]
+  save(items: OfferProduct[]): Promise<void>;
+  findManyByProductsIdsAndStatus(
+    product_ids: string[],
+    status: Offer["status"]
   ): Promise<OfferProduct[]>;
+  findManyByIds(ids: string[]): Promise<OfferProduct[]>;
+  update(items: OfferProduct[]): Promise<void>;
 }

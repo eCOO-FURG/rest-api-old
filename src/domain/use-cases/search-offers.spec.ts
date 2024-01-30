@@ -53,6 +53,7 @@ describe("search offers", () => {
             {
               name,
               type_id: new UniqueEntityID("1"),
+              pricing: "WEIGHT",
             },
             new UniqueEntityID(index.toString())
           )
@@ -80,25 +81,22 @@ describe("search offers", () => {
       )
     );
 
-    await inMemoryOffersProductsRepository.save(
+    await inMemoryOffersProductsRepository.save([
       OfferProduct.create({
         offer_id: new UniqueEntityID("1"),
         product_id: new UniqueEntityID("1"),
         price: "1",
         quantity: 1,
         weight: "1",
-      })
-    );
-
-    await inMemoryOffersProductsRepository.save(
+      }),
       OfferProduct.create({
         offer_id: new UniqueEntityID("2"),
         product_id: new UniqueEntityID("1"),
         price: "1",
         quantity: 1,
         weight: "1",
-      })
-    );
+      }),
+    ]);
 
     const result = await sut.execute({ product: "Potato" });
 

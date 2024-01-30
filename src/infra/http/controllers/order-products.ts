@@ -4,12 +4,13 @@ import { InsufficientProductQuantityError } from "@/domain/use-cases/errors/insu
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { PaymentPresenter } from "../presenters/payment-presenter";
 
 export const orderProductsBodySchema = z.object({
-  order: z
+  products: z
     .array(
       z.object({
-        product_id: z.string(),
+        id: z.string(),
         quantity: z.coerce.number(),
       })
     )
@@ -22,19 +23,19 @@ export async function orderProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { order } = orderProductsBodySchema.parse(request.body);
+  const { products } = orderProductsBodySchema.parse(request.body);
 
   try {
     const orderProductsUseCase = request.diScope.resolve<OrderProductsUseCase>(
       "orderProductsUseCase"
     );
 
-    await orderProductsUseCase.execute({
+    const payment = await orderProductsUseCase.execute({
       account_id: request.payload.sub,
-      order,
+      products,
     });
 
-    return reply.status(201).send();
+    return reply.status(201).send(PaymentPresenter.toHttp(payment));
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });

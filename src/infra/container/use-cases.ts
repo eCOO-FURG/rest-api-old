@@ -1,5 +1,6 @@
 import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
+import { HandleOfferUseCase } from "@/domain/use-cases/handle-offer";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -74,19 +75,34 @@ diContainer.register({
         offersProductsRepository
       )
   ),
-
   orderProductsUseCase: asFunction(
     ({
       productsRepository,
       offersProductsRepository,
       ordersRepository,
       ordersProductsRepository,
+      paymentsProcessor,
+      accountsRepository,
     }) =>
       new OrderProductsUseCase(
         productsRepository,
         offersProductsRepository,
         ordersRepository,
-        ordersProductsRepository
+        ordersProductsRepository,
+        paymentsProcessor,
+        accountsRepository
+      )
+  ),
+  handleOfferUseCase: asFunction(
+    ({
+      ordersRepository,
+      ordersProductsRepository,
+      offersProductsRepository,
+    }) =>
+      new HandleOfferUseCase(
+        ordersRepository,
+        ordersProductsRepository,
+        offersProductsRepository
       )
   ),
 });

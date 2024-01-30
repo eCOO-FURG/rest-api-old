@@ -7,7 +7,10 @@ const jwtPayloadSchema = z.object({
   sub: z.string(),
 });
 
-export async function verifyJwt(request: FastifyRequest, reply: FastifyReply) {
+export async function ensureAuthenticated(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
   try {
     const authHeader = request.headers.authorization;
 

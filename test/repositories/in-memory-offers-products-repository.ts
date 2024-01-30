@@ -9,27 +9,37 @@ export class InMemoryOffersProductsRepository
 
   constructor(private inMemoryOffersRepository: InMemoryOffersRepository) {}
 
-  async save(offerProduct: OfferProduct): Promise<void> {
-    this.items.push(offerProduct);
+  async save(offerProducts: OfferProduct[]): Promise<void> {
+    this.items.push(...offerProducts);
   }
 
-  async findManyAvailableByProductsIds(
+  async findManyByProductsIdsAndStatus(
     product_ids: string[]
   ): Promise<OfferProduct[]> {
-    const availableOffers =
-      await this.inMemoryOffersRepository.findManyByStatus("AVAILABLE");
-
-    const availableOffersIds = availableOffers.map((offer) =>
-      offer.id.toString()
-    );
-
-    const availableProducts = this.items.filter(
+    const offersProducts = this.items.filter(
       (item) =>
         item.quantity != 0 &&
         product_ids.includes(item.product_id.toString()) &&
         item.quantity > 0
     );
 
-    return availableProducts;
+    return offersProducts;
+  }
+
+  async update(offerProducts: OfferProduct[]): Promise<void> {
+    for (const offerProduct of offerProducts) {
+      const itemIndex = this.items.findIndex(
+        (item) => item.id.toString() === offerProduct.id.toString()
+      );
+      this.items[itemIndex] = offerProduct;
+    }
+  }
+
+  async findManyByIds(ids: string[]): Promise<OfferProduct[]> {
+    const offersProducts = this.items.filter((item) =>
+      ids.includes(item.id.toString())
+    );
+
+    return offersProducts;
   }
 }

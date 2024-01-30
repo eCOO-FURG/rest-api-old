@@ -10,16 +10,22 @@ import { Order } from "../entities/order";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
+import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
+import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
+import { Account } from "../entities/account";
 
+let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
+let fakePaymentsProcessor: FakePaymentsProcessor;
 let sut: OrderProductsUseCase;
 
 describe("order products", () => {
   beforeEach(() => {
+    inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
@@ -27,11 +33,14 @@ describe("order products", () => {
     );
     inMemoryOrdersRepository = new InMemoryOrdersRepository();
     inMemoryOrdersProductsRepository = new InMemoryOrdersProductsRepository();
+    fakePaymentsProcessor = new FakePaymentsProcessor();
     sut = new OrderProductsUseCase(
       inMemoryProductsRepository,
       inMemoryOffersProductsRepository,
       inMemoryOrdersRepository,
-      inMemoryOrdersProductsRepository
+      inMemoryOrdersProductsRepository,
+      fakePaymentsProcessor,
+      inMemoryAccountsRepository
     );
   });
 
@@ -41,6 +50,7 @@ describe("order products", () => {
         {
           name: "potato",
           type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
         },
         new UniqueEntityID("1")
       )
@@ -51,46 +61,63 @@ describe("order products", () => {
         {
           name: "apple",
           type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
         },
         new UniqueEntityID("2")
       )
     );
 
-    await inMemoryOffersProductsRepository.save(
+    await inMemoryOffersProductsRepository.save([
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        price: "1",
+        price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 2,
+        quantity: 4,
         weight: "2",
-      })
-    );
-
-    await inMemoryOffersProductsRepository.save(
+      }),
+      OfferProduct.create({
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        offer_id: new UniqueEntityID("1"),
+        quantity: 4,
+        weight: "2",
+      }),
       OfferProduct.create({
         product_id: new UniqueEntityID("2"),
-        price: "1",
+        price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 2,
+        quantity: 4,
         weight: "2",
-      })
-    );
+      }),
+    ]);
 
-    await sut.execute({
-      account_id: "1",
-      order: [
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+    });
+
+    await inMemoryAccountsRepository.save(account);
+
+    const result = await sut.execute({
+      account_id: account.id.toString(),
+      products: [
         {
-          product_id: "1",
-          quantity: 2,
+          id: "1",
+          quantity: 6,
         },
         {
-          product_id: "2",
+          id: "2",
           quantity: 2,
         },
       ],
     });
 
+    expect(result.value).toBe("8");
+    expect(inMemoryOffersProductsRepository.items[0].quantity).toBe(0);
+    expect(inMemoryOffersProductsRepository.items[1].quantity).toBe(2);
+    expect(inMemoryOffersProductsRepository.items[2].quantity).toBe(2);
     expect(inMemoryOrdersRepository.items[0]).toBeInstanceOf(Order);
+    expect(inMemoryOrdersRepository.items).toHaveLength(1);
   });
 
   it("should not be able to order an unavailable quantity of products", async () => {
@@ -99,27 +126,35 @@ describe("order products", () => {
         {
           name: "potato",
           type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
         },
         new UniqueEntityID("1")
       )
     );
 
-    await inMemoryOffersProductsRepository.save(
+    await inMemoryOffersProductsRepository.save([
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        price: "1",
+        price: 1,
         offer_id: new UniqueEntityID("1"),
         quantity: 2,
         weight: "2",
-      })
-    );
+      }),
+    ]);
+
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+    });
+
+    await inMemoryAccountsRepository.save(account);
 
     await expect(() =>
       sut.execute({
-        account_id: "1",
-        order: [
+        account_id: account.id.toString(),
+        products: [
           {
-            product_id: "1",
+            id: "1",
             quantity: 1000,
           },
         ],
@@ -133,27 +168,35 @@ describe("order products", () => {
         {
           name: "potato",
           type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
         },
         new UniqueEntityID("2")
       )
     );
 
-    await inMemoryOffersProductsRepository.save(
+    await inMemoryOffersProductsRepository.save([
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        price: "1",
+        price: 1,
         offer_id: new UniqueEntityID("1"),
         quantity: 2,
         weight: "2",
-      })
-    );
+      }),
+    ]);
+
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+    });
+
+    await inMemoryAccountsRepository.save(account);
 
     await expect(() =>
       sut.execute({
-        account_id: "1",
-        order: [
+        account_id: account.id.toString(),
+        products: [
           {
-            product_id: "1",
+            id: "1",
             quantity: 2,
           },
         ],

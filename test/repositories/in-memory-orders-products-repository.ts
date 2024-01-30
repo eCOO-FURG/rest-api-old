@@ -1,4 +1,3 @@
-import { Order } from "@/domain/entities/order";
 import { OrderProduct } from "@/domain/entities/order-products";
 import { OrdersProductsRepository } from "@/domain/repositories/orders-products-repository";
 
@@ -7,7 +6,15 @@ export class InMemoryOrdersProductsRepository
 {
   items: OrderProduct[] = [];
 
-  async save(orderProduct: OrderProduct): Promise<void> {
-    this.items.push(orderProduct);
+  async save(orderProducts: OrderProduct[]): Promise<void> {
+    this.items.push(...orderProducts);
+  }
+
+  async findManyByOrderId(order_id: string): Promise<OrderProduct[]> {
+    const orderProducts = this.items.filter(
+      (item) => item.order_id.toString() === order_id
+    );
+
+    return orderProducts;
   }
 }

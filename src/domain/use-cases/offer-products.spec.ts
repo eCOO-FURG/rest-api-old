@@ -10,7 +10,10 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { InMemoryProductsTypesRepository } from "test/repositories/in-memory-products-types-repository";
 import { ProductType } from "../entities/product-type";
+import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
+import { Account } from "../entities/account";
 
+let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
@@ -20,6 +23,7 @@ let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
   beforeEach(() => {
+    inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
@@ -37,8 +41,15 @@ describe("offer product", () => {
   });
 
   it("should be able to offer products", async () => {
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+    });
+
+    inMemoryAccountsRepository.save(account);
+
     const agribussines = Agribusiness.create({
-      admin_id: new UniqueEntityID("fake-id"),
+      admin_id: account.id,
       caf: "123456",
       name: "fake name",
     });
@@ -57,6 +68,7 @@ describe("offer product", () => {
     const product = Product.create({
       name: "potato",
       type_id: new UniqueEntityID("1"),
+      pricing: "WEIGHT",
     });
 
     await inMemoryProductsRepository.save(product);
@@ -65,7 +77,7 @@ describe("offer product", () => {
       agribusiness_id: agribussines.id.toString(),
       products: [
         {
-          product_id: product.id.toString(),
+          id: product.id.toString(),
           price: "6.60",
           quantity: 10,
           weight: "1.2",
@@ -80,8 +92,15 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer products that do not exist", async () => {
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+    });
+
+    inMemoryAccountsRepository.save(account);
+
     const agribussines = Agribusiness.create({
-      admin_id: new UniqueEntityID("fake-id"),
+      admin_id: account.id,
       caf: "123456",
       name: "fake name",
     });
@@ -93,7 +112,7 @@ describe("offer product", () => {
         agribusiness_id: agribussines.id.toString(),
         products: [
           {
-            product_id: "wrong-id",
+            id: "wrong-id",
             price: "6.60",
             quantity: 10,
             weight: "1.2",

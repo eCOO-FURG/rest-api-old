@@ -1,7 +1,7 @@
 import { prisma } from "@/infra/database/prisma-service";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export async function ensureProducer(
+export async function ensureAgribusinessAdmin(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
@@ -16,6 +16,8 @@ export async function ensureProducer(
 
     request.payload.agribusiness_id = agribusiness.id;
   } catch (err) {
-    return reply.status(401).send({ message: "Not a producer." });
+    return reply
+      .status(401)
+      .send({ message: "Not an agribusiness administrator." });
   }
 }

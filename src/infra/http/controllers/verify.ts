@@ -14,6 +14,8 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
     const verifyUseCase =
       request.diScope.resolve<VerifyUseCase>("verifyUseCase");
 
+    request.diScope.resolve("onUserVerified");
+
     await verifyUseCase.execute({
       code,
     });

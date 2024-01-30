@@ -63,7 +63,6 @@ diContainer.register({
   viewLoader: asFunction(() => new EjsLoader()),
   naturalLanguageProcessor: asClass(TfUseModel, {
     lifetime: "SINGLETON",
-    asyncInit: "init",
   }),
   paymentsProcessor: asFunction(() => new Asaas()),
 });

@@ -31,8 +31,7 @@ export class OnUserRegistered implements EventHandler {
     private mailer: Mailer,
     private peopleRepository: PeopleRepository,
     private encrypter: Encrypter,
-    private viewLoader: ViewLoader,
-    private paymentsProcessor: PaymentsProcessor
+    private viewLoader: ViewLoader
   ) {
     this.setupSubscriptions();
   }
@@ -40,10 +39,6 @@ export class OnUserRegistered implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendAccountVerificationEmail.bind(this),
-      UserRegisteredEvent.name
-    );
-    DomainEvents.register(
-      this.registerCustomerOnPaymentProcessor.bind(this),
       UserRegisteredEvent.name
     );
   }
@@ -72,24 +67,5 @@ export class OnUserRegistered implements EventHandler {
     });
 
     await this.mailer.send(email);
-  }
-
-  public async registerCustomerOnPaymentProcessor({
-    account,
-  }: UserRegisteredEvent) {
-    const person = await this.peopleRepository.findByAccountId(
-      account.id.toString()
-    );
-
-    if (!person) return; // log issue
-
-    const customerFullName = `${person.first_name} ${person.last_name}`;
-
-    const customer = Customer.create({
-      full_name: customerFullName,
-      cpf: person.cpf.value,
-    });
-
-    await this.paymentsProcessor.registerCustomer(customer);
   }
 }
