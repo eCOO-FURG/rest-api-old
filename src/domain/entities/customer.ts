@@ -3,13 +3,13 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Cpf } from "./value-objects/cpf";
 
 interface CustomerProps {
-  fullName: string;
+  full_name: string;
   cpf: Cpf;
 }
 
 export class Customer extends Entity<CustomerProps> {
   get full_name() {
-    return this.props.fullName;
+    return this.props.full_name;
   }
 
   get cpf() {

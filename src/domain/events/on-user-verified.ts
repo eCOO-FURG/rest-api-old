@@ -48,7 +48,7 @@ export class OnUserVerified implements EventHandler {
     const customerFullName = `${person.first_name} ${person.last_name}`;
 
     const customer = Customer.create({
-      fullName: customerFullName,
+      full_name: customerFullName,
       cpf: person.cpf,
     });
 
