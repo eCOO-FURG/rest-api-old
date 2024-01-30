@@ -5,6 +5,7 @@ import { z } from "zod";
 
 export const registerBodySchema = z.object({
   email: z.string().email(),
+  cellphone: z.number(),
   password: z.string().min(8),
   first_name: z.string(),
   last_name: z.string(),
@@ -12,7 +13,7 @@ export const registerBodySchema = z.object({
 });
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
-  const { email, password, first_name, last_name, cpf } =
+  const { email, cellphone, password, first_name, last_name, cpf } =
     registerBodySchema.parse(request.body);
 
   try {
@@ -23,6 +24,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     await registerUseCase.execute({
       email,
+      cellphone: cellphone.toString(),
       password,
       first_name,
       last_name,

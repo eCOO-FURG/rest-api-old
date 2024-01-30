@@ -11,6 +11,7 @@ export async function seedUsers() {
     data: {
       id: accountId,
       email: "admin@ecoo.com.br",
+      cellphone: "123456789",
       password: await hash("12345678", 8),
       verified_at: new Date(),
       person: {

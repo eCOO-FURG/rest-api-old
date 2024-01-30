@@ -9,6 +9,7 @@ import { ResourceAlreadyExistsError } from "../../core/errors/resource-already-e
 
 interface RegisterUseCaseRequest {
   email: string;
+  cellphone: string;
   password: string;
   first_name: string;
   last_name: string;
@@ -24,6 +25,7 @@ export class RegisterUseCase {
 
   async execute({
     email,
+    cellphone,
     password,
     first_name,
     last_name,
@@ -49,6 +51,7 @@ export class RegisterUseCase {
 
     const account = Account.create({
       email,
+      cellphone,
       password: hashedPassword,
     });
 

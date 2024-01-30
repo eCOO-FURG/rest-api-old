@@ -11,6 +11,7 @@ datasource db {
 model Account {
   id          String    @id @default(uuid())
   email       String    @unique
+  cellphone   String    @unique
   password    String
   verified_at DateTime?
 
