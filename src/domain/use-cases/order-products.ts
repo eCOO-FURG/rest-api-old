@@ -126,8 +126,6 @@ export class OrderProductsUseCase {
       updatedProductsOffers.push(...productOffersByLowestPrice);
     }
 
-    console.log(order.id);
-
     await Promise.all([
       this.offersProductsRepository.update(updatedProductsOffers),
       this.ordersRepository.save(order),

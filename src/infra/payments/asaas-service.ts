@@ -43,8 +43,6 @@ export class Asaas implements PaymentsProcessor {
     const customerData = await customerResponse.json();
     const customerRefence = customerData.data[0].id;
 
-    console.log(charge.order_id.toString());
-
     const chargeResponse = await fetch(`${assasUrl}/payments`, {
       method: "POST",
       headers: {
