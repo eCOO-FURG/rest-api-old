@@ -6,6 +6,7 @@ import { Optional } from "@/core/types/optional";
 interface AccountProps {
   email: string;
   password: string;
+  cellphone: string;
   verified_at?: Date | null;
   created_at: Date;
   updated_at?: Date | null;
@@ -14,6 +15,10 @@ interface AccountProps {
 export class Account extends AggregateRoot<AccountProps> {
   get email() {
     return this.props.email;
+  }
+
+  get cellphone() {
+    return this.props.cellphone;
   }
 
   get password() {

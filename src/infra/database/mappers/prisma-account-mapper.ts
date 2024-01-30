@@ -8,6 +8,7 @@ export class PrismaAccountMapper {
       {
         email: raw.email,
         password: raw.password,
+        cellphone: raw.cellphone,
         verified_at: raw.verified_at,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
@@ -20,6 +21,7 @@ export class PrismaAccountMapper {
     return {
       id: account.id.toString(),
       email: account.email,
+      cellphone: account.cellphone,
       password: account.password,
       verified_at: account.verified_at,
       created_at: account.created_at,

@@ -26,6 +26,7 @@ describe("register", () => {
   it("should be able to able to register", async () => {
     await sut.execute({
       email: "johndoe@example.com",
+      cellphone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
@@ -41,6 +42,7 @@ describe("register", () => {
 
     await sut.execute({
       email,
+      cellphone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
@@ -50,6 +52,31 @@ describe("register", () => {
     await expect(() =>
       sut.execute({
         email,
+        cellphone: "51987654321",
+        password: "123456",
+        first_name: "Rodrigo",
+        last_name: "Goes",
+        cpf: "523.065.281-02",
+      })
+    ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
+  });
+
+  it("should not be able to register with the same cellphone twice", async () => {
+    const cellphone = "51987654321";
+
+    await sut.execute({
+      email: "johndoe@example.com",
+      cellphone,
+      password: "123456",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+    });
+
+    await expect(() =>
+      sut.execute({
+        email: "johndoe@example.com",
+        cellphone,
         password: "123456",
         first_name: "Rodrigo",
         last_name: "Goes",
@@ -63,6 +90,7 @@ describe("register", () => {
 
     await sut.execute({
       email: "johndoe@example.com",
+      cellphone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
@@ -72,6 +100,7 @@ describe("register", () => {
     await expect(() =>
       sut.execute({
         email: "rodrigogoes@example.com",
+        cellphone: "51987654321",
         password: "123456",
         first_name: "Rodrigo",
         last_name: "Goes",
@@ -85,6 +114,7 @@ describe("register", () => {
 
     await sut.execute({
       email: "johndoe@example.com",
+      cellphone: "51987654321",
       password,
       first_name: "John",
       last_name: "Doe",
