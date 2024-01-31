@@ -19,6 +19,7 @@ import { QdrantProductsCollection } from "../database/collections/qdrant-product
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
 import { Asaas } from "../payments/asaas-service";
+import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
@@ -65,5 +66,11 @@ diContainer.register({
     lifetime: "SINGLETON",
     asyncInit: "init",
   }),
-  paymentsProcessor: asFunction(() => new Asaas()),
+  paymentsProcessor: asFunction(() => {
+    if (env.ENV === "dev") {
+      return new FakePaymentsProcessor();
+    }
+
+    return new Asaas();
+  }),
 });
