@@ -1,5 +1,6 @@
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Account } from "@/domain/entities/account";
+import { Cellphone } from "@/domain/entities/value-objects/cellphone";
 import { Account as PrismaAccount, Prisma } from "@prisma/client";
 
 export class PrismaAccountMapper {
@@ -8,7 +9,7 @@ export class PrismaAccountMapper {
       {
         email: raw.email,
         password: raw.password,
-        cellphone: raw.cellphone,
+        cellphone: Cellphone.createFromText(raw.cellphone),
         verified_at: raw.verified_at,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
@@ -21,7 +22,7 @@ export class PrismaAccountMapper {
     return {
       id: account.id.toString(),
       email: account.email,
-      cellphone: account.cellphone,
+      cellphone: account.cellphone.value,
       password: account.password,
       verified_at: account.verified_at,
       created_at: account.created_at,
