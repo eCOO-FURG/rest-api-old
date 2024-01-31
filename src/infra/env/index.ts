@@ -16,7 +16,16 @@ const envSchema = z.object({
   PAYMENTS_PROCESSOR_API_KEY: z.string(),
 });
 
-const _env = envSchema.safeParse(process.env);
+const devSchema = envSchema.omit({
+  PAYMENTS_PROCESSOR_API_KEY: true,
+});
+
+const selectedEnv = process.env.ENV;
+
+const _env =
+  selectedEnv === "dev"
+    ? devSchema.safeParse(process.env)
+    : envSchema.safeParse(process.env);
 
 if (_env.success === false) {
   console.error("❌ Invalid environment variables", _env.error.format());
