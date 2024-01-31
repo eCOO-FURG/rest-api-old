@@ -8,7 +8,7 @@ export class PrismaOfferProductMapper {
       {
         offer_id: new UniqueEntityID(raw.offer_id),
         product_id: new UniqueEntityID(raw.product_id),
-        price: raw.price,
+        price: raw.price.toNumber(),
         quantity: raw.quantity,
         weight: raw.weight,
         created_at: raw.created_at,

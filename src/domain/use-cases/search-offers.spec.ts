@@ -52,6 +52,7 @@ describe("search offers", () => {
           Product.create(
             {
               name,
+              image: "",
               type_id: new UniqueEntityID("1"),
               pricing: "WEIGHT",
             },
@@ -85,14 +86,14 @@ describe("search offers", () => {
       OfferProduct.create({
         offer_id: new UniqueEntityID("1"),
         product_id: new UniqueEntityID("1"),
-        price: "1",
+        price: 1,
         quantity: 1,
         weight: "1",
       }),
       OfferProduct.create({
         offer_id: new UniqueEntityID("2"),
         product_id: new UniqueEntityID("1"),
-        price: "1",
+        price: 1,
         quantity: 1,
         weight: "1",
       }),

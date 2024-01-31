@@ -14,7 +14,7 @@ interface OfferProductsUseCaseRequest {
     id: string;
     weight: string;
     quantity: number;
-    price: string;
+    price: number;
   }[];
 }
 

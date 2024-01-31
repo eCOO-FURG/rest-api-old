@@ -49,6 +49,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -60,6 +61,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "apple",
+          image: "apple.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -125,6 +127,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -167,6 +170,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
