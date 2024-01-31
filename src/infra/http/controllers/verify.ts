@@ -1,5 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
+import { env } from "@/infra/env";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -20,7 +21,7 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
       code,
     });
 
-    return reply.status(200).send();
+    return reply.redirect(301, `${env.SERVER_URL}:3000/login`);
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
