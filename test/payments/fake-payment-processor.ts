@@ -9,9 +9,9 @@ export class FakePaymentsProcessor implements PaymentsProcessor {
   async registerCharge(charge: Charge): Promise<Payment> {
     const payment = Payment.create({
       charge_id: charge.id,
-      key: "r&@wMxcV]d3QLuSH=enVGs",
+      key: "r&@wMxcV]d3QLuSH=enVGs", // gerar uma chave pix de verdade
       expiration_date: charge.due_date,
-      qrcode: "qrcode",
+      qrcode: "qrcode", // gerar um qrcode falso de verdade
       value: charge.value,
     });
 
