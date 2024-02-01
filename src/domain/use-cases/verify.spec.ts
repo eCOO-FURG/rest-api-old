@@ -2,6 +2,7 @@ import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { VerifyUseCase } from "./verify";
 import { Account } from "../entities/account";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let fakeEncrypter: FakeEncrypter;
@@ -18,6 +19,7 @@ describe("verify", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: "123456",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);

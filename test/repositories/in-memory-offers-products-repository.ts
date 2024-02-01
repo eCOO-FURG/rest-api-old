@@ -13,7 +13,16 @@ export class InMemoryOffersProductsRepository
     this.items.push(...offerProducts);
   }
 
-  async findManyByProductsIdsAndStatus(
+  async update(offerProducts: OfferProduct[]): Promise<void> {
+    for (const offerProduct of offerProducts) {
+      const itemIndex = this.items.findIndex(
+        (item) => item.id.toString() === offerProduct.id.toString()
+      );
+      this.items[itemIndex] = offerProduct;
+    }
+  }
+
+  async findManyWithRemainingQuantityByProductsIdsAndStatus(
     product_ids: string[]
   ): Promise<OfferProduct[]> {
     const offersProducts = this.items.filter(
@@ -24,15 +33,6 @@ export class InMemoryOffersProductsRepository
     );
 
     return offersProducts;
-  }
-
-  async update(offerProducts: OfferProduct[]): Promise<void> {
-    for (const offerProduct of offerProducts) {
-      const itemIndex = this.items.findIndex(
-        (item) => item.id.toString() === offerProduct.id.toString()
-      );
-      this.items[itemIndex] = offerProduct;
-    }
   }
 
   async findManyByIds(ids: string[]): Promise<OfferProduct[]> {

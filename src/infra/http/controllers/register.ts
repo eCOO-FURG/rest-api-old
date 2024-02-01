@@ -1,4 +1,6 @@
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
+import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
+import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -35,6 +37,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
       return reply.status(409).send({ message: err.message });
+    }
+    if (
+      err instanceof InvalidCpfFormatError ||
+      err instanceof InvalidCellphoneFormatError
+    ) {
+      return reply.status(400).send({ message: err.message });
     }
     throw err;
   }

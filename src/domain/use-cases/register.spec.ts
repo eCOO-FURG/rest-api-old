@@ -75,7 +75,7 @@ describe("register", () => {
 
     await expect(() =>
       sut.execute({
-        email: "johndoe@example.com",
+        email: "rodrigogoes@example.com",
         cellphone,
         password: "123456",
         first_name: "Rodrigo",

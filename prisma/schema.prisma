@@ -91,6 +91,7 @@ enum PRICING {
 model Product {
   id      String  @id @default(uuid())
   name    String  @unique
+  image   String  
   pricing PRICING
 
   type_id String

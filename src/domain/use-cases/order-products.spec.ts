@@ -13,6 +13,7 @@ import { InsufficientProductQuantityError } from "./errors/insufficient-product-
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -49,6 +50,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -60,6 +62,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "apple",
+          image: "apple.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -94,6 +97,7 @@ describe("order products", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
     });
 
     await inMemoryAccountsRepository.save(account);
@@ -125,6 +129,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -145,6 +150,7 @@ describe("order products", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
     });
 
     await inMemoryAccountsRepository.save(account);
@@ -167,6 +173,7 @@ describe("order products", () => {
       Product.create(
         {
           name: "potato",
+          image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
           pricing: "WEIGHT",
         },
@@ -187,6 +194,7 @@ describe("order products", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
     });
 
     await inMemoryAccountsRepository.save(account);

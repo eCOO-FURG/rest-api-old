@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { z } from "zod";
 
-const envSchema = z.object({
+const deployValidationSchema = z.object({
+  ENV: z.enum(["dev", "test", "homolog", "prod"]),
   SERVER_URL: z.string(),
-  ENV: z.enum(["dev", "test", "production"]).default("dev"),
   PORT: z.coerce.number().default(3333),
   POSTGRES_URL: z.string(),
   QDRANT_URL: z.string(),
@@ -16,7 +16,35 @@ const envSchema = z.object({
   PAYMENTS_PROCESSOR_API_KEY: z.string(),
 });
 
-const _env = envSchema.safeParse(process.env);
+const localValidationSchema = deployValidationSchema.omit({
+  PAYMENTS_PROCESSOR_API_KEY: true,
+});
+
+const testValidationSchema = localValidationSchema.omit({
+  SMTP_HOST: true,
+  SMTP_PORT: true,
+  QDRANT_URL: true,
+  POSTGRES_URL: true,
+  JWT_SECRET: true,
+  EXPECTED_SIMILARITY_SCORE: true,
+});
+
+const environment = process.env.ENV;
+
+if (!environment) {
+  throw new Error(
+    "❌ Invalid environment variables: Please specify the environment!"
+  );
+}
+
+const validationSchema =
+  environment === "dev"
+    ? localValidationSchema
+    : environment === "test"
+    ? testValidationSchema
+    : deployValidationSchema;
+
+const _env = validationSchema.safeParse(process.env);
 
 if (_env.success === false) {
   console.error("❌ Invalid environment variables", _env.error.format());
@@ -24,4 +52,7 @@ if (_env.success === false) {
   throw new Error("Invalid environment variables.");
 }
 
-export const env = _env.data;
+export const env = {
+  ..._env.data,
+  PAYMENTS_PROCESSOR_API_KEY: "",
+};

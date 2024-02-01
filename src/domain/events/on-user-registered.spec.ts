@@ -47,6 +47,7 @@ describe("on user registered", () => {
   it("should send a email when a new user is registered", async () => {
     await registerUseCase.execute({
       email: "johndoe@example.com",
+      cellphone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",

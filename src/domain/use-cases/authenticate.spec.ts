@@ -7,6 +7,7 @@ import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { Session } from "../entities/session";
 import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemorySessionsRepository: InMemorySessionsRepository;
@@ -32,6 +33,7 @@ describe("authenticate", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
+      cellphone: Cellphone.createFromText("519876543"),
       verified_at: new Date(),
     });
 
@@ -52,6 +54,8 @@ describe("authenticate", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
+      cellphone: Cellphone.createFromText("519876543"),
+
       verified_at: new Date(),
     });
 
@@ -71,6 +75,7 @@ describe("authenticate", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);

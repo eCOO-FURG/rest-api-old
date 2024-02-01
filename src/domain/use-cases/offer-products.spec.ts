@@ -12,6 +12,7 @@ import { InMemoryProductsTypesRepository } from "test/repositories/in-memory-pro
 import { ProductType } from "../entities/product-type";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -44,6 +45,7 @@ describe("offer product", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);
@@ -67,6 +69,7 @@ describe("offer product", () => {
 
     const product = Product.create({
       name: "potato",
+      image: "potato.url",
       type_id: new UniqueEntityID("1"),
       pricing: "WEIGHT",
     });
@@ -78,7 +81,7 @@ describe("offer product", () => {
       products: [
         {
           id: product.id.toString(),
-          price: "6.60",
+          price: 6.6,
           quantity: 10,
           weight: "1.2",
         },
@@ -95,6 +98,7 @@ describe("offer product", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);
@@ -113,7 +117,7 @@ describe("offer product", () => {
         products: [
           {
             id: "wrong-id",
-            price: "6.60",
+            price: 6.6,
             quantity: 10,
             weight: "1.2",
           },

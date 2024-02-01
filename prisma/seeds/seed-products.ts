@@ -15,6 +15,7 @@ export async function seedProducts() {
           create: category.items?.map((item) => ({
             name: item.name,
             pricing: item.pricing as PRICING,
+            image: item.image,
           })),
         },
       },

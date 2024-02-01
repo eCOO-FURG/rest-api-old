@@ -4,6 +4,7 @@ import { GetUserProfileUseCase } from "./get-user-profile";
 import { Account } from "../entities/account";
 import { Person } from "../entities/person";
 import { Cpf } from "../entities/value-objects/cpf";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryPeopleRepository: InMemoryPeopleRepository;
@@ -23,6 +24,7 @@ describe("get user profile", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: "123456",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);

@@ -28,7 +28,7 @@ export class Asaas implements PaymentsProcessor {
     });
   }
 
-  async registerCharge(charge: Charge): Promise<any> {
+  async registerCharge(charge: Charge): Promise<Payment> {
     const customerResponse = await fetch(
       `${assasUrl}/customers?email=${charge.customer_email}`,
       {

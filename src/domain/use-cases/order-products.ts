@@ -55,7 +55,7 @@ export class OrderProductsUseCase {
     }
 
     const offers =
-      await this.offersProductsRepository.findManyByProductsIdsAndStatus(
+      await this.offersProductsRepository.findManyWithRemainingQuantityByProductsIdsAndStatus(
         productsIds,
         "AVAILABLE"
       );

@@ -1,4 +1,5 @@
 import { Account } from "@/domain/entities/account";
+import { Cellphone } from "@/domain/entities/value-objects/cellphone";
 import { AccountsRepository } from "@/domain/repositories/accounts-repository";
 
 export class InMemoryAccountsRepository implements AccountsRepository {
@@ -14,6 +15,16 @@ export class InMemoryAccountsRepository implements AccountsRepository {
 
   async findByEmail(email: string): Promise<Account | null> {
     const account = this.items.find((item) => item.email === email);
+
+    if (!account) return null;
+
+    return account;
+  }
+
+  async findByCellphone(cellphone: Cellphone): Promise<Account | null> {
+    const account = this.items.find(
+      (item) => item.cellphone.value === cellphone.value
+    );
 
     if (!account) return null;
 

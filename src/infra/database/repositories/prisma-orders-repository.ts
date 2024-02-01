@@ -2,6 +2,7 @@ import { Order } from "@/domain/entities/order";
 import { OrdersRepository } from "@/domain/repositories/orders-repository";
 import { prisma } from "../prisma-service";
 import { PrismaOrderMapper } from "../mappers/prisma-order-mapper";
+import { env } from "@/infra/env";
 
 export class PrismaOrdersRepository implements OrdersRepository {
   async update(order: Order): Promise<void> {
@@ -30,6 +31,10 @@ export class PrismaOrdersRepository implements OrdersRepository {
   }
 
   async save(order: Order): Promise<void> {
+    if (env.ENV === "dev") {
+      order.status = "READY";
+    }
+
     const data = PrismaOrderMapper.toPrisma(order);
 
     await prisma.order.create({

@@ -56,7 +56,7 @@ export class OnUserRegistered implements EventHandler {
 
     const view = await this.viewLoader.load("verifyAccount", {
       first_name: person.first_name,
-      url: `${env.SERVER_URL}/users/verify?code=${code}`,
+      url: `${env.SERVER_URL}:${env.PORT}/users/verify?code=${code}`,
     });
 
     const email = Email.create({

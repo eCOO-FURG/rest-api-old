@@ -8,6 +8,7 @@ import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-rep
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { OrderProduct } from "../entities/order-products";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
 let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
@@ -33,6 +34,7 @@ describe("handle offer", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     const order = Order.create({
@@ -57,6 +59,7 @@ describe("handle offer", () => {
     const account = Account.create({
       email: "test@gmail.com",
       password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     const offerProduct1 = OfferProduct.create({

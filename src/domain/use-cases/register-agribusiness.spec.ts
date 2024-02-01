@@ -4,6 +4,7 @@ import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts
 import { Account } from "../entities/account";
 import { Agribusiness } from "../entities/agribusiness";
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
@@ -24,6 +25,7 @@ describe("create agribusiness", () => {
       email: "johndoe@example.com",
       password: "123456",
       verified_at: new Date(),
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);
@@ -44,6 +46,7 @@ describe("create agribusiness", () => {
       email: "johndoe@example.com",
       password: "123456",
       verified_at: new Date(),
+      cellphone: Cellphone.createFromText("519876543"),
     });
 
     inMemoryAccountsRepository.save(account);
