@@ -9,12 +9,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
           node-version: 19.9.0
           cache: "npm"
-
       - run: npm ci
-
       - run: npm run test
+        env:
+          ENV: test
+          SERVER_URL: http://localhost
+          PORT: 3333
+          SESSION_DURATION_IN_DAYS: 7
+          ECOO_EMAIL: contato@ecoo.com.br"
