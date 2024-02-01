@@ -11,10 +11,11 @@ def internal_server_error(e):
 @main_bp.route('/products/infer')
 def infer():
     query = request.args.get('q')
+    limit = request.args.get('limit')
 
     if query is None:
         return jsonify({'error': 'Missing query parameter'}), 400
 
-    intention = search('products', query)[0]
+    intention = search('products', query, limit)
 
     return jsonify(intention)
