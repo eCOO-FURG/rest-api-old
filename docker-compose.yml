@@ -11,10 +11,39 @@ services:
       - "5432:5432"
 
   qdrant:
-    container_name: ecoo-qdrant
+    container_name: ecoo_vector_db
     image: qdrant/qdrant:latest
     ports:
       - "6333:6333"
+
+  qdrant_scripts:
+    container_name: ecoo_vector_db_scripts
+    build:
+      context: ./qdrant
+      dockerfile: ./Dockerfile
+      args:
+        - REQUIREMENTS_TXT_PATH=./requirements.txt
+    volumes:
+      - ./products.json:/app/products.json
+      - ./qdrant/seed.py:/app/seed.py
+      - ./nlp/src/utils/:/app/utils/
+      - ./nlp/src/qdrant_service.py:/app/qdrant_service.py
+    depends_on:
+      - qdrant
+
+  nlp:
+    container_name: ecoo_nlp
+    build:
+      context: ./nlp/
+      dockerfile: ./Dockerfile
+      args:
+        - REQUIREMENTS_TXT_PATH=./requirements.txt
+    volumes:
+      - ./nlp/src/:/app/
+    ports:
+      - "5000:5000"
+    depends_on:
+      - qdrant
 
   smtp4dev:
     container_name: ecoo-smtp
