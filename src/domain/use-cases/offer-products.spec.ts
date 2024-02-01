@@ -67,6 +67,7 @@ describe("offer product", () => {
 
     const product = Product.create({
       name: "potato",
+      image: "potato.url",
       type_id: new UniqueEntityID("1"),
       pricing: "WEIGHT",
     });
@@ -78,7 +79,7 @@ describe("offer product", () => {
       products: [
         {
           id: product.id.toString(),
-          price: "6.60",
+          price: 6.60,
           quantity: 10,
           weight: "1.2",
         },
@@ -113,7 +114,7 @@ describe("offer product", () => {
         products: [
           {
             id: "wrong-id",
-            price: "6.60",
+            price: 6.60,
             quantity: 10,
             weight: "1.2",
           },
