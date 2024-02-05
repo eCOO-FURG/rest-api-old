@@ -12,8 +12,9 @@ export class OffersPresenter {
     return offersForEachProduct.map((item) => ({
       id: item.id.toString(),
       name: item.name,
-      quantity: item.offers.reduce(
-        (quantity: number, cur: OfferProduct) => quantity + cur.quantity,
+      quantity_or_weight: item.offers.reduce(
+        (quantity_or_weight: number, cur: OfferProduct) =>
+          quantity_or_weight + cur.quantity_or_weight,
         0
       ),
     }));

@@ -13,7 +13,7 @@ import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
 import { Cellphone } from "../entities/value-objects/cellphone";
-import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
+import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;

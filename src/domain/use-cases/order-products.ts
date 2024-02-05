@@ -5,13 +5,13 @@ import { OrdersProductsRepository } from "../repositories/orders-products-reposi
 import { PaymentsProcessor } from "../payments/payments-processor";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
 import { Order } from "../entities/order";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { OrderProduct } from "../entities/order-products";
 import { Charge } from "../entities/charge";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 
 interface OrderProductsUseCaseRequest {
   account_id: string;
@@ -86,7 +86,10 @@ export class OrderProductsUseCase {
       );
 
       if (item.quantity_or_weight > available) {
-        throw new InsufficientProductQuantityError(item.id);
+        throw new InsufficientProductQuantityOrWeightError(
+          product.pricing === "UNIT" ? "quantity" : "weight",
+          item.id
+        );
       }
 
       const offersByLowestPrice = offersForItem.sort(

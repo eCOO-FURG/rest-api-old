@@ -7,6 +7,7 @@ import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 import { NotAgrobusinessAdminError } from "./errors/not-agrobusiness-admin-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
@@ -29,14 +30,6 @@ export class OfferProductsUseCase {
     agribusiness_id,
     products: offeredProducts,
   }: OfferProductsUseCaseRequest) {
-    const agribusiness = await this.agribusinessRepository.findById(
-      agribusiness_id
-    );
-
-    if (!agribusiness) {
-      throw new NotAgrobusinessAdminError();
-    }
-
     const offeredProductsIds = offeredProducts.map(
       (offeredProduct) => offeredProduct.id
     );
@@ -48,7 +41,7 @@ export class OfferProductsUseCase {
     const productsIds = products.map((product) => product.id.toString());
 
     const offer = Offer.create({
-      agribusiness_id: agribusiness.id,
+      agribusiness_id: new UniqueEntityID(agribusiness_id),
     });
 
     const offerProducts = offeredProducts.map((item) => {
