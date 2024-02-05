@@ -11,12 +11,14 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
 import { OrderProduct } from "../entities/order-products";
 import { Charge } from "../entities/charge";
+import { InvalidWeightError } from "./errors/invalid-weight-error";
 
 interface OrderProductsUseCaseRequest {
   account_id: string;
+  shipping_address: string;
   products: {
     id: string;
-    quantity: number;
+    quantity_or_weight: number;
   }[];
 }
 
@@ -32,15 +34,10 @@ export class OrderProductsUseCase {
 
   async execute({
     account_id,
+    shipping_address,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
-    const account = await this.accountsRepository.findById(account_id);
-
-    if (!account) {
-      throw new ResourceNotFoundError(account_id);
-    }
-
-    const orderedProductsIds = orderedProducts.map((product) => product.id);
+    const orderedProductsIds = orderedProducts.map((item) => item.id);
 
     const products = await this.productsRepository.findManyByIds(
       orderedProductsIds
@@ -48,99 +45,104 @@ export class OrderProductsUseCase {
 
     const productsIds = products.map((product) => product.id.toString());
 
-    for (const orderedProduct of orderedProducts) {
-      if (!productsIds.includes(orderedProduct.id)) {
-        throw new ResourceNotFoundError(orderedProduct.id);
-      }
-    }
-
-    const offers =
-      await this.offersProductsRepository.findManyWithRemainingQuantityByProductsIdsAndStatus(
+    const offersProducts =
+      await this.offersProductsRepository.findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
         productsIds,
         "AVAILABLE"
       );
 
-    for (const orderedProduct of orderedProducts) {
-      const offersForProduct = offers.filter((offerProduct) => {
-        return offerProduct.product_id.toString() === orderedProduct.id;
-      });
-
-      const availableQuantityForProduct = offersForProduct.reduce(
-        (total, product) => total + product.quantity,
-        0
-      );
-
-      if (orderedProduct.quantity > availableQuantityForProduct) {
-        throw new InsufficientProductQuantityError(orderedProduct.id);
-      }
-    }
-
-    const offersByLowestPrice = offers.sort((a, b) => a.price - b.price);
-
-    const updatedProductsOffers: OfferProduct[] = [];
-
     const order = Order.create({
       customer_id: new UniqueEntityID(account_id),
       payment_method: "PIX",
-      shipping_address: "Av. José de Souza Castro - 147",
+      shipping_address,
     });
 
+    let totalPrice = 0;
     const orderProducts: OrderProduct[] = [];
-    let totalValue = 0;
+    const updatedOffersProducts: OfferProduct[] = [];
 
-    for (const orderedProduct of orderedProducts) {
-      const productOffersByLowestPrice = offersByLowestPrice.filter(
-        (offer) => offer.product_id.toString() === orderedProduct.id
+    for (const item of orderedProducts) {
+      const itemExists = productsIds.includes(item.id);
+
+      if (!itemExists) {
+        throw new ResourceNotFoundError(item.id);
+      }
+
+      const offersForItem = offersProducts.filter((offerProduct) =>
+        offerProduct.product_id.equals(new UniqueEntityID(item.id))
       );
 
-      const orderedQuantity = orderedProduct.quantity;
+      const product = products.find((product) =>
+        product.id.equals(new UniqueEntityID(item.id))
+      )!;
 
-      productOffersByLowestPrice.reduce((selectedQuantity, offer, index) => {
-        if (selectedQuantity === orderedQuantity) {
-          productOffersByLowestPrice.slice(0, index);
+      if (product.pricing === "WEIGHT" && item.quantity_or_weight % 50 !== 0) {
+        throw new InvalidWeightError("ordered", item.id);
+      }
+
+      const available = offersForItem.reduce(
+        (total, product) => total + product.quantity_or_weight,
+        0
+      );
+
+      if (item.quantity_or_weight > available) {
+        throw new InsufficientProductQuantityError(item.id);
+      }
+
+      const offersByLowestPrice = offersForItem.sort(
+        (a, b) => a.price - b.price
+      );
+
+      offersByLowestPrice.reduce((selected, offerProduct, index) => {
+        if (selected === item.quantity_or_weight) {
+          offersByLowestPrice.slice(0, index);
         }
 
         const orderProduct = OrderProduct.create({
-          offer_product_id: offer.id,
+          offer_product_id: offerProduct.id,
           order_id: order.id,
-          product_id: new UniqueEntityID(orderedProduct.id),
-          quantity: 0,
+          product_id: product.id,
+          quantity_or_weight: 0,
         });
 
-        const quantityNeeded = Math.min(
-          orderedQuantity - selectedQuantity,
-          offer.quantity
+        const needed = Math.min(
+          item.quantity_or_weight - selected,
+          offerProduct.quantity_or_weight
         );
 
-        totalValue += quantityNeeded * offer.price;
+        totalPrice += needed * offerProduct.price;
 
-        orderProduct.quantity = quantityNeeded;
+        orderProduct.quantity_or_weight = needed;
         orderProducts.push(orderProduct);
 
-        selectedQuantity += quantityNeeded;
-        offer.quantity -= quantityNeeded;
+        selected += needed;
+        offerProduct.quantity_or_weight -= needed;
 
-        return selectedQuantity;
+        return selected;
       }, 0);
 
-      updatedProductsOffers.push(...productOffersByLowestPrice);
+      updatedOffersProducts.push(...offersByLowestPrice);
     }
 
-    await Promise.all([
-      this.offersProductsRepository.update(updatedProductsOffers),
-      this.ordersRepository.save(order),
-    ]);
-    await this.ordersProductsRepository.save(orderProducts);
+    const account = await this.accountsRepository.findById(account_id);
+
+    if (!account) {
+      throw new ResourceNotFoundError(account_id);
+    }
 
     const charge = Charge.create({
       customer_email: account.email,
+      due_date: new Date(),
       order_id: order.id,
       payment_method: "PIX",
-      value: totalValue.toString(), // eventually add plataform taxes
-      due_date: new Date(),
+      value: totalPrice.toString(),
     });
 
     const payment = await this.paymentsProcessor.registerCharge(charge);
+
+    await this.offersProductsRepository.save(updatedOffersProducts);
+    await this.ordersRepository.save(order);
+    await this.ordersProductsRepository.save(orderProducts);
 
     return payment;
   }

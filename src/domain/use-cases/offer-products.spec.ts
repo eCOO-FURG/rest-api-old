@@ -13,6 +13,7 @@ import { ProductType } from "../entities/product-type";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
 import { Cellphone } from "../entities/value-objects/cellphone";
+import { InvalidWeightError } from "./errors/invalid-weight-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -82,8 +83,7 @@ describe("offer product", () => {
         {
           id: product.id.toString(),
           price: 6.6,
-          quantity: 10,
-          weight: "1.2",
+          quantity_or_weight: 50,
         },
       ],
     });
@@ -118,11 +118,50 @@ describe("offer product", () => {
           {
             id: "wrong-id",
             price: 6.6,
-            quantity: 10,
-            weight: "1.2",
+            quantity_or_weight: 10,
           },
         ],
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
+  });
+
+  it("should no be able to offer products with an invalid weight", async () => {
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
+    });
+
+    inMemoryAccountsRepository.save(account);
+
+    const agribussines = Agribusiness.create({
+      admin_id: account.id,
+      caf: "123456",
+      name: "fake name",
+    });
+
+    inMemoryAgribusinessesRepository.save(agribussines);
+
+    const product = Product.create({
+      name: "potato",
+      image: "potato.url",
+      type_id: new UniqueEntityID("1"),
+      pricing: "WEIGHT",
+    });
+
+    await inMemoryProductsRepository.save(product);
+
+    await expect(async () =>
+      sut.execute({
+        agribusiness_id: agribussines.id.toString(),
+        products: [
+          {
+            id: product.id.toString(),
+            price: 6.6,
+            quantity_or_weight: 10,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InvalidWeightError);
   });
 });
