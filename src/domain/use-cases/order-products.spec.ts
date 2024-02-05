@@ -13,8 +13,8 @@ import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
 import { Cellphone } from "../entities/value-objects/cellphone";
-import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -138,7 +138,7 @@ describe("order products", () => {
     expect(inMemoryOrdersRepository.items).toHaveLength(1);
   });
 
-  it("should not be able to order an unavailable quantity products", async () => {
+  it("should not be able to order an unavailable quantity of products", async () => {
     await inMemoryProductsRepository.save(
       Product.create(
         {
@@ -179,10 +179,54 @@ describe("order products", () => {
           },
         ],
       })
-    ).rejects.toBeInstanceOf(InsufficientProductQuantityError);
+    ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
   });
 
-  it("should not be able to order an unavailable weight products", async () => {
+  it("should not be able to order an unavailable weight of products", async () => {
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "potato",
+          image: "potato.jpg",
+          type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
+        },
+        new UniqueEntityID("1")
+      )
+    );
+
+    await inMemoryOffersProductsRepository.save([
+      OfferProduct.create({
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        offer_id: new UniqueEntityID("1"),
+        quantity_or_weight: 2,
+      }),
+    ]);
+
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
+    });
+
+    await inMemoryAccountsRepository.save(account);
+
+    await expect(() =>
+      sut.execute({
+        account_id: account.id.toString(),
+        shipping_address: "shipping address",
+        products: [
+          {
+            id: "1",
+            quantity_or_weight: 1000,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
+  });
+
+  it("should not be able to order an invalid weight products", async () => {
     await inMemoryProductsRepository.save(
       Product.create(
         {
