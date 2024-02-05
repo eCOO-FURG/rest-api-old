@@ -48,7 +48,8 @@ export class HandleOrderUseCase {
               offerProduct.id.equals(orderProduct.offer_product_id) &&
               offerProduct.product_id.equals(orderProduct.product_id)
           );
-          offersProducts[offerProductIndex].quantity += orderProduct.quantity;
+          offersProducts[offerProductIndex].quantity_or_weight +=
+            orderProduct.quantity_or_weight;
 
           return offersProducts[offerProductIndex];
         });
