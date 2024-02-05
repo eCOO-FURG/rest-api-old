@@ -91,7 +91,7 @@ enum PRICING {
 model Product {
   id      String  @id @default(uuid())
   name    String  @unique
-  image   String  
+  image   String
   pricing PRICING
 
   type_id String
@@ -127,10 +127,9 @@ model Offer {
 }
 
 model OfferProduct {
-  id       String  @id @default(uuid())
-  price    Decimal @db.Decimal(10, 2)
-  quantity Int
-  weight   String
+  id                 String  @id @default(uuid())
+  price              Decimal @db.Decimal(10, 2)
+  quantity_or_weight Decimal @db.Decimal(10, 2)
 
   offer_id String
   offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
@@ -171,8 +170,8 @@ model Order {
 }
 
 model OrderProduct {
-  id       String @id @default(uuid())
-  quantity Int
+  id                 String  @id @default(uuid())
+  quantity_or_weight Decimal @db.Decimal(10, 2)
 
   order_id String
   order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)

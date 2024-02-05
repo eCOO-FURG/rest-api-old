@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { seedUsers } from "./seeds/seed-users";
 import { seedProducts } from "./seeds/seed-products";
 import { seedOffers } from "./seeds/seed-offers";
-import { env } from "@/infra/env";
+import { env } from "../src/infra/env";
 
 const prisma = new PrismaClient();
 

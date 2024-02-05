@@ -65,9 +65,8 @@ Authorization: Bearer {{access_token}}
   "products": [
     {
       "id": "a00453c0-7f14-484f-b0a0-8b9c7e5b5b9c",
-      "quantity": 2,
+      "quantity_or_weight": 2,
       "price": "2",
-      "weight": "3"
     }
   ]
 }
@@ -90,7 +89,7 @@ Authorization: Bearer {{access_token}}
   "products": [
     {
       "id": "59d3beb7-0dc1-4273-9eb9-317f21ad8b96",
-      "quantity": 2
+      "quantity_or_weight": 2
     }
   ]
 }

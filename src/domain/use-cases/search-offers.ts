@@ -35,7 +35,7 @@ export class SearchOffersUseCase {
     const productsIds = products.map((product) => product.id.toString());
 
     const offersProductsWithRemainingQuantity =
-      await this.offersProductsRepository.findManyWithRemainingQuantityByProductsIdsAndStatus(
+      await this.offersProductsRepository.findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
         productsIds,
         "AVAILABLE"
       );

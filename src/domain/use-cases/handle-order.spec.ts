@@ -66,32 +66,28 @@ describe("handle offer", () => {
       offer_id: new UniqueEntityID("1"),
       price: 10.0,
       product_id: new UniqueEntityID("1"),
-      quantity: 4,
-      weight: "10",
+      quantity_or_weight: 4,
     });
 
     const offerProduct2 = OfferProduct.create({
       offer_id: new UniqueEntityID("1"),
       price: 10.0,
       product_id: new UniqueEntityID("2"),
-      quantity: 6,
-      weight: "10",
+      quantity_or_weight: 6,
     });
 
     const offerProduct3 = OfferProduct.create({
       offer_id: new UniqueEntityID("2"),
       price: 10.0,
       product_id: new UniqueEntityID("1"),
-      quantity: 4,
-      weight: "10",
+      quantity_or_weight: 4,
     });
 
     const offerProduct4 = OfferProduct.create({
       offer_id: new UniqueEntityID("3"),
       price: 10.0,
       product_id: new UniqueEntityID("4"),
-      quantity: 20,
-      weight: "10",
+      quantity_or_weight: 20,
     });
 
     await inMemoryOffersProductsRepository.save([
@@ -114,25 +110,25 @@ describe("handle offer", () => {
         offer_product_id: offerProduct1.id,
         order_id: order.id,
         product_id: new UniqueEntityID("1"),
-        quantity: 6,
+        quantity_or_weight: 6,
       }),
       OrderProduct.create({
         offer_product_id: offerProduct2.id,
         order_id: order.id,
         product_id: new UniqueEntityID("2"),
-        quantity: 4,
+        quantity_or_weight: 4,
       }),
       OrderProduct.create({
         offer_product_id: offerProduct3.id,
         order_id: order.id,
         product_id: new UniqueEntityID("1"),
-        quantity: 6,
+        quantity_or_weight: 6,
       }),
       OrderProduct.create({
         offer_product_id: offerProduct4.id,
         order_id: order.id,
         product_id: new UniqueEntityID("4"),
-        quantity: 6,
+        quantity_or_weight: 6,
       }),
     ]);
 
@@ -142,9 +138,17 @@ describe("handle offer", () => {
     });
 
     expect(inMemoryOrdersRepository.items[0].status).toBe("CANCELED");
-    expect(inMemoryOffersProductsRepository.items[0].quantity).toBe(10);
-    expect(inMemoryOffersProductsRepository.items[1].quantity).toBe(10);
-    expect(inMemoryOffersProductsRepository.items[2].quantity).toBe(10);
-    expect(inMemoryOffersProductsRepository.items[3].quantity).toBe(26);
+    expect(inMemoryOffersProductsRepository.items[0].quantity_or_weight).toBe(
+      10
+    );
+    expect(inMemoryOffersProductsRepository.items[1].quantity_or_weight).toBe(
+      10
+    );
+    expect(inMemoryOffersProductsRepository.items[2].quantity_or_weight).toBe(
+      10
+    );
+    expect(inMemoryOffersProductsRepository.items[3].quantity_or_weight).toBe(
+      26
+    );
   });
 });

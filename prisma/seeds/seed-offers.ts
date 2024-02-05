@@ -18,8 +18,10 @@ export async function seedOffers() {
             create: products.map((product) => ({
               product_id: product.id,
               price: "10",
-              quantity: 10,
-              weight: (Math.floor(Math.random() * 6) + 1).toString(),
+              quantity_or_weight:
+                product.pricing === "UNIT"
+                  ? Math.floor(Math.random() * 20 + 1)
+                  : Math.floor(Math.random() * 20 + 1) * 50,
             })),
           },
         },
