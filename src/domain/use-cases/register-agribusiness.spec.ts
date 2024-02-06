@@ -34,6 +34,7 @@ describe("create agribusiness", () => {
       account_id: account.id.toString(),
       caf: "123456",
       name: "fake-agribusiness",
+      active: true,
     });
 
     expect(inMemoryAgribusinessesRepository.items[0]).toBeInstanceOf(
@@ -55,6 +56,7 @@ describe("create agribusiness", () => {
       account_id: account.id.toString(),
       caf: "123456",
       name: "fake-agribusiness",
+      active: true,
     });
 
     await expect(() =>
@@ -62,6 +64,7 @@ describe("create agribusiness", () => {
         account_id: account.id.toString(),
         caf: "123456",
         name: "fake-agribusiness",
+        active: true,
       })
     ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });

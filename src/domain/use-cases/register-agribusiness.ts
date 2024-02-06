@@ -9,6 +9,7 @@ interface RegisterAgribusinessUseCaseRequest {
   account_id: string;
   caf: string;
   name: string;
+  active: boolean;
 }
 
 export class RegisterAgribusinessUseCase {
@@ -17,7 +18,7 @@ export class RegisterAgribusinessUseCase {
     private agribusinessesRepository: AgribusinessesRepository
   ) {}
 
-  async execute({ account_id, caf, name }: RegisterAgribusinessUseCaseRequest) {
+  async execute({ account_id, caf, name, active }: RegisterAgribusinessUseCaseRequest) {
     const account = await this.accountsRepository.findById(account_id);
 
     if (!account) {
@@ -35,6 +36,7 @@ export class RegisterAgribusinessUseCase {
       admin_id: new UniqueEntityID(account_id),
       caf,
       name,
+      active,
     });
 
     await this.agribusinessesRepository.save(agribusiness);
