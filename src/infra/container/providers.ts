@@ -14,7 +14,6 @@ import { env } from "../env";
 import { EjsLoader } from "../mail/ejs-loader";
 import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
-import { QdrantProductsCollection } from "../database/collections/qdrant-products-collection";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
 import { Asaas } from "../payments/asaas-service";
@@ -47,9 +46,6 @@ diContainer.register({
     lifetime: Lifetime.SINGLETON,
   }),
   ordersProductsRepository: asClass(PrismaOrderProductsRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  productsCollection: asClass(QdrantProductsCollection, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
