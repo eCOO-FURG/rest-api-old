@@ -14,12 +14,12 @@ import { env } from "../env";
 import { EjsLoader } from "../mail/ejs-loader";
 import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
-import { TfUseModel } from "../search/tf-use-model";
 import { QdrantProductsCollection } from "../database/collections/qdrant-products-collection";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
 import { Asaas } from "../payments/asaas-service";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
+import { NlpService } from "../search/nlp-service";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
@@ -62,9 +62,8 @@ diContainer.register({
     return new Nodemailer(transporter);
   }),
   viewLoader: asFunction(() => new EjsLoader()),
-  naturalLanguageProcessor: asClass(TfUseModel, {
+  naturalLanguageProcessor: asClass(NlpService, {
     lifetime: "SINGLETON",
-    asyncInit: "init",
   }),
   paymentsProcessor: asFunction(() => {
     if (env.ENV === "dev") {

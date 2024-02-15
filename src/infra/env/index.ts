@@ -7,6 +7,7 @@ const deployValidationSchema = z.object({
   PORT: z.coerce.number().default(3333),
   POSTGRES_URL: z.string(),
   QDRANT_URL: z.string(),
+  NLP_URL: z.string(),
   JWT_SECRET: z.string(),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),

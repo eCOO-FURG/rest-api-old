@@ -20,6 +20,12 @@ export class InMemoryProductsRepository implements ProductsRepository {
     return products;
   }
 
+  async findManyByNames(names: string[]): Promise<Product[]> {
+    const products = this.items.filter((item) => names.includes(item.name));
+
+    return products;
+  }
+
   async save(product: Product): Promise<void> {
     this.items.push(product);
   }
