@@ -86,7 +86,7 @@ describe("update", () => {
     await expect(
       sut.execute({
         agribusiness_id: agribusiness2.id.toString(),
-        name: "Agronegóio do Timóteo",
+        name: "Agronegócio do Timóteo",
         caf: "123456",
         active: true,
       })

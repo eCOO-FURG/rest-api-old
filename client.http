@@ -105,6 +105,6 @@ Authorization: Bearer {{access_token}}
 
 {
   "caf": "agribusiness-caf",
-  "name": "name BANANAO the agribusiness",
+  "name": "agribusiness new name",
   "active": false
 }

@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -35,6 +36,8 @@ export async function updateAgribusiness(
       active,
     });
   } catch (err) {
-    throw err;
+    if (err instanceof ResourceNotFoundError) {
+      return reply.status(404).send({ message: err.message });
+    }
   }
 }
