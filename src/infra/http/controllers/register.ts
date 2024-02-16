@@ -23,7 +23,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
     request.diScope.resolve("onUserRegistered");
-
+    
     await registerUseCase.execute({
       email,
       cellphone: cellphone.toString(),

@@ -21,8 +21,9 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
     await verifyUseCase.execute({
       code,
     });
+    
 
-    return reply.redirect(301, `${env.SERVER_URL}:3000/login`);
+    return reply.redirect(301, `${env.SERVER_URL}:3000/cadastrar`).send({});
   } catch (err) {
     if (err instanceof InvalidValidationCodeError) {
       return reply.status(401).send({ message: err.message });
