@@ -1,4 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -8,9 +9,8 @@ export const offerProductsBodySchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        weight: z.string(),
-        quantity: z.coerce.number(),
-        price: z.string(),
+        quantity_or_weight: z.coerce.number(),
+        price: z.coerce.number(),
       })
     )
     .refine((products) => products.length > 0, {
@@ -44,6 +44,9 @@ export async function offerProducts(
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
+    }
+    if (err instanceof InvalidWeightError) {
+      return reply.status(400).send({ message: err.message });
     }
     throw err;
   }

@@ -1,17 +1,18 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { DayRestrictedError } from "@/domain/use-cases/errors/day-restricted-error";
-import { InsufficientProductQuantityError } from "@/domain/use-cases/errors/insufficient-product-quantity-error";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { PaymentPresenter } from "../presenters/payment-presenter";
+import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
 
 export const orderProductsBodySchema = z.object({
+  shipping_address: z.string(),
   products: z
     .array(
       z.object({
         id: z.string(),
-        quantity: z.coerce.number(),
+        quantity_or_weight: z.coerce.number(),
       })
     )
     .refine((products) => products.length > 0, {
@@ -23,7 +24,9 @@ export async function orderProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { products } = orderProductsBodySchema.parse(request.body);
+  const { shipping_address, products } = orderProductsBodySchema.parse(
+    request.body
+  );
 
   try {
     const orderProductsUseCase = request.diScope.resolve<OrderProductsUseCase>(
@@ -32,6 +35,7 @@ export async function orderProducts(
 
     const payment = await orderProductsUseCase.execute({
       account_id: request.payload.sub,
+      shipping_address,
       products,
     });
 
@@ -43,7 +47,7 @@ export async function orderProducts(
     if (err instanceof DayRestrictedError) {
       return reply.status(403).send({ message: err.message });
     }
-    if (err instanceof InsufficientProductQuantityError) {
+    if (err instanceof InsufficientProductQuantityOrWeightError) {
       return reply.status(400).send({ message: err.message });
     }
     throw err;

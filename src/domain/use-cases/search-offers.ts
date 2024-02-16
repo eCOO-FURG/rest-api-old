@@ -2,7 +2,7 @@ import { ProductsRepository } from "../repositories/products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
-import { RemoteNaturalLanguageProcessor } from "../search/remote-natural-language-processor";
+import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -10,17 +10,13 @@ interface SearchOffersUseCaseRequest {
 
 export class SearchOffersUseCase {
   constructor(
-    private naturalLanguageProcessor: RemoteNaturalLanguageProcessor,
+    private naturalLanguageProcessor: NaturalLanguageProcessor,
     private productsRepository: ProductsRepository,
     private offersProductsRepository: OffersProductsRepository
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    const similarProducts = await this.naturalLanguageProcessor.infer(
-      product,
-      "products",
-      10
-    );
+    const similarProducts = await this.naturalLanguageProcessor.infer(product);
 
     const similarProductsNames = similarProducts.map((item) => item.name);
 
@@ -31,7 +27,7 @@ export class SearchOffersUseCase {
     const productsIds = products.map((product) => product.id.toString());
 
     const offersProductsWithRemainingQuantity =
-      await this.offersProductsRepository.findManyWithRemainingQuantityByProductsIdsAndStatus(
+      await this.offersProductsRepository.findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
         productsIds,
         "AVAILABLE"
       );

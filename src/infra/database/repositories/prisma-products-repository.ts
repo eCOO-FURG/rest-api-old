@@ -43,8 +43,6 @@ export class PrismaProductsRepository implements ProductsRepository {
   }
 
   async findManyByNames(names: string[]): Promise<Product[]> {
-    console.log(names);
-
     const products = await prisma.product.findMany({
       where: {
         name: {

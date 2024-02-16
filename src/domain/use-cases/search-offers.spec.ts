@@ -1,0 +1,96 @@
+import { SearchOffersUseCase } from "./search-offers";
+import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
+import { Product } from "../entities/product";
+import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
+import { OfferProduct } from "../entities/offer-product";
+import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
+import { Offer } from "../entities/offer";
+import { FakeNaturalLanguageProcessor } from "test/search/fake-natural-language-processor";
+import { Record } from "../entities/record";
+
+let fakeNaturalLanguageProcessor: FakeNaturalLanguageProcessor;
+let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryOffersRepository: InMemoryOffersRepository;
+let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
+let sut: SearchOffersUseCase;
+
+describe("search offers", () => {
+  beforeEach(() => {
+    fakeNaturalLanguageProcessor = new FakeNaturalLanguageProcessor();
+    inMemoryProductsRepository = new InMemoryProductsRepository();
+    inMemoryOffersRepository = new InMemoryOffersRepository();
+    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+      inMemoryOffersRepository
+    );
+    sut = new SearchOffersUseCase(
+      fakeNaturalLanguageProcessor,
+      inMemoryProductsRepository,
+      inMemoryOffersProductsRepository
+    );
+  });
+
+  it("should be able to search offers by sematinc similarity", async () => {
+    const products = ["Apple", "Potato", "Strawberry"];
+
+    await Promise.all(
+      products.map(async (name, index) => {
+        await inMemoryProductsRepository.save(
+          Product.create(
+            {
+              name,
+              image: "",
+              type_id: new UniqueEntityID("1"),
+              pricing: "WEIGHT",
+            },
+            new UniqueEntityID(index.toString())
+          )
+        );
+        await fakeNaturalLanguageProcessor.save(
+          Record.create({
+            name,
+          })
+        );
+      })
+    );
+
+    await inMemoryOffersRepository.save(
+      Offer.create(
+        {
+          agribusiness_id: new UniqueEntityID("1"),
+          status: "AVAILABLE",
+        },
+        new UniqueEntityID("1")
+      )
+    );
+
+    await inMemoryOffersRepository.save(
+      Offer.create(
+        {
+          agribusiness_id: new UniqueEntityID("1"),
+          status: "AVAILABLE",
+        },
+        new UniqueEntityID("2")
+      )
+    );
+
+    await inMemoryOffersProductsRepository.save([
+      OfferProduct.create({
+        offer_id: new UniqueEntityID("1"),
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        quantity_or_weight: 50,
+      }),
+      OfferProduct.create({
+        offer_id: new UniqueEntityID("2"),
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        quantity_or_weight: 50,
+      }),
+    ]);
+
+    const result = await sut.execute({ product: "Potato" });
+
+    expect(result[0].offers).toHaveLength(2);
+  });
+});

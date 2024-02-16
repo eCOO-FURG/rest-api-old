@@ -6,8 +6,7 @@ interface OfferProductProps {
   offer_id: UniqueEntityID;
   product_id: UniqueEntityID;
   price: number;
-  quantity: number;
-  weight: string;
+  quantity_or_weight: number;
   created_at: Date;
   updated_at?: Date | null;
 }
@@ -25,16 +24,12 @@ export class OfferProduct extends Entity<OfferProductProps> {
     return this.props.price;
   }
 
-  get quantity() {
-    return this.props.quantity;
+  get quantity_or_weight() {
+    return this.props.quantity_or_weight;
   }
 
-  set quantity(quantity: number) {
-    this.props.quantity = quantity;
-  }
-
-  get weight() {
-    return this.props.weight;
+  set quantity_or_weight(quantity_or_weight: number) {
+    this.props.quantity_or_weight = quantity_or_weight;
   }
 
   get created_at() {

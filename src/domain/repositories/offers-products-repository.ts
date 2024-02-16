@@ -3,7 +3,7 @@ import { OfferProduct } from "../entities/offer-product";
 
 export interface OffersProductsRepository {
   save(items: OfferProduct[]): Promise<void>;
-  findManyWithRemainingQuantityByProductsIdsAndStatus(
+  findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
     product_ids: string[],
     status: Offer["status"]
   ): Promise<OfferProduct[]>;

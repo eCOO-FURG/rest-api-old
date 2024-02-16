@@ -6,14 +6,14 @@ import { OffersProductsRepository } from "../repositories/offers-products-reposi
 import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 import { NotAgrobusinessAdminError } from "./errors/not-agrobusiness-admin-error";
+import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
   products: {
     id: string;
-    weight: string;
-    quantity: number;
+    quantity_or_weight: number;
     price: number;
   }[];
 }
@@ -30,14 +30,6 @@ export class OfferProductsUseCase {
     agribusiness_id,
     products: offeredProducts,
   }: OfferProductsUseCaseRequest) {
-    const agribusiness = await this.agribusinessRepository.findById(
-      agribusiness_id
-    );
-
-    if (!agribusiness) {
-      throw new NotAgrobusinessAdminError();
-    }
-
     const offeredProductsIds = offeredProducts.map(
       (offeredProduct) => offeredProduct.id
     );
@@ -48,27 +40,34 @@ export class OfferProductsUseCase {
 
     const productsIds = products.map((product) => product.id.toString());
 
-    for (const offeredProduct of offeredProducts) {
-      if (!productsIds.includes(offeredProduct.id)) {
-        throw new ResourceNotFoundError(offeredProduct.id);
-      }
-    }
-
     const offer = Offer.create({
-      agribusiness_id: agribusiness.id,
+      agribusiness_id: new UniqueEntityID(agribusiness_id),
+    });
+
+    const offerProducts = offeredProducts.map((item) => {
+      if (!productsIds.includes(item.id)) {
+        throw new ResourceNotFoundError(item.id);
+      }
+
+      const product = products.find(
+        (product) => product.id.toString() === item.id
+      )!;
+
+      if (product.pricing === "WEIGHT") {
+        if (item.quantity_or_weight % 50 !== 0) {
+          throw new InvalidWeightError("offered", product.name);
+        }
+      }
+
+      return OfferProduct.create({
+        offer_id: offer.id,
+        price: item.price,
+        product_id: product.id,
+        quantity_or_weight: item.quantity_or_weight,
+      });
     });
 
     await this.offersRepository.save(offer);
-
-    const offerProducts = offeredProducts.map((product) =>
-      OfferProduct.create({
-        offer_id: offer.id,
-        product_id: new UniqueEntityID(product.id),
-        price: product.price,
-        weight: product.weight,
-        quantity: product.quantity,
-      })
-    );
 
     await this.offersProductsRepository.save(offerProducts);
   }

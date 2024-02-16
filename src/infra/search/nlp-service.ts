@@ -1,10 +1,11 @@
-import { env } from "@/infra/env";
-import { RemoteNaturalLanguageProcessor } from "@/domain/search/remote-natural-language-processor";
+import { NaturalLanguageProcessor } from "@/domain/search/natural-language-processor";
+import { env } from "../env";
+import { Record } from "@/domain/entities/record";
 
-export class NlpService implements RemoteNaturalLanguageProcessor {
-  async infer(text: string, collection: string, limit: number = 10) {
+export class NlpService implements NaturalLanguageProcessor {
+  async infer(text: string, limit: number = 10): Promise<Record[]> {
     const inferences = await fetch(
-      `${env.NLP_URL}/${collection}/infer?q=${text}&limit=${limit}`,
+      `${env.NLP_URL}/products/infer?q=${text}&limit=${limit}`,
       {
         method: "GET",
       }
@@ -12,6 +13,14 @@ export class NlpService implements RemoteNaturalLanguageProcessor {
       .then((response: any) => response.json())
       .catch((err: Error) => err);
 
-    return inferences;
+    const records = inferences.map(
+      (inference: { name: string; score: number }) =>
+        Record.create({
+          name: inference.name,
+          score: inference.score,
+        })
+    );
+
+    return records;
   }
 }

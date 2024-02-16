@@ -22,14 +22,14 @@ export class InMemoryOffersProductsRepository
     }
   }
 
-  async findManyWithRemainingQuantityByProductsIdsAndStatus(
+  async findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
     product_ids: string[]
   ): Promise<OfferProduct[]> {
     const offersProducts = this.items.filter(
       (item) =>
-        item.quantity != 0 &&
+        item.quantity_or_weight != 0 &&
         product_ids.includes(item.product_id.toString()) &&
-        item.quantity > 0
+        item.quantity_or_weight > 0
     );
 
     return offersProducts;
