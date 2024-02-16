@@ -41,4 +41,20 @@ export class PrismaProductsRepository implements ProductsRepository {
 
     return mappedProducts;
   }
+
+  async findManyByNames(names: string[]): Promise<Product[]> {
+    const products = await prisma.product.findMany({
+      where: {
+        name: {
+          in: names,
+        },
+      },
+    });
+
+    const mappedProducts = products.map((product) =>
+      PrismaProductMapper.toDomain(product)
+    );
+
+    return mappedProducts;
+  }
 }

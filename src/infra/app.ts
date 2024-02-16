@@ -1,4 +1,3 @@
-import "./config/tensor-flow";
 import "./container/";
 import fastify from "fastify";
 import swagger from "@fastify/swagger";

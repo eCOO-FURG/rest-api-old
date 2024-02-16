@@ -1,3 +1,5 @@
+import { Record } from "../entities/record";
+
 export interface NaturalLanguageProcessor {
-  embed(value: string): Promise<number[]>;
+  infer(text: string, limit?: number): Promise<Record[]>;
 }

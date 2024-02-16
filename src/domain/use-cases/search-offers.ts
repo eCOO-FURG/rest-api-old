@@ -1,9 +1,8 @@
-import { Collection } from "../repositories/collection";
-import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { ProductsRepository } from "../repositories/products-repository";
 import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OfferProduct } from "../entities/offer-product";
+import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -12,24 +11,17 @@ interface SearchOffersUseCaseRequest {
 export class SearchOffersUseCase {
   constructor(
     private naturalLanguageProcessor: NaturalLanguageProcessor,
-    private productsCollection: Collection,
     private productsRepository: ProductsRepository,
     private offersProductsRepository: OffersProductsRepository
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    const productEmbedding = await this.naturalLanguageProcessor.embed(product);
+    const similarProducts = await this.naturalLanguageProcessor.infer(product);
 
-    const similarProducts = await this.productsCollection.findSimilar(
-      productEmbedding
-    );
+    const similarProductsNames = similarProducts.map((item) => item.name);
 
-    const similarProductsIds = similarProducts.map((item) =>
-      item.id.toString()
-    );
-
-    const products = await this.productsRepository.findManyByIds(
-      similarProductsIds
+    const products = await this.productsRepository.findManyByNames(
+      similarProductsNames
     );
 
     const productsIds = products.map((product) => product.id.toString());

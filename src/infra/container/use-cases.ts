@@ -64,13 +64,11 @@ diContainer.register({
   searchOffersUseCase: asFunction(
     ({
       naturalLanguageProcessor,
-      productsCollection,
       productsRepository,
       offersProductsRepository,
     }) =>
       new SearchOffersUseCase(
         naturalLanguageProcessor,
-        productsCollection,
         productsRepository,
         offersProductsRepository
       )
