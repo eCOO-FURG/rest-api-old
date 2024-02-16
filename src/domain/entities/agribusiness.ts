@@ -16,8 +16,24 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     return this.props.name;
   }
 
+  set name(name: string) {
+    this.props.name = name;
+  }
+
   get caf() {
     return this.props.caf;
+  }
+
+  set caf(caf: string) {
+    this.props.caf = caf;
+  }
+
+  get active() {
+    return this.props.active;
+  }
+
+  set active(active: boolean) {
+    this.props.active = active;
   }
 
   get admin_id() {
@@ -32,8 +48,12 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     return this.props.updated_at;
   }
 
+  touch() {
+    this.props.updated_at = new Date();
+  }
+
   static create(
-    props: Optional<AgribusinessProps, "created_at">,
+    props: Optional<AgribusinessProps, "created_at" | "active">,
     id?: UniqueEntityID
   ) {
     const agribusiness = new Agribusiness(
@@ -46,21 +66,5 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     );
 
     return agribusiness;
-  }
-
-  static update(
-    agribusiness: Agribusiness,
-    updates: Partial<AgribusinessProps>
-  ) {
-    const updatedAgribusiness = new Agribusiness(
-      {
-        ...agribusiness.props,
-        ...updates,
-        updated_at: new Date(),
-      },
-      agribusiness.id
-    );
-
-    return updatedAgribusiness;
   }
 }

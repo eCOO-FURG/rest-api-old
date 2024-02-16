@@ -11,6 +11,7 @@ import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admi
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
 import { handleOrder } from "./handle-order";
+import { updateAgribusiness } from "./update-agribusiness";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -52,4 +53,12 @@ export async function routes(app: FastifyInstance) {
   );
 
   app.post("/payments", handleOrder);
+
+  app.patch(
+    "/agribusiness",
+    {
+      onRequest: [ensureAuthenticated, ensureAgribusinessAdmin],
+    },
+    updateAgribusiness
+  );
 }

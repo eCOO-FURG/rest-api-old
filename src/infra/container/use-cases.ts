@@ -7,6 +7,7 @@ import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
+import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -104,5 +105,12 @@ diContainer.register({
         ordersProductsRepository,
         offersProductsRepository
       )
+  ),
+  updateAgribusinessUseCase: asFunction(
+    ({ agribusinessesRepository }) =>
+      new UpdateAgribusinessUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
   ),
 });

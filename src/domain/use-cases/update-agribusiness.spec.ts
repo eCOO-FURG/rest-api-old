@@ -17,7 +17,7 @@ describe("update", () => {
     sut = new UpdateAgribusinessUseCase(inMemoryAgribusinessesRepository);
   });
 
-  it("should be able to update the name of a existing agribusiness", async () => {
+  it("should be able to update the name of an existing agribusiness", async () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: "123456",
@@ -39,10 +39,16 @@ describe("update", () => {
     await sut.execute({
       agribusiness_id: agribusiness.id.toString(),
       name: "Agronegócio do Eduardo",
+      caf: "123456",
+      active: true,
     });
+
+    expect(inMemoryAgribusinessesRepository.items[0].name).toBe(
+      "Agronegócio do Eduardo"
+    );
   });
 
-  it("should not be able to update an agribusiness with a name that already exists", async () => {
+  it("should not be able to update an agribusiness with a caf that already exists", async () => {
     const account1 = Account.create({
       email: "johndoe@example.com",
       password: "123456",
@@ -80,7 +86,9 @@ describe("update", () => {
     await expect(
       sut.execute({
         agribusiness_id: agribusiness2.id.toString(),
+        name: "Agronegóio do Timóteo",
         caf: "123456",
+        active: true,
       })
     ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });

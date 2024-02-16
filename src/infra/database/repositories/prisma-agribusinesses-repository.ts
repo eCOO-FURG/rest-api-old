@@ -41,4 +41,15 @@ export class PrismaAgribusinessesRepository
       data,
     });
   }
+
+  async update(agribusiness: Agribusiness): Promise<void> {
+    const data = PrismaAgribusinessMapper.toPrisma(agribusiness);
+
+    await prisma.agribusiness.update({
+      where: {
+        id: agribusiness.id.toString(),
+      },
+      data,
+    });
+  }
 }

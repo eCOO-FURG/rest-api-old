@@ -25,4 +25,12 @@ export class InMemoryAgribusinessesRepository
   async save(agribusiness: Agribusiness): Promise<void> {
     this.items.push(agribusiness);
   }
+
+  async update(agribusiness: Agribusiness): Promise<void> {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === agribusiness.id
+    );
+
+    this.items[itemIndex] = agribusiness;
+  }
 }

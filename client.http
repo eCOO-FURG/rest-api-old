@@ -6,12 +6,12 @@ POST {{base_url}}/users
 Content-Type: application/json
 
 {
-  "email": "johndoe@example.cppam",
-  "cellphone": 519876543,
+  "email": "eduardo@example.cppam",
+  "cellphone": 519876553,
   "password": "12345678",
   "first_name": "John",
   "last_name": "Doe",
-  "cpf": "103.202.243-41"
+  "cpf": "042.056.160-90"
 }
 
 ###
@@ -21,7 +21,7 @@ POST {{base_url}}/auth
 Content-Type: application/json
 
 {
-  "email": "johndoe@example.com",
+  "email": "eduardo@example.cppam",
   "password": "12345678"
 }
 
@@ -51,7 +51,8 @@ Authorization: Bearer {{access_token}}
 
 {
  "caf": "agribusiness-caf",
- "name": "name of the agribusiness" 
+ "name": "name of the agribusiness",
+ "active": true
 }
 
 ###
@@ -64,7 +65,7 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "id": "a00453c0-7f14-484f-b0a0-8b9c7e5b5b9c",
+      "id": "990cb365-4357-45d8-b3bd-848b16b18a25",
       "quantity": 2,
       "price": "2",
       "weight": "3"
@@ -93,4 +94,17 @@ Authorization: Bearer {{access_token}}
       "quantity": 2
     }
   ]
+}
+
+###
+
+# @name update-agribusiness
+PATCH {{base_url}}/agribusiness
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "caf": "agribusiness-caf",
+  "name": "name BANANAO the agribusiness",
+  "active": false
 }
