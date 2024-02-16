@@ -24,8 +24,6 @@ export class SearchOffersUseCase {
 
     const similarProductsNames = similarProducts.map((item) => item.name);
 
-    console.log(this.productsRepository);
-
     const products = await this.productsRepository.findManyByNames(
       similarProductsNames
     );

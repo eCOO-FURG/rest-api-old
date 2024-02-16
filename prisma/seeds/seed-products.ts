@@ -12,7 +12,7 @@ export async function seedProducts() {
       data: {
         name: category.name,
         products: {
-          create: category.items?.map((item) => ({
+          create: category.items.map((item) => ({
             name: item.name,
             pricing: item.pricing as PRICING,
             image: item.image,
