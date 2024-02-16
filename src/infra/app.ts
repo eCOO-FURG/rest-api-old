@@ -1,4 +1,3 @@
-import "./config/tensor-flow";
 import "./container/";
 import fastify from "fastify";
 import swagger from "@fastify/swagger";
@@ -8,8 +7,13 @@ import { ZodError } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
 import { FastifySwaggerOptions } from "./helpers/swagger";
+import cors from '@fastify/cors'
 
 export const app = fastify();
+
+app.register(cors, { 
+  origin: true, //Todas as URLs de front-end podem acessar nosso back-end
+})
 
 app.register(fastifyAwilixPlugin, {
   asyncInit: true,

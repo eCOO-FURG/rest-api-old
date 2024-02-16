@@ -9,11 +9,12 @@ import { OfferProduct } from "../entities/offer-product";
 import { Order } from "../entities/order";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
-import { InsufficientProductQuantityError } from "./errors/insufficient-product-quantity-error";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { Account } from "../entities/account";
 import { Cellphone } from "../entities/value-objects/cellphone";
+import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -52,7 +53,7 @@ describe("order products", () => {
           name: "potato",
           image: "potato.jpg",
           type_id: new UniqueEntityID("1"),
-          pricing: "WEIGHT",
+          pricing: "UNIT",
         },
         new UniqueEntityID("1")
       )
@@ -75,22 +76,25 @@ describe("order products", () => {
         product_id: new UniqueEntityID("1"),
         price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 4,
-        weight: "2",
+        quantity_or_weight: 4,
       }),
       OfferProduct.create({
         product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity: 4,
-        weight: "2",
+        price: 2,
+        offer_id: new UniqueEntityID("2"),
+        quantity_or_weight: 4,
       }),
       OfferProduct.create({
         product_id: new UniqueEntityID("2"),
         price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 4,
-        weight: "2",
+        quantity_or_weight: 200,
+      }),
+      OfferProduct.create({
+        product_id: new UniqueEntityID("2"),
+        price: 2,
+        offer_id: new UniqueEntityID("2"),
+        quantity_or_weight: 100,
       }),
     ]);
 
@@ -107,24 +111,78 @@ describe("order products", () => {
       products: [
         {
           id: "1",
-          quantity: 6,
+          quantity_or_weight: 6,
         },
         {
           id: "2",
-          quantity: 2,
+          quantity_or_weight: 250,
         },
       ],
+      shipping_address: "shipping address",
     });
 
-    expect(result.value).toBe("8");
-    expect(inMemoryOffersProductsRepository.items[0].quantity).toBe(0);
-    expect(inMemoryOffersProductsRepository.items[1].quantity).toBe(2);
-    expect(inMemoryOffersProductsRepository.items[2].quantity).toBe(2);
+    expect(result.value).toBe("308");
+    expect(inMemoryOffersProductsRepository.items[0].quantity_or_weight).toBe(
+      0
+    );
+    expect(inMemoryOffersProductsRepository.items[1].quantity_or_weight).toBe(
+      2
+    );
+    expect(inMemoryOffersProductsRepository.items[2].quantity_or_weight).toBe(
+      0
+    );
+    expect(inMemoryOffersProductsRepository.items[3].quantity_or_weight).toBe(
+      50
+    );
     expect(inMemoryOrdersRepository.items[0]).toBeInstanceOf(Order);
     expect(inMemoryOrdersRepository.items).toHaveLength(1);
   });
 
   it("should not be able to order an unavailable quantity of products", async () => {
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "potato",
+          image: "potato.jpg",
+          type_id: new UniqueEntityID("1"),
+          pricing: "UNIT",
+        },
+        new UniqueEntityID("1")
+      )
+    );
+
+    await inMemoryOffersProductsRepository.save([
+      OfferProduct.create({
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        offer_id: new UniqueEntityID("1"),
+        quantity_or_weight: 2,
+      }),
+    ]);
+
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
+    });
+
+    await inMemoryAccountsRepository.save(account);
+
+    await expect(() =>
+      sut.execute({
+        account_id: account.id.toString(),
+        shipping_address: "shipping address",
+        products: [
+          {
+            id: "1",
+            quantity_or_weight: 1000,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
+  });
+
+  it("should not be able to order an unavailable weight of products", async () => {
     await inMemoryProductsRepository.save(
       Product.create(
         {
@@ -142,8 +200,7 @@ describe("order products", () => {
         product_id: new UniqueEntityID("1"),
         price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 2,
-        weight: "2",
+        quantity_or_weight: 2,
       }),
     ]);
 
@@ -158,14 +215,59 @@ describe("order products", () => {
     await expect(() =>
       sut.execute({
         account_id: account.id.toString(),
+        shipping_address: "shipping address",
         products: [
           {
             id: "1",
-            quantity: 1000,
+            quantity_or_weight: 1000,
           },
         ],
       })
-    ).rejects.toBeInstanceOf(InsufficientProductQuantityError);
+    ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
+  });
+
+  it("should not be able to order an invalid weight products", async () => {
+    await inMemoryProductsRepository.save(
+      Product.create(
+        {
+          name: "potato",
+          image: "potato.jpg",
+          type_id: new UniqueEntityID("1"),
+          pricing: "WEIGHT",
+        },
+        new UniqueEntityID("1")
+      )
+    );
+
+    await inMemoryOffersProductsRepository.save([
+      OfferProduct.create({
+        product_id: new UniqueEntityID("1"),
+        price: 1,
+        offer_id: new UniqueEntityID("1"),
+        quantity_or_weight: 2,
+      }),
+    ]);
+
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+      cellphone: Cellphone.createFromText("51987654321"),
+    });
+
+    await inMemoryAccountsRepository.save(account);
+
+    await expect(() =>
+      sut.execute({
+        account_id: account.id.toString(),
+        shipping_address: "shipping address",
+        products: [
+          {
+            id: "1",
+            quantity_or_weight: 40,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InvalidWeightError);
   });
 
   it("should not be able to order products that do not exist", async () => {
@@ -186,8 +288,7 @@ describe("order products", () => {
         product_id: new UniqueEntityID("1"),
         price: 1,
         offer_id: new UniqueEntityID("1"),
-        quantity: 2,
-        weight: "2",
+        quantity_or_weight: 2,
       }),
     ]);
 
@@ -202,10 +303,11 @@ describe("order products", () => {
     await expect(() =>
       sut.execute({
         account_id: account.id.toString(),
+        shipping_address: "shipping address",
         products: [
           {
             id: "1",
-            quantity: 2,
+            quantity_or_weight: 2,
           },
         ],
       })

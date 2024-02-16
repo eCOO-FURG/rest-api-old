@@ -17,7 +17,7 @@ export class PrismaOffersProductsRepository
     });
   }
 
-  async findManyWithRemainingQuantityByProductsIdsAndStatus(
+  async findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
     product_ids: string[],
     status: Offer["status"]
   ): Promise<OfferProduct[]> {
@@ -26,7 +26,7 @@ export class PrismaOffersProductsRepository
         product_id: {
           in: product_ids,
         },
-        quantity: {
+        quantity_or_weight: {
           gt: 0,
         },
         offer: {

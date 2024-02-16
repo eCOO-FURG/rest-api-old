@@ -8,7 +8,7 @@ export class PrismaOrderProductMapper {
       {
         order_id: new UniqueEntityID(raw.order_id),
         product_id: new UniqueEntityID(raw.product_id),
-        quantity: raw.quantity,
+        quantity_or_weight: raw.quantity_or_weight.toNumber(),
         offer_product_id: new UniqueEntityID(raw.offer_product_id),
         created_at: raw.created_at,
         updated_at: raw.created_at,
@@ -25,7 +25,7 @@ export class PrismaOrderProductMapper {
       order_id: orderProduct.order_id.toString(),
       product_id: orderProduct.product_id.toString(),
       offer_product_id: orderProduct.offer_product_id.toString(),
-      quantity: orderProduct.quantity,
+      quantity_or_weight: orderProduct.quantity_or_weight,
       created_at: orderProduct.created_at,
       updated_at: orderProduct.updated_at,
     };

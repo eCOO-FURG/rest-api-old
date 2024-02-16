@@ -1,4 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InvalidValidationCodeError } from "@/domain/use-cases/errors/invalid-validation-code-error";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { env } from "@/infra/env";
 import { FastifyReply, FastifyRequest } from "fastify";
@@ -20,9 +21,14 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
     await verifyUseCase.execute({
       code,
     });
+    
 
-    return reply.redirect(301, `${env.SERVER_URL}:3000/login`);
+    return reply.redirect(301, `${env.SERVER_URL}:3000/cadastrar`).send({});
   } catch (err) {
+    if (err instanceof InvalidValidationCodeError) {
+      return reply.status(401).send({ message: err.message });
+    }
+
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
     }
