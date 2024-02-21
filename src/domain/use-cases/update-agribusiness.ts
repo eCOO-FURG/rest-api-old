@@ -5,7 +5,6 @@ interface UpdateAgribusinessUseCaseRequest {
   agribusiness_id: string;
   caf: string;
   name: string;
-  active: boolean;
 }
 
 export class UpdateAgribusinessUseCase {
@@ -15,7 +14,6 @@ export class UpdateAgribusinessUseCase {
     agribusiness_id,
     caf,
     name,
-    active,
   }: UpdateAgribusinessUseCaseRequest) {
     const agribusiness = await this.agribusinessesRepository.findById(
       agribusiness_id
@@ -32,7 +30,6 @@ export class UpdateAgribusinessUseCase {
 
     agribusiness!.name = name;
     agribusiness!.caf = caf;
-    agribusiness!.active = active;
     agribusiness!.touch();
 
     await this.agribusinessesRepository.update(agribusiness!);

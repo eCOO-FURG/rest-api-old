@@ -40,7 +40,6 @@ describe("update", () => {
       agribusiness_id: agribusiness.id.toString(),
       name: "Agronegócio do Eduardo",
       caf: "123456",
-      active: true,
     });
 
     expect(inMemoryAgribusinessesRepository.items[0].name).toBe(
@@ -88,7 +87,6 @@ describe("update", () => {
         agribusiness_id: agribusiness2.id.toString(),
         name: "Agronegócio do Timóteo",
         caf: "123456",
-        active: true,
       })
     ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });

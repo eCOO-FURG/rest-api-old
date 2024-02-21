@@ -6,7 +6,6 @@ import { z } from "zod";
 export const updateAgribusinessBodySchema = z.object({
   caf: z.string(),
   name: z.string(),
-  active: z.boolean(),
 });
 
 const offerProductsPayloadSchema = z.object({
@@ -17,23 +16,20 @@ export async function updateAgribusiness(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { caf, name, active } = updateAgribusinessBodySchema.parse(
-    request.body
-  );
+  const { caf, name } = updateAgribusinessBodySchema.parse(request.body);
 
   const { agribusiness_id } = offerProductsPayloadSchema.parse(request.payload);
 
   try {
-    const UpdateAgribusinessUseCase =
+    const updateAgribusinessUseCase =
       request.diScope.resolve<UpdateAgribusinessUseCase>(
         "updateAgribusinessUseCase"
       );
 
-    await UpdateAgribusinessUseCase.execute({
+    await updateAgribusinessUseCase.execute({
       agribusiness_id,
       caf,
       name,
-      active,
     });
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {

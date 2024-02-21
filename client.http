@@ -11,7 +11,7 @@ Content-Type: application/json
   "password": "12345678",
   "first_name": "John",
   "last_name": "Doe",
-  "cpf": "042.056.160-90"
+  "cpf": "103.202.243-41"
 }
 
 ###
@@ -21,7 +21,7 @@ POST {{base_url}}/auth
 Content-Type: application/json
 
 {
-  "email": "eduardo@example.cppam",
+  "email": "johndoe@example.com",
   "password": "12345678"
 }
 
@@ -50,8 +50,8 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
- "caf": "agribusiness-caf",
- "name": "name of the agribusiness",
+ "caf": "15517887",
+ "name": "agribusiness do joao",
  "active": true
 }
 
@@ -104,7 +104,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "caf": "agribusiness-caf",
-  "name": "agribusiness new name",
-  "active": false
+  "caf": "1111221111111111",
+  "name": "agribusiness updated name"
+  
 }
