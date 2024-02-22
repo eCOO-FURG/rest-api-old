@@ -4,13 +4,12 @@ import { env } from "../env";
 import { Charge } from "@/domain/entities/charge";
 import { Payment } from "@/domain/entities/payment";
 
-const assasUrls: Record<typeof env.ENV, string> = {
-  production: "https://asaas.com/api/v3",
-  test: "https://sandbox.asaas.com/api/v3",
-  dev: "https://sandbox.asaas.com/api/v3",
+const assasUrls: Record<Exclude<typeof env.ENV, "test" | "dev">, string> = {
+  prod: "https://asaas.com/api/v3",
+  homolog: "https://sandbox.asaas.com/api/v3",
 };
 
-const assasUrl = assasUrls[env.ENV];
+const assasUrl = assasUrls[env.ENV as "prod" | "homolog"];
 
 export class Asaas implements PaymentsProcessor {
   async registerCustomer(customer: Customer): Promise<void> {
