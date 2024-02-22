@@ -19,7 +19,6 @@ import { PrismaOrderProductsRepository } from "../database/repositories/prisma-o
 import { Asaas } from "../payments/asaas-service";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
-import { op } from "@tensorflow/tfjs-node";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
