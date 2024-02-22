@@ -11,7 +11,5 @@ EXPOSE 5000
 
 COPY . ./
 
-RUN sh -c python seed.py
-
 CMD sh -c "python main.py"
 
