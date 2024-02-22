@@ -1,7 +1,6 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Optional } from "@/core/types/optional";
-import { s } from "vitest/dist/types-198fd1d9";
 
 interface OrderProps {
   customer_id: UniqueEntityID;

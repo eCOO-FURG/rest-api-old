@@ -12,16 +12,18 @@ const deployValidationSchema = z.object({
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
   ECOO_EMAIL: z.string(),
+  ECOO_EMAIL_PASSWORD: z.string(),
   SESSION_DURATION_IN_DAYS: z.coerce.number(),
   EXPECTED_SIMILARITY_SCORE: z.coerce.number(),
   PAYMENTS_PROCESSOR_API_KEY: z.string(),
 });
 
-const localValidationSchema = deployValidationSchema.omit({
+const devValidationSchema = deployValidationSchema.omit({
   PAYMENTS_PROCESSOR_API_KEY: true,
+  ECOO_EMAIL_PASSWORD: true,
 });
 
-const testValidationSchema = localValidationSchema.omit({
+const testValidationSchema = devValidationSchema.omit({
   SMTP_HOST: true,
   SMTP_PORT: true,
   QDRANT_URL: true,
@@ -41,7 +43,7 @@ if (!environment) {
 
 const validationSchema =
   environment === "dev"
-    ? localValidationSchema
+    ? devValidationSchema
     : environment === "test"
     ? testValidationSchema
     : deployValidationSchema;
