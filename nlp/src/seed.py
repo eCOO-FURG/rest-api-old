@@ -13,7 +13,7 @@ with open('./products.json', 'r') as json_file:
 
 model = hub.load("https://tfhub.dev/google/universal-sentence-encoder-multilingual/3")
 
-qdrant_client.create_collection(
+qdrant_client.recreate_collection(
     collection_name="products",
     vectors_config=VectorParams(size=512, distance=Distance.COSINE),
 )
@@ -37,3 +37,5 @@ qdrant_client.upsert(
     vectors=[item["vector"] for item in products],
     ),
 )
+
+print("\n Your database is now sync with your seed. 🌱")

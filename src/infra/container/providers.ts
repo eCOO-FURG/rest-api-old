@@ -51,10 +51,22 @@ diContainer.register({
   hasher: asClass(BcrypterHasher),
   encrypter: asFunction(() => new JwtEncrypter(JwtService)),
   mailer: asFunction(() => {
-    const transporter = createTransport({
+    const options = {
       host: env.SMTP_HOST,
       port: env.SMTP_PORT,
-    });
+    };
+
+    if (["prod", "homolog"].includes(env.ENV)) {
+      Object.assign(options, {
+        auth: {
+          user: env.ECOO_EMAIL,
+          pass: env.ECOO_EMAIL_PASSWORD,
+        },
+      });
+    }
+
+    const transporter = createTransport(options);
+
     return new Nodemailer(transporter);
   }),
   viewLoader: asFunction(() => new EjsLoader()),
@@ -62,10 +74,9 @@ diContainer.register({
     lifetime: "SINGLETON",
   }),
   paymentsProcessor: asFunction(() => {
-    if (env.ENV === "dev") {
-      return new FakePaymentsProcessor();
+    if (env.ENV === "prod") {
+      return new Asaas();
     }
-
-    return new Asaas();
+    return new FakePaymentsProcessor();
   }),
 });

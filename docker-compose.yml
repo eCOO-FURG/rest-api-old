@@ -16,23 +16,8 @@ services:
     ports:
       - "6333:6333"
 
-  qdrant_scripts:
-    container_name: qdrant_scripts
-    build:
-      context: ./qdrant
-      dockerfile: ./Dockerfile
-      args:
-        - REQUIREMENTS_TXT_PATH=./requirements.txt
-    volumes:
-      - ./products.json:/app/products.json
-      - ./qdrant/seed.py:/app/seed.py
-      - ./nlp/src/utils/:/app/utils/
-      - ./nlp/src/qdrant_service.py:/app/qdrant_service.py
-    depends_on:
-      - qdrant
-
   nlp:
-    container_name: ecoo_nlp
+    container_name: ecoo-nlp
     build:
       context: ./nlp/
       dockerfile: ./Dockerfile
@@ -40,6 +25,7 @@ services:
         - REQUIREMENTS_TXT_PATH=./requirements.txt
     volumes:
       - ./nlp/src/:/app/
+      - ./products.json:/app/products.json
     ports:
       - "5000:5000"
     depends_on:

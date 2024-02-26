@@ -53,8 +53,6 @@ export class PrismaAccountsRepository implements AccountsRepository {
       account.verify();
     }
 
-    console.log(env.ENV, account.verified_at);
-
     const data = PrismaAccountMapper.toPrisma(account);
 
     await prisma.account.create({
