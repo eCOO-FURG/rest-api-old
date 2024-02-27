@@ -1,5 +1,5 @@
 @base_url = http://localhost:3333
-@access_token = {{authenticate.response.body.access_token}}
+@access_token = {{authenticate_with_password.response.body.access_token}}
 
 # @name register
 POST {{base_url}}/users
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 ###
 
-# @name authenticate
+# @name authenticate_with_password
 POST {{base_url}}/auth
 Content-Type: application/json
 
@@ -98,10 +98,22 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name register-one-time-password
+POST {{base_url}}/users/otp
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "email": "johndoe@example.com"
+}
+
+###
+
+# @name authenticate-with-one-time-password
 POST {{base_url}}/auth/otp
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "email": "timoteostifft@gmail.com"
+  "email": "johndoe@example.com",
+  "one_time_password": "280441"
 }

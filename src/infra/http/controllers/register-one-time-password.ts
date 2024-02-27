@@ -18,6 +18,8 @@ export async function registerOneTimePassword(
         "registerOneTimePasswordUseCase"
       );
 
+    request.diScope.resolve("onOneTimePasswordRegistered");
+
     await registerOneTimePassword.execute({
       email,
     });

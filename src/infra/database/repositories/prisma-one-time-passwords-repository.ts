@@ -14,7 +14,18 @@ export class PrismaOneTimePasswordsRepository
     });
   }
 
-  async expirePreviousOneTimePassword(account_id: string): Promise<void> {
+  async update(oneTimePassword: OneTimePassword): Promise<void> {
+    const data = PrismaOneTimePasswordMapper.toPrisma(oneTimePassword);
+
+    await prisma.oneTimePassword.update({
+      where: {
+        id: oneTimePassword.id.toString(),
+      },
+      data,
+    });
+  }
+
+  async expirePreviousForAccountId(account_id: string): Promise<void> {
     await prisma.oneTimePassword.updateMany({
       where: {
         account_id,
@@ -25,5 +36,27 @@ export class PrismaOneTimePasswordsRepository
         updated_at: new Date(),
       },
     });
+  }
+
+  async findValidByAccountId(
+    account_id: string
+  ): Promise<OneTimePassword | null> {
+    const fifteenMinutesAgo = new Date(new Date().getTime() - 15 * 60 * 1000);
+
+    const oneTimePassword = await prisma.oneTimePassword.findFirst({
+      where: {
+        used: false,
+        account_id: account_id,
+        created_at: {
+          gte: fifteenMinutesAgo,
+        },
+      },
+    });
+
+    if (!oneTimePassword) {
+      return null;
+    }
+
+    return PrismaOneTimePasswordMapper.toDomain(oneTimePassword);
   }
 }
