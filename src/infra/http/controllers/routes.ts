@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { register } from "./register";
-import { authenticate } from "./authenticate";
+import { authenticateWithPassword } from "./authenticate-with-password";
 import { getUserProfile } from "./get-user-profile";
 import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
 import { refresh } from "./refresh";
@@ -11,12 +11,17 @@ import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admi
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
 import { handleOrder } from "./handle-order";
+import { registerOneTimePassword } from "./register-one-time-password";
+import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
-  app.post("/auth", authenticate);
-  app.post("/auth/refresh", refresh);
   app.get("/users/verify", verify);
+  app.post("/users/otp", registerOneTimePassword);
+
+  app.post("/auth", authenticateWithPassword);
+  app.post("/auth/otp", authenticateWithOneTimePassword);
+  app.post("/auth/refresh", refresh);
 
   app.post(
     "/agribusinesses",

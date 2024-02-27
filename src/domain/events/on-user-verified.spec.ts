@@ -9,6 +9,7 @@ import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { Account } from "../entities/account";
 import { Person } from "../entities/person";
 import { Cpf } from "../entities/value-objects/cpf";
+import { Cellphone } from "../entities/value-objects/cellphone";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let fakePaymentsProcessor: FakePaymentsProcessor;
@@ -40,6 +41,7 @@ describe("on user verified", () => {
     const account = Account.create({
       email: "johndoe@example.com",
       password: "123456",
+      cellphone: Cellphone.createFromText("51987654321"),
     });
 
     inMemoryAccountsRepository.save(account);

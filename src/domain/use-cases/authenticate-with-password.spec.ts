@@ -1,6 +1,5 @@
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { AuthenticateUseCase } from "./authenticate";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { Account } from "../entities/account";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
@@ -8,24 +7,30 @@ import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions
 import { Session } from "../entities/session";
 import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 import { Cellphone } from "../entities/value-objects/cellphone";
+import { AuthenticateWithPasswordUseCase } from "./authenticate-with-password";
+import { RegisterSessionUseCase } from "./register-session";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemorySessionsRepository: InMemorySessionsRepository;
-let fakeHasher: FakeHasher;
 let fakeEncrypter: FakeEncrypter;
-let sut: AuthenticateUseCase;
+let registerSessionUseCase: RegisterSessionUseCase;
+let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let fakeHasher: FakeHasher;
+let sut: AuthenticateWithPasswordUseCase;
 
 describe("authenticate", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemorySessionsRepository = new InMemorySessionsRepository();
-    fakeHasher = new FakeHasher();
     fakeEncrypter = new FakeEncrypter();
-    sut = new AuthenticateUseCase(
-      inMemoryAccountsRepository,
+    registerSessionUseCase = new RegisterSessionUseCase(
       inMemorySessionsRepository,
-      fakeHasher,
       fakeEncrypter
+    );
+    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    fakeHasher = new FakeHasher();
+    sut = new AuthenticateWithPasswordUseCase(
+      inMemoryAccountsRepository,
+      fakeHasher,
+      registerSessionUseCase
     );
   });
 

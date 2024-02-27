@@ -19,6 +19,8 @@ import { PrismaOrderProductsRepository } from "../database/repositories/prisma-o
 import { Asaas } from "../payments/asaas-service";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
+import { OtpProvider } from "../cryptography/otp-generator";
+import { PrismaOneTimePasswordsRepository } from "../database/repositories/prisma-one-time-passwords-repository";
 
 diContainer.register({
   accountsRepository: asClass(PrismaAccountsRepository, {
@@ -46,6 +48,9 @@ diContainer.register({
     lifetime: Lifetime.SINGLETON,
   }),
   ordersProductsRepository: asClass(PrismaOrderProductsRepository, {
+    lifetime: Lifetime.SINGLETON,
+  }),
+  oneTimePasswordsRepository: asClass(PrismaOneTimePasswordsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),
@@ -79,4 +84,5 @@ diContainer.register({
     }
     return new FakePaymentsProcessor();
   }),
+  otpGenerator: asFunction(() => new OtpProvider()),
 });

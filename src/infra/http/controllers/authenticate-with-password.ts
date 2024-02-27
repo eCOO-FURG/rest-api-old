@@ -1,30 +1,31 @@
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
-import { AuthenticateUseCase } from "@/domain/use-cases/authenticate";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { AccountNotVerifiedError } from "@/domain/use-cases/errors/account-not-verified-error";
+import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-export async function authenticate(
+export async function authenticateWithPassword(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
   const { email, password } = authenticateBodySchema.parse(request.body);
 
   try {
-    const authenticateUseCase = request.diScope.resolve<AuthenticateUseCase>(
-      "authenticateUseCase"
-    );
+    const authenticateWithPasswordUseCase =
+      request.diScope.resolve<AuthenticateWithPasswordUseCase>(
+        "authenticateWithPasswordUseCase"
+      );
 
-    const { accessToken } = await authenticateUseCase.execute({
+    const { accessToken } = await authenticateWithPasswordUseCase.execute({
       email,
       password,
       ip_address: request.ip,
-      user_agent: request.headers["user-agent"] || "not-identified",
+      user_agent: request.headers["user-agent"] ?? "not-identified",
     });
 
     return reply.status(200).send({

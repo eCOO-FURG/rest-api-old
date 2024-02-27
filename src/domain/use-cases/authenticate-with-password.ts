@@ -1,10 +1,8 @@
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
-import { Encrypter } from "../cryptography/encrypter";
 import { Hasher } from "../cryptography/hasher";
-import { SessionsRepository } from "../repositories/sessions-repository";
-import { Session } from "../entities/session";
 import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
+import { RegisterSessionUseCase } from "./register-session";
 
 interface AuthenticateRequest {
   email: string;
@@ -13,12 +11,11 @@ interface AuthenticateRequest {
   user_agent: string;
 }
 
-export class AuthenticateUseCase {
+export class AuthenticateWithPasswordUseCase {
   constructor(
     private accountsRepository: AccountsRepository,
-    private sessionsRepository: SessionsRepository,
     private hasher: Hasher,
-    private encrypter: Encrypter
+    private registerSessionUseCase: RegisterSessionUseCase
   ) {}
 
   async execute({
@@ -46,16 +43,10 @@ export class AuthenticateUseCase {
       throw new AccountNotVerifiedError();
     }
 
-    const session = Session.create({
-      account_id: account.id,
+    const accessToken = await this.registerSessionUseCase.execute({
+      account_id: account.id.toString(),
       ip_address,
       user_agent,
-    });
-
-    await this.sessionsRepository.save(session);
-
-    const accessToken = await this.encrypter.encrypt({
-      sub: account.id.toString(),
     });
 
     return {
