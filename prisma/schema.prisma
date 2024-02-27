@@ -18,10 +18,11 @@ model Account {
   created_at DateTime  @default(now())
   updated_at DateTime?
 
-  person       Person?
-  sessions     Session[]
-  agribusiness Agribusiness?
-  orders       Order[]
+  person          Person?
+  sessions        Session[]
+  agribusiness    Agribusiness?
+  orders          Order[]
+  OneTimePassword OneTimePassword[]
 
   @@map("accounts")
 }
@@ -186,4 +187,16 @@ model OrderProduct {
   updated_at DateTime?
 
   @@map("orders_products")
+}
+
+model OneTimePassword {
+  id    String  @id @default(uuid())
+  value String
+  used  Boolean
+
+  account_id String
+  account    Account @relation(fields: [account_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
 }
