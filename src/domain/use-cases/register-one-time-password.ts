@@ -22,7 +22,7 @@ export class RegisterOneTimePasswordUseCase {
       return;
     }
 
-    await this.oneTimePasswordsRepository.expirePreviousOneTimePassword(
+    await this.oneTimePasswordsRepository.expirePreviousForAccountId(
       account.id.toString()
     );
 
