@@ -6,11 +6,11 @@ POST {{base_url}}/users
 Content-Type: application/json
 
 {
-  "email": "timoteostifft@gmail.com",
+  "email": "johndoe@example.com",
   "cellphone": 519876543,
   "password": "12345678",
-  "first_name": "Timóteo",
-  "last_name": "Stifft",
+  "first_name": "John",
+  "last_name": "Doe",
   "cpf": "103.202.243-41"
 }
 
@@ -93,4 +93,15 @@ Authorization: Bearer {{access_token}}
       "quantity_or_weight": 2
     }
   ]
+}
+
+###
+
+# @name register-one-time-password
+POST {{base_url}}/auth/otp
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "email": "timoteostifft@gmail.com"
 }

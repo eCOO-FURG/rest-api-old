@@ -6,6 +6,7 @@ import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
+import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
@@ -101,6 +102,14 @@ diContainer.register({
         ordersRepository,
         ordersProductsRepository,
         offersProductsRepository
+      )
+  ),
+  registerOneTimePasswordUseCase: asFunction(
+    ({ accountsRepository, otpGenerator, oneTimePasswordsRepository }) =>
+      new RegisterOneTimePasswordUseCase(
+        accountsRepository,
+        otpGenerator,
+        oneTimePasswordsRepository
       )
   ),
 });

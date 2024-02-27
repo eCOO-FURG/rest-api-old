@@ -11,12 +11,14 @@ import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admi
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
 import { handleOrder } from "./handle-order";
+import { registerOneTimePassword } from "./register-one-time-password";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
   app.post("/auth", authenticate);
   app.post("/auth/refresh", refresh);
   app.get("/users/verify", verify);
+  app.post("/auth/otp", registerOneTimePassword);
 
   app.post(
     "/agribusinesses",
