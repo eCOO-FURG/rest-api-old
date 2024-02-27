@@ -10,6 +10,8 @@ import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribus
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
 import { RegisterSessionUseCase } from "@/domain/use-cases/register-session";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
+import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
+import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -120,6 +122,20 @@ diContainer.register({
         ordersProductsRepository,
         offersProductsRepository
       )
+  ),
+  updateAgribusinessUseCase: asFunction(
+    ({ agribusinessesRepository }) =>
+      new UpdateAgribusinessUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
+  ),
+  updateAgribusinessStatusUseCase: asFunction(
+    ({ agribusinessesRepository }) =>
+      new UpdateAgribusinessStatusUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
   ),
   registerOneTimePasswordUseCase: asFunction(
     ({ accountsRepository, otpGenerator, oneTimePasswordsRepository }) =>

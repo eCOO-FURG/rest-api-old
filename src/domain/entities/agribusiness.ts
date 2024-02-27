@@ -2,9 +2,10 @@ import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
-interface AgribusinessProps {
+export interface AgribusinessProps {
   name: string;
   caf: string;
+  active: boolean;
   admin_id: UniqueEntityID;
   created_at: Date;
   updated_at?: Date | null;
@@ -15,8 +16,24 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     return this.props.name;
   }
 
+  set name(name: string) {
+    this.props.name = name;
+  }
+
   get caf() {
     return this.props.caf;
+  }
+
+  set caf(caf: string) {
+    this.props.caf = caf;
+  }
+
+  get active() {
+    return this.props.active;
+  }
+
+  set active(active: boolean) {
+    this.props.active = active;
   }
 
   get admin_id() {
@@ -31,13 +48,18 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
     return this.props.updated_at;
   }
 
+  touch() {
+    this.props.updated_at = new Date();
+  }
+
   static create(
-    props: Optional<AgribusinessProps, "created_at">,
+    props: Optional<AgribusinessProps, "created_at" | "active">,
     id?: UniqueEntityID
   ) {
     const agribusiness = new Agribusiness(
       {
         ...props,
+        active: props.active ?? true,
         created_at: props.created_at ?? new Date(),
       },
       id

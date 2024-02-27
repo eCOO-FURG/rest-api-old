@@ -60,6 +60,7 @@ model Agribusiness {
   id   String @id @default(uuid())
   name String
   caf  String @unique
+  active Boolean @default(true)
 
   admin_id String  @unique
   admin    Account @relation(fields: [admin_id], references: [id], onDelete: Cascade)

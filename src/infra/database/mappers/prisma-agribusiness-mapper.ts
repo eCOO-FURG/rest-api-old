@@ -8,6 +8,7 @@ export class PrismaAgribusinessMapper {
       {
         name: raw.name,
         caf: raw.caf,
+        active: raw.active,
         admin_id: new UniqueEntityID(raw.admin_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
@@ -23,6 +24,7 @@ export class PrismaAgribusinessMapper {
       id: agribusiness.id.toString(),
       name: agribusiness.name,
       caf: agribusiness.caf,
+      active: agribusiness.active,
       admin_id: agribusiness.admin_id.toString(),
       created_at: agribusiness.created_at,
       updated_at: agribusiness.updated_at,
