@@ -1,6 +1,6 @@
 import { FastifyDynamicSwaggerOptions } from "@fastify/swagger";
 import { registerBodySchema } from "../http/controllers/register";
-import { authenticateBodySchema } from "../http/controllers/authenticate";
+import { authenticateBodySchema } from "../http/controllers/authenticate-with-password";
 import { refreshBodySchema } from "../http/controllers/refresh";
 import { registerAgribusinessBodySchema } from "../http/controllers/register-agribusiness";
 import { offerProductsBodySchema } from "../http/controllers/offer-products";

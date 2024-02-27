@@ -7,8 +7,6 @@ import { PeopleRepository } from "../repositories/people-repository";
 import { Encrypter } from "../cryptography/encrypter";
 import { env } from "@/infra/env";
 import { ViewLoader } from "../mail/view-loader";
-import { PaymentsProcessor } from "../payments/payments-processor";
-import { Customer } from "../entities/customer";
 import { Email } from "../entities/email";
 import { Mailer } from "../mail/mailer";
 
@@ -48,7 +46,7 @@ export class OnUserRegistered implements EventHandler {
       account.id.toString()
     );
 
-    if (!person) return; // log issue
+    if (!person) return;
 
     const code = await this.encrypter.encrypt({
       account_id: account.id.toString(),

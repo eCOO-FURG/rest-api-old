@@ -1,28 +1,38 @@
 @base_url = http://localhost:3333
-@access_token = {{authenticate.response.body.access_token}}
+@access_token = {{authenticate_with_password.response.body.access_token}}
 
 # @name register
 POST {{base_url}}/users
 Content-Type: application/json
 
 {
-  "email": "timoteostifft@gmail.com",
+  "email": "johndoe@example.com",
   "cellphone": 519876543,
   "password": "12345678",
-  "first_name": "Timóteo",
-  "last_name": "Stifft",
+  "first_name": "John",
+  "last_name": "Doe",
   "cpf": "103.202.243-41"
 }
 
 ###
 
-# @name authenticate
+# @name authenticate_with_password
 POST {{base_url}}/auth
 Content-Type: application/json
 
 {
   "email": "admin@ecoo.com.br",
   "password": "12345678"
+}
+
+# @name authenticate-with-one-time-password
+POST {{base_url}}/auth/otp
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "email": "johndoe@example.com",
+  "one_time_password": "280441"
 }
 
 ###
@@ -100,6 +110,8 @@ Authorization: Bearer {{access_token}}
 
 # @name update-agribusiness
 PATCH {{base_url}}/agribusiness
+# @name register-one-time-password
+POST {{base_url}}/users/otp
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -107,6 +119,7 @@ Authorization: Bearer {{access_token}}
   "caf": "1111221111111111",
   "name": "agribusiness updated name"
   
+  "email": "johndoe@example.com"
 }
 
 ###
@@ -115,3 +128,7 @@ Authorization: Bearer {{access_token}}
 GET {{base_url}}/agribusiness/0e543971-be03-4f39-9cb9-dc07e8c09e20
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+###
+
+
