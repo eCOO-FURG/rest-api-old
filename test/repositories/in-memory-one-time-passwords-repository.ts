@@ -11,7 +11,17 @@ export class InMemoryOneTimePasswordsRepository
     this.items.push(oneTimePassword);
   }
 
-  async expirePreviousOneTimePassword(account_id: string): Promise<void> {
+  async update(oneTimePassword: OneTimePassword): Promise<void> {
+    const oneTimePasswordIndex = this.items.findIndex((item) =>
+      item.id.equals(oneTimePassword.id)
+    );
+
+    if (oneTimePasswordIndex >= 0) {
+      this.items[oneTimePasswordIndex] = oneTimePassword;
+    }
+  }
+
+  async expirePreviousForAccountId(account_id: string): Promise<void> {
     const previousOneTimePasswordIndex = this.items.findIndex((item) =>
       item.account_id.equals(new UniqueEntityID(account_id))
     );
@@ -21,5 +31,24 @@ export class InMemoryOneTimePasswordsRepository
     }
 
     this.items[previousOneTimePasswordIndex].expire();
+  }
+
+  async findValidByAccountId(
+    account_id: string
+  ): Promise<OneTimePassword | null> {
+    const fifteenMinutesAgo = new Date(new Date().getTime() - 15 * 60 * 1000);
+
+    const oneTimePassword = this.items.find(
+      (item) =>
+        item.used === false &&
+        item.created_at > fifteenMinutesAgo &&
+        item.account_id.equals(new UniqueEntityID(account_id))
+    );
+
+    if (!oneTimePassword) {
+      return null;
+    }
+
+    return oneTimePassword;
   }
 }
