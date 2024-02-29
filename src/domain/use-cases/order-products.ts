@@ -12,10 +12,12 @@ import { OrderProduct } from "../entities/order-products";
 import { Charge } from "../entities/charge";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
+import { Payment } from "../entities/payment";
 
 interface OrderProductsUseCaseRequest {
   account_id: string;
   shipping_address: string;
+  payment_method: "PIX" | "ON_DELIVERY";
   products: {
     id: string;
     quantity_or_weight: number;
@@ -35,6 +37,7 @@ export class OrderProductsUseCase {
   async execute({
     account_id,
     shipping_address,
+    payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
     const orderedProductsIds = orderedProducts.map((item) => item.id);
@@ -53,7 +56,7 @@ export class OrderProductsUseCase {
 
     const order = Order.create({
       customer_id: new UniqueEntityID(account_id),
-      payment_method: "PIX",
+      payment_method,
       shipping_address,
     });
 
@@ -133,17 +136,27 @@ export class OrderProductsUseCase {
       throw new ResourceNotFoundError(account_id);
     }
 
-    const charge = Charge.create({
-      customer_email: account.email,
-      due_date: new Date(),
-      order_id: order.id,
-      payment_method: "PIX",
+    const payment = Payment.create({
       value: totalPrice.toString(),
     });
 
-    const payment = await this.paymentsProcessor.registerCharge(charge);
+    if (payment_method === "PIX") {
+      const charge = Charge.create({
+        customer_email: account.email,
+        due_date: new Date(),
+        order_id: order.id,
+        payment_method,
+        value: totalPrice.toString(),
+      });
 
-    await this.offersProductsRepository.save(updatedOffersProducts);
+      const props = await this.paymentsProcessor.registerCharge(charge);
+
+      Object.assign(payment, {
+        ...props,
+      });
+    }
+
+    await this.offersProductsRepository.update(updatedOffersProducts);
     await this.ordersRepository.save(order);
     await this.ordersProductsRepository.save(orderProducts);
 

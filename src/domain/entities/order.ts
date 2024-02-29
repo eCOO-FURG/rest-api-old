@@ -5,7 +5,7 @@ import { Optional } from "@/core/types/optional";
 interface OrderProps {
   customer_id: UniqueEntityID;
   shipping_address: string;
-  payment_method: "PIX";
+  payment_method: "PIX" | "ON_DELIVERY";
   status: "READY" | "ON_HOLD" | "PENDING" | "DISPATCHED" | "CANCELED";
   created_at: Date;
   updated_at?: Date | null;

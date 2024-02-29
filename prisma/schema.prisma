@@ -57,9 +57,9 @@ model Session {
 }
 
 model Agribusiness {
-  id   String @id @default(uuid())
-  name String
-  caf  String @unique
+  id     String  @id @default(uuid())
+  name   String
+  caf    String  @unique
   active Boolean @default(true)
 
   admin_id String  @unique
