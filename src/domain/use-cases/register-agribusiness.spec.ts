@@ -5,6 +5,8 @@ import { Account } from "../entities/account";
 import { Agribusiness } from "../entities/agribusiness";
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { Cellphone } from "../entities/value-objects/cellphone";
+import { rejects } from "assert";
+import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
 
 let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
@@ -64,5 +66,30 @@ describe("create agribusiness", () => {
         name: "fake-agribusiness",
       })
     ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
+  });
+
+  it("should not be able to create an agribusiness with an admin who is already an admin of another agribusiness", async () => {
+    const account = Account.create({
+      email: "johndoe@example.com",
+      password: "123456",
+      verified_at: new Date(),
+      cellphone: Cellphone.createFromText("519876543"),
+    });
+
+    inMemoryAccountsRepository.save(account);
+
+    await sut.execute({
+      account_id: account.id.toString(),
+      caf: "123456",
+      name: "fake-agribusiness",
+    });
+
+    await expect(() =>
+      sut.execute({
+        account_id: account.id.toString(),
+        caf: "777777",
+        name: "seconda agribusiness but with same admin",
+      })
+    ).rejects.toBeInstanceOf(AlreadyAgribusinessAdminError);
   });
 });

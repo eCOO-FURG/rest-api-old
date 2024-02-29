@@ -4,6 +4,7 @@ import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exist
 import { Agribusiness } from "../entities/agribusiness";
 import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
+import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
 
 interface RegisterAgribusinessUseCaseRequest {
   account_id: string;
@@ -31,7 +32,12 @@ export class RegisterAgribusinessUseCase {
       throw new ResourceAlreadyExistsError(caf);
     }
 
-    // verificar se já nao tem um agro negócio
+    const agribusinessWithSameAdmin =
+      await this.agribusinessesRepository.findByAdminId(account.id.toString());
+
+    if (agribusinessWithSameAdmin) {
+      throw new AlreadyAgribusinessAdminError();
+    }
 
     const agribusiness = Agribusiness.create({
       admin_id: new UniqueEntityID(account_id),

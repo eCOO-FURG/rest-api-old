@@ -1,4 +1,5 @@
 import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
+import { AlreadyAgribusinessAdminError } from "@/domain/use-cases/errors/already-agribusiness-admin-error";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -28,7 +29,10 @@ export async function registerAgribusiness(
 
     return reply.status(201).send();
   } catch (err) {
-    if (err instanceof ResourceAlreadyExistsError) {
+    if (
+      err instanceof ResourceAlreadyExistsError ||
+      err instanceof AlreadyAgribusinessAdminError
+    ) {
       return reply.status(409).send({ message: err.message });
     }
     throw err;

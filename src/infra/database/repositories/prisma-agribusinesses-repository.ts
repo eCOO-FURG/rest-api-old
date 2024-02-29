@@ -34,6 +34,20 @@ export class PrismaAgribusinessesRepository
     return PrismaAgribusinessMapper.toDomain(agribusiness);
   }
 
+  async findByAdminId(admin_id: string): Promise<Agribusiness | null> {
+    const agribusiness = await prisma.agribusiness.findUnique({
+      where: {
+        admin_id,
+      },
+    });
+
+    if (!agribusiness) {
+      return null;
+    }
+
+    return PrismaAgribusinessMapper.toDomain(agribusiness);
+  }
+
   async save(agribusiness: Agribusiness): Promise<void> {
     const data = PrismaAgribusinessMapper.toPrisma(agribusiness);
 
