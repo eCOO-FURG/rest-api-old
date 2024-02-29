@@ -22,6 +22,16 @@ export class InMemoryAgribusinessesRepository
     return agribusiness;
   }
 
+  async findByAdminId(admin_id: string): Promise<Agribusiness | null> {
+    const agribusiness = this.items.find(
+      (item) => item.admin_id.toString() === admin_id
+    );
+
+    if (!agribusiness) return null;
+
+    return agribusiness;
+  }
+
   async save(agribusiness: Agribusiness): Promise<void> {
     this.items.push(agribusiness);
   }
