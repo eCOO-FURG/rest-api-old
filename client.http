@@ -21,9 +21,11 @@ POST {{base_url}}/auth
 Content-Type: application/json
 
 {
-  "email": "admin@ecoo.com.br",
+  "email": "johndoe@example.com",
   "password": "12345678"
 }
+
+### 
 
 # @name authenticate-with-one-time-password
 POST {{base_url}}/auth/otp
@@ -61,7 +63,7 @@ Authorization: Bearer {{access_token}}
 
 {
  "caf": "15517887",
- "name": "agribusiness do joao",
+ "name": "agribusiness do john doe",
  "active": true
 }
 
@@ -75,9 +77,9 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "id": "a00453c0-7f14-484f-b0a0-8b9c7e5b5b9c",
-      "quantity_or_weight": 2,
-      "price": "2",
+      "id": "064e3fb3-68ef-498a-9658-2bb55d86e6b5",
+      "quantity_or_weight": 200,
+      "price": "2"
     }
   ]
 }
@@ -97,11 +99,11 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "shipping_address": "test address"
+  "shipping_address": "test address",
   "products": [
     {
-      "id": "59d3beb7-0dc1-4273-9eb9-317f21ad8b96",
-      "quantity_or_weight": 2
+      "id": "064e3fb3-68ef-498a-9658-2bb55d86e6b5",
+      "quantity_or_weight": 100
     }
   ]
 }
@@ -130,5 +132,10 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
+
+# @name list-of-orders
+GET {{base_url}}/orders?order_status=READY
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 

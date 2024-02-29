@@ -3,6 +3,7 @@ import { OrdersRepository } from "@/domain/repositories/orders-repository";
 import { prisma } from "../prisma-service";
 import { PrismaOrderMapper } from "../mappers/prisma-order-mapper";
 import { env } from "@/infra/env";
+import { ORDER_STATUS } from "@prisma/client";
 
 export class PrismaOrdersRepository implements OrdersRepository {
   async update(order: Order): Promise<void> {
@@ -28,6 +29,16 @@ export class PrismaOrdersRepository implements OrdersRepository {
     }
 
     return PrismaOrderMapper.toDomain(order);
+  }
+
+  async findByStatus(status: ORDER_STATUS): Promise<Order[]> {
+    const orders = await prisma.order.findMany({
+      where: {
+        status,
+      },
+    });
+
+    return orders.map((order) => PrismaOrderMapper.toDomain(order));
   }
 
   async save(order: Order): Promise<void> {

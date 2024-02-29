@@ -27,4 +27,11 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
     return order;
   }
+
+  async findByStatus(status: string): Promise<Order[]> {
+    const ordersWithStatus = this.items.filter(
+      (order) => order.status === status
+    );
+    return ordersWithStatus;
+  }
 }
