@@ -2,6 +2,7 @@ import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authe
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
 import { HandleOrderUseCase } from "@/domain/use-cases/handle-order";
+import { ListOfOrdersUseCase } from "@/domain/use-cases/list-of-orders";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -144,5 +145,11 @@ diContainer.register({
         otpGenerator,
         oneTimePasswordsRepository
       )
+  ),
+  listOfOrdersUseCase: asFunction(
+    ({ ordersRepository }) => new ListOfOrdersUseCase(ordersRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
   ),
 });

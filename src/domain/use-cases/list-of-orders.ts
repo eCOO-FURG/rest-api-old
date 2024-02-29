@@ -10,6 +10,8 @@ export class ListOfOrdersUseCase {
   async execute({ order_status }: ListOfOrdersUseCaseRequest) {
     const orders = await this.ordersRepository.findByStatus(order_status);
 
+    console.log(`Found orders: ${JSON.stringify(orders)}`);
+
     return orders;
   }
 }
