@@ -31,6 +31,8 @@ export class RegisterAgribusinessUseCase {
       throw new ResourceAlreadyExistsError(caf);
     }
 
+    // verificar se já nao tem um agro negócio
+
     const agribusiness = Agribusiness.create({
       admin_id: new UniqueEntityID(account_id),
       caf,

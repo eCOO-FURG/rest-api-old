@@ -4,7 +4,7 @@ import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 interface ChargeProps {
   order_id: UniqueEntityID;
   customer_email: string;
-  payment_method: "PIX";
+  payment_method: "PIX" | "ON_DELIVERY";
   value: string;
   due_date: Date;
 }

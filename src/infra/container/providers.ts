@@ -79,9 +79,9 @@ diContainer.register({
     lifetime: "SINGLETON",
   }),
   paymentsProcessor: asFunction(() => {
-    if (env.ENV === "prod") {
-      return new Asaas();
-    }
+    // if (env.ENV === "prod") {
+    //   return new Asaas();
+    // }
     return new FakePaymentsProcessor();
   }),
   otpGenerator: asFunction(() => new OtpProvider()),

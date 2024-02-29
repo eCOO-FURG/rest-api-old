@@ -119,6 +119,7 @@ describe("order products", () => {
         },
       ],
       shipping_address: "shipping address",
+      payment_method: "ON_DELIVERY",
     });
 
     expect(result.value).toBe("308");
@@ -172,6 +173,7 @@ describe("order products", () => {
       sut.execute({
         account_id: account.id.toString(),
         shipping_address: "shipping address",
+        payment_method: "PIX",
         products: [
           {
             id: "1",
@@ -216,6 +218,7 @@ describe("order products", () => {
       sut.execute({
         account_id: account.id.toString(),
         shipping_address: "shipping address",
+        payment_method: "PIX",
         products: [
           {
             id: "1",
@@ -260,6 +263,7 @@ describe("order products", () => {
       sut.execute({
         account_id: account.id.toString(),
         shipping_address: "shipping address",
+        payment_method: "PIX",
         products: [
           {
             id: "1",
@@ -304,6 +308,7 @@ describe("order products", () => {
       sut.execute({
         account_id: account.id.toString(),
         shipping_address: "shipping address",
+        payment_method: "PIX",
         products: [
           {
             id: "1",

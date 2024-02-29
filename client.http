@@ -6,12 +6,12 @@ POST {{base_url}}/users
 Content-Type: application/json
 
 {
-  "email": "johndoe@example.com",
-  "cellphone": 519876543,
-  "password": "12345678",
-  "first_name": "John",
-  "last_name": "Doe",
-  "cpf": "103.202.243-41"
+  "email": "timoteostifft@gmail.com",
+  "cellphone": 51981280499,
+  "password": "Ts#1042003",
+  "first_name": "Timóteo",
+  "last_name": "Stifft",
+  "cpf": "04437220056"
 }
 
 ###
@@ -33,8 +33,8 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "email": "johndoe@example.com",
-  "one_time_password": "280441"
+  "email": "timoteostifft@gmail.com",
+  "one_time_password": "607926"
 }
 
 ###
@@ -62,9 +62,8 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
- "caf": "15517887",
- "name": "agribusiness do john doe",
- "active": true
+ "caf": "15517889",
+ "name": "Agrocomércio do Timas"
 }
 
 ###
@@ -77,9 +76,9 @@ Authorization: Bearer {{access_token}}
 {
   "products": [
     {
-      "id": "064e3fb3-68ef-498a-9658-2bb55d86e6b5",
-      "quantity_or_weight": 200,
-      "price": "2"
+      "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
+      "quantity_or_weight": 50,
+      "price": "10"
     }
   ]
 }
@@ -87,7 +86,7 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name search-offers
-GET {{base_url}}/offers?product=banana
+GET {{base_url}}/offers?product=queijo
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -100,10 +99,11 @@ Authorization: Bearer {{access_token}}
 
 {
   "shipping_address": "test address",
+  "payment_method": "PIX",
   "products": [
     {
-      "id": "064e3fb3-68ef-498a-9658-2bb55d86e6b5",
-      "quantity_or_weight": 100
+      "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
+      "quantity_or_weight": 50
     }
   ]
 }
@@ -112,22 +112,29 @@ Authorization: Bearer {{access_token}}
 
 # @name update-agribusiness
 PATCH {{base_url}}/agribusiness
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "caf": "1111221111111111",
+  "name": "agribusiness updated name"  
+}
+
+###
+
 # @name register-one-time-password
 POST {{base_url}}/users/otp
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "caf": "1111221111111111",
-  "name": "agribusiness updated name"
-  
-  "email": "johndoe@example.com"
+  "email": "timoteostifft@gmail.com"
 }
 
 ###
 
 # @name update-agribusiness-status
-GET {{base_url}}/agribusiness/0e543971-be03-4f39-9cb9-dc07e8c09e20
+GET {{base_url}}/agribusiness/0c3ffa93-4f46-4c25-ad2d-403c3a6b1b39
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

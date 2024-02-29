@@ -7,13 +7,13 @@ import { ZodError } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
 import { FastifySwaggerOptions } from "./helpers/swagger";
-import cors from '@fastify/cors'
+import cors from "@fastify/cors";
 
 export const app = fastify();
 
-app.register(cors, { 
+app.register(cors, {
   origin: true, //Todas as URLs de front-end podem acessar nosso back-end
-})
+});
 
 app.register(fastifyAwilixPlugin, {
   asyncInit: true,
@@ -35,6 +35,7 @@ app.setErrorHandler((error, _, reply) => {
   if (env.ENV !== "prod") {
     console.error(error);
   } else {
+    console.log(error);
     // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
   }
 

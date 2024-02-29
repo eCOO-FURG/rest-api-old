@@ -5,9 +5,11 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { PaymentPresenter } from "../presenters/payment-presenter";
 import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
+import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
+  payment_method: z.enum(["PIX", "ON_DELIVERY"]),
   products: z
     .array(
       z.object({
@@ -24,9 +26,8 @@ export async function orderProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { shipping_address, products } = orderProductsBodySchema.parse(
-    request.body
-  );
+  const { shipping_address, payment_method, products } =
+    orderProductsBodySchema.parse(request.body);
 
   try {
     const orderProductsUseCase = request.diScope.resolve<OrderProductsUseCase>(
@@ -37,6 +38,7 @@ export async function orderProducts(
       account_id: request.payload.sub,
       shipping_address,
       products,
+      payment_method,
     });
 
     return reply.status(201).send(PaymentPresenter.toHttp(payment));
@@ -48,6 +50,9 @@ export async function orderProducts(
       return reply.status(403).send({ message: err.message });
     }
     if (err instanceof InsufficientProductQuantityOrWeightError) {
+      return reply.status(400).send({ message: err.message });
+    }
+    if (err instanceof InvalidWeightError) {
       return reply.status(400).send({ message: err.message });
     }
     throw err;
