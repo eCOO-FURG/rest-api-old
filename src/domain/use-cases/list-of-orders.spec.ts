@@ -35,4 +35,25 @@ describe("list of orders", () => {
     expect(orders).toHaveLength(1);
     expect(orders[0].status).toBe("READY");
   });
+
+  it("should not be able to list any order because there are none with ON_HOLD status", async () => {
+    const account = Account.create({
+      email: "test@gmail.com",
+      password: "password",
+      cellphone: Cellphone.createFromText("519876543"),
+    });
+
+    const order = Order.create({
+      customer_id: account.id,
+      payment_method: "PIX",
+      shipping_address: "test address",
+    });
+
+    order.status = "READY";
+
+    await inMemoryOrdersRepository.save(order);
+
+    const orders = await sut.execute({ order_status: "ON_HOLD" });
+    expect(orders).toHaveLength(0);
+  });
 });
