@@ -1,5 +1,5 @@
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { OneTimePasswordsRepository } from "../repositories/one-time-passwords-repository";
+import { UsersRepository } from "../repositories/users-repository";
 import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { RegisterSessionUseCase } from "./register-session";
@@ -13,7 +13,7 @@ interface AuthenticateWithOneTimePasswordRequest {
 
 export class AuthenticateWithOneTimePasswordUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private oneTimePasswordsRepository: OneTimePasswordsRepository,
     private registerSessionUseCase: RegisterSessionUseCase
   ) {}
@@ -24,26 +24,20 @@ export class AuthenticateWithOneTimePasswordUseCase {
     ip_address,
     user_agent,
   }: AuthenticateWithOneTimePasswordRequest) {
-    const account = await this.accountsRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email);
 
-    if (!account) {
+    if (!user) {
       throw new WrongCredentialsError();
     }
 
     const oneTimePassword =
-      await this.oneTimePasswordsRepository.findValidByAccountId(
-        account.id.toString()
-      );
+      await this.oneTimePasswordsRepository.findValidByUserId(user.id.value);
 
-    if (!oneTimePassword) {
+    if (!oneTimePassword || oneTimePassword.value !== one_time_password) {
       throw new WrongCredentialsError();
     }
 
-    if (oneTimePassword.value !== one_time_password) {
-      throw new WrongCredentialsError();
-    }
-
-    if (!account.verified_at) {
+    if (!user.verified_at) {
       throw new AccountNotVerifiedError();
     }
 
@@ -51,14 +45,14 @@ export class AuthenticateWithOneTimePasswordUseCase {
 
     await this.oneTimePasswordsRepository.update(oneTimePassword);
 
-    const accessToken = await this.registerSessionUseCase.execute({
-      account_id: account.id.toString(),
+    const { token } = await this.registerSessionUseCase.execute({
+      user_id: user.id.value,
       ip_address,
       user_agent,
     });
 
     return {
-      accessToken,
+      token,
     };
   }
 }

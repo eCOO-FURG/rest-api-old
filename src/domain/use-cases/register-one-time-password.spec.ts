@@ -1,38 +1,41 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { Account } from "../entities/account";
 import { Cellphone } from "../entities/value-objects/cellphone";
 import { RegisterOneTimePasswordUseCase } from "./register-one-time-password";
 import { FakeOtpGenerator } from "test/cryptography/fake-otp-generator";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
 import { OneTimePassword } from "../entities/one-time-password";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeOtpGenerator: FakeOtpGenerator;
 let inMemoryOneTimePasswordsRepository: InMemoryOneTimePasswordsRepository;
 let sut: RegisterOneTimePasswordUseCase;
 
 describe("register one time password", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeOtpGenerator = new FakeOtpGenerator();
     inMemoryOneTimePasswordsRepository =
       new InMemoryOneTimePasswordsRepository();
     sut = new RegisterOneTimePasswordUseCase(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       fakeOtpGenerator,
       inMemoryOneTimePasswordsRepository
     );
   });
 
   it("should be able to register an one time password", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await sut.execute({
       email: "johndoe@example.com",
@@ -44,14 +47,17 @@ describe("register one time password", () => {
   });
 
   it("should expire the previous one time password once a new one is registered", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await sut.execute({
       email: "johndoe@example.com",
