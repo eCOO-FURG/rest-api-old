@@ -2,6 +2,7 @@ import { DomainEvents } from "@/core/events/domain-events";
 import { Encrypter } from "../cryptography/encrypter";
 import { AccountsRepository } from "../repositories/accounts-repository";
 import { InvalidValidationCodeError } from "./errors/invalid-validation-code-error";
+import { UsersRepository } from "../repositories/users-repository";
 
 interface VerifyUseCaseRequest {
   code: string;
@@ -9,33 +10,31 @@ interface VerifyUseCaseRequest {
 
 export class VerifyUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private encrypter: Encrypter
   ) {}
 
   async execute({ code }: VerifyUseCaseRequest) {
     const decryptedCode = await this.encrypter.decode(code);
 
-    if (!decryptedCode || decryptedCode.account_id === null) {
+    if (!decryptedCode || decryptedCode.user_id === null) {
       throw new InvalidValidationCodeError();
     }
 
-    const account = await this.accountsRepository.findById(
-      decryptedCode.account_id
-    );
+    const user = await this.usersRepository.findById(decryptedCode.user_id);
 
-    if (!account) {
+    if (!user) {
       throw new InvalidValidationCodeError();
     }
 
-    if (account.verified_at) {
+    if (user.verified_at) {
       return;
     }
 
-    account.verify();
+    user.verify();
 
-    await this.accountsRepository.update(account);
+    await this.usersRepository.update(user);
 
-    DomainEvents.dispatchEventsForAggregate(account.id);
+    DomainEvents.dispatchEventsForEntity(user.id);
   }
 }

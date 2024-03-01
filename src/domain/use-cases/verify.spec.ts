@@ -1,36 +1,36 @@
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { VerifyUseCase } from "./verify";
-import { Account } from "../entities/account";
-import { Cellphone } from "../entities/value-objects/cellphone";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeEncrypter: FakeEncrypter;
 let sut: VerifyUseCase;
 
 describe("verify", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeEncrypter = new FakeEncrypter();
-    sut = new VerifyUseCase(inMemoryAccountsRepository, fakeEncrypter);
+    sut = new VerifyUseCase(inMemoryUsersRepository, fakeEncrypter);
   });
 
   it("should be able to verify an account", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
+    const user = User.create({
+      email: "test@gmail.com",
+      phone: "51987654321",
       password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await sut.execute({
-      code: await fakeEncrypter.encrypt({ account_id: account.id.toString() }),
+      code: await fakeEncrypter.encrypt({ user_id: user.id.value }),
     });
 
-    expect(inMemoryAccountsRepository.items[0].verified_at).toBeInstanceOf(
-      Date
-    );
+    expect(inMemoryUsersRepository.items[0].verified_at).toBeInstanceOf(Date);
   });
 
   it("should not be able to verify an account twice", async () => {});

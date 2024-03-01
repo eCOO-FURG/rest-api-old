@@ -8,6 +8,16 @@ export class InMemoryUsersRepository implements UsersRepository {
     this.items.push(user);
   }
 
+  async update(user: User): Promise<void> {
+    const index = this.items.findIndex((item) => item.id.equals(user.id));
+
+    if (index < 0) {
+      return;
+    }
+
+    this.items[index] = user;
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const item = this.items.find((item) => item.email === email);
 
@@ -30,6 +40,16 @@ export class InMemoryUsersRepository implements UsersRepository {
 
   async findByCpf(cpf: string): Promise<User | null> {
     const item = this.items.find((item) => item.cpf === cpf);
+
+    if (!item) {
+      return null;
+    }
+
+    return item;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const item = this.items.find((item) => item.id.equals(id));
 
     if (!item) {
       return null;

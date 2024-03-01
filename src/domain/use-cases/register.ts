@@ -45,8 +45,6 @@ export class RegisterUseCase {
       throw new ResourceAlreadyExistsError("CPF", cpf);
     }
 
-    console.log(userWithSameCpf);
-
     const hashedPassword = await this.hasher.hash(password);
 
     const user = User.create({
