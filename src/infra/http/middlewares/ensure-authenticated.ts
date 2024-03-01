@@ -6,6 +6,7 @@ import { z } from "zod";
 
 const jwtPayloadSchema = z.object({
   sub: z.string(),
+  iat: z.coerce.number(),
 });
 
 export async function ensureAuthenticated(
@@ -21,42 +22,40 @@ export async function ensureAuthenticated(
 
     const [, token] = authHeader.split(" ");
 
-    let payload;
-
-    payload = JwtService.verify(token, env.JWT_SECRET, {
+    const payload = JwtService.verify(token, env.JWT_SECRET, {
       ignoreExpiration: true,
     });
 
-    const { sub } = jwtPayloadSchema.parse(payload);
+    const { sub, iat } = jwtPayloadSchema.parse(payload);
 
-    try {
-      payload = JwtService.verify(token, env.JWT_SECRET);
-    } catch (err) {
-      if (err instanceof JwtService.TokenExpiredError) {
-        const sessionExpiration = new Date(
-          Date.now() - env.SESSION_DURATION_IN_DAYS * 24 * 60 * 60 * 1000
-        );
+    const now = Date.now();
 
-        const session = await prisma.session.findFirst({
-          where: {
-            account_id: sub,
-            user_agent: request.headers["user-agent"] ?? "not-identified",
-            created_at: {
-              gte: sessionExpiration,
-            },
+    const dateInmilliseconds = now / 1000;
+
+    const expired = dateInmilliseconds - iat > 24 * 3600;
+
+    if (expired) {
+      const sessionExpiration = now - env.SESSION_DURATION_IN_DAYS * 86400000;
+
+      const session = await prisma.session.findFirst({
+        where: {
+          account_id: sub,
+          user_agent: request.headers["user-agent"] ?? "not-identified",
+          created_at: {
+            gte: new Date(sessionExpiration),
           },
-        });
+        },
+      });
 
-        if (!session) {
-          return reply.status(401).send({ message: "Session expired." });
-        }
-
-        const newAccessToken = JwtService.sign({ sub }, env.JWT_SECRET, {
-          expiresIn: "24h",
-        });
-
-        reply.header("set-cookie", { access_token: newAccessToken });
+      if (!session) {
+        return reply.status(401).send({ message: "Session expired." });
       }
+
+      const newAccessToken = JwtService.sign({ sub }, env.JWT_SECRET, {
+        expiresIn: "24h",
+      });
+
+      reply.header("set-cookie", { access_token: newAccessToken });
     }
 
     request.payload = {
