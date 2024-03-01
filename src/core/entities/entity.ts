@@ -59,7 +59,7 @@ export abstract class Entity<Props> {
     props: Props & Optional<EntityProps, "created_at">,
     id?: UUID
   ) {
-    this._id = id ?? UUID.create();
+    this._id = id ?? new UUID();
 
     this.props = {
       ...props,

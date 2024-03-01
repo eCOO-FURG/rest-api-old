@@ -17,8 +17,4 @@ export class UUID {
     }
     return this.value === id.value;
   }
-
-  static create(value?: string) {
-    return new UUID(value);
-  }
 }

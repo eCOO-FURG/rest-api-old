@@ -11,7 +11,7 @@ interface SessionProps {
 }
 
 export class Session extends Entity<SessionProps> {
-  get account_id() {
+  get user_id() {
     return this.props.user_id;
   }
 

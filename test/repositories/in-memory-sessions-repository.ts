@@ -19,7 +19,7 @@ export class InMemorySessionsRepository implements SessionsRepository {
 
     const session = this.items.find(
       (item) =>
-        item.account_id.toString() === account_id &&
+        item.user_id.equals(account_id) &&
         item.user_agent === user_agent &&
         item.created_at > sessionExpiration
     );

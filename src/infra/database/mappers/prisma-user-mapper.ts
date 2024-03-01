@@ -19,7 +19,7 @@ export class PrismaUserMapper {
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      UUID.create(raw.id)
+      new UUID(raw.id)
     );
   }
 
