@@ -1,80 +1,65 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { Hasher } from "../cryptography/hasher";
-import { Account } from "../entities/account";
-import { Person } from "../entities/person";
-import { Cpf } from "../entities/value-objects/cpf";
-import { AccountsRepository } from "../repositories/accounts-repository";
-import { PeopleRepository } from "../repositories/people-repository";
-import { ResourceAlreadyExistsError } from "../../core/errors/resource-already-exists-error";
-import { Cellphone } from "../entities/value-objects/cellphone";
+import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { User } from "../entities/user";
+import { UsersRepository } from "../repositories/users-repository";
 
 interface RegisterUseCaseRequest {
-  email: string;
-  cellphone: string;
-  password: string;
   first_name: string;
   last_name: string;
+  email: string;
+  password: string;
   cpf: string;
+  phone: string;
 }
 
 export class RegisterUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
-    private peopleRepository: PeopleRepository,
+    private usersRepository: UsersRepository,
     private hasher: Hasher
   ) {}
 
   async execute({
     email,
-    cellphone,
+    phone,
     password,
     first_name,
     last_name,
     cpf,
   }: RegisterUseCaseRequest) {
-    const accountWithSameEmail = await this.accountsRepository.findByEmail(
-      email
-    );
+    const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
-    if (accountWithSameEmail) {
-      throw new ResourceAlreadyExistsError(email);
+    if (userWithSameEmail) {
+      throw new ResourceAlreadyExistsError("Email", email);
     }
 
-    const accountWithSameCellphone =
-      await this.accountsRepository.findByCellphone(
-        Cellphone.createFromText(cellphone)
-      );
+    const userWithSamePhone = await this.usersRepository.findByPhone(phone);
 
-    if (accountWithSameCellphone) {
-      throw new ResourceAlreadyExistsError(cellphone);
+    if (userWithSamePhone) {
+      throw new ResourceAlreadyExistsError("Telefone", phone);
     }
 
-    const personWithSameCPF = await this.peopleRepository.findByCpf(
-      Cpf.createFromText(cpf)
-    );
+    const userWithSameCpf = await this.usersRepository.findByCpf(cpf);
 
-    if (personWithSameCPF) {
-      throw new ResourceAlreadyExistsError(cpf);
+    if (userWithSameCpf) {
+      throw new ResourceAlreadyExistsError("CPF", cpf);
     }
+
+    console.log(userWithSameCpf);
 
     const hashedPassword = await this.hasher.hash(password);
 
-    const account = Account.create({
+    const user = User.create({
+      first_name,
+      last_name,
+      cpf: cpf,
       email,
-      cellphone: Cellphone.createFromText(cellphone),
+      phone,
       password: hashedPassword,
     });
 
-    const person = Person.create({
-      first_name,
-      last_name,
-      cpf: Cpf.createFromText(cpf),
-      account_id: account.id,
-    });
+    await this.usersRepository.save(user);
 
-    await this.accountsRepository.save(account);
-    await this.peopleRepository.save(person);
-
-    DomainEvents.dispatchEventsForAggregate(account.id);
+    DomainEvents.dispatchEventsForEntity(user.id);
   }
 }
