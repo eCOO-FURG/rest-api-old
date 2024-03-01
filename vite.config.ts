@@ -4,8 +4,7 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [tsConfigPaths()],
   test: {
+    include: ["**/*.spec.ts"],
     globals: true,
-    environmentMatchGlobs: [["src/infra/http/controllers/**", "prisma"]],
-    dir: "src",
   },
 });
