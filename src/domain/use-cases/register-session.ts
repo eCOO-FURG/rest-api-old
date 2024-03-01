@@ -1,10 +1,10 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Session } from "../entities/session";
 import { SessionsRepository } from "../repositories/sessions-repository";
 import { Encrypter } from "../cryptography/encrypter";
+import { UUID } from "@/core/entities/uuid";
 
 interface RegisterSessionUseCaseRequest {
-  account_id: string;
+  user_id: string;
   ip_address: string;
   user_agent: string;
 }
@@ -16,22 +16,24 @@ export class RegisterSessionUseCase {
   ) {}
 
   async execute({
-    account_id,
+    user_id,
     ip_address,
     user_agent,
   }: RegisterSessionUseCaseRequest) {
     const session = Session.create({
-      account_id: new UniqueEntityID(account_id),
+      user_id: new UUID(user_id),
       ip_address,
       user_agent,
     });
 
     await this.sessionsRepository.save(session);
 
-    const accessToken = await this.encrypter.encrypt({
-      sub: account_id,
+    const token = await this.encrypter.encrypt({
+      user_id,
     });
 
-    return accessToken;
+    return {
+      token,
+    };
   }
 }
