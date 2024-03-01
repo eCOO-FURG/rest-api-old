@@ -32,7 +32,7 @@ export async function ensureAuthenticated(
 
     const dateInmilliseconds = now / 1000;
 
-    const expired = dateInmilliseconds - iat > 24 * 3600;
+    const expired = dateInmilliseconds - iat > 1; // 24 * 3600
 
     if (expired) {
       const sessionExpiration = now - env.SESSION_DURATION_IN_DAYS * 86400000;
@@ -55,7 +55,9 @@ export async function ensureAuthenticated(
         expiresIn: "24h",
       });
 
-      reply.header("set-cookie", { access_token: newAccessToken });
+      const cookies = `access_token=${newAccessToken}`;
+
+      reply.header("set-cookie", cookies);
     }
 
     request.payload = {
