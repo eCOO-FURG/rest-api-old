@@ -1,6 +1,6 @@
-import { UniqueEntityID } from "../entities/value-objects/unique-entity-id";
+import { UUID } from "../entities/uuid";
 
 export interface DomainEvent {
-  ocurredAt: Date;
-  getAggregateId(): UniqueEntityID;
+  ocurred_at: Date;
+  getEntityId(): UUID;
 }
