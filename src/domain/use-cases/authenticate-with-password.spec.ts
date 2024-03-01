@@ -3,11 +3,11 @@ import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { Session } from "../entities/session";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 import { AuthenticateWithPasswordUseCase } from "./authenticate-with-password";
 import { RegisterSessionUseCase } from "./register-session";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { User } from "../entities/user";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;
@@ -91,6 +91,6 @@ describe("authenticate with password", () => {
         ip_address: "ip_address",
         user_agent: "mozila-firefox 5.0",
       })
-    ).rejects.toBeInstanceOf(AccountNotVerifiedError);
+    ).rejects.toBeInstanceOf(UserNotVerifiedError);
   });
 });

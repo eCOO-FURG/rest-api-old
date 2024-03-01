@@ -27,9 +27,8 @@ export class InMemoryOneTimePasswordsRepository
 
     const item = this.items.find(
       (item) =>
-        item.id.equals(user_id) &&
+        item.user_id.equals(user_id) &&
         item.used === false &&
-        item.created_at &&
         item.created_at > fifteenMinutesAgo
     );
 

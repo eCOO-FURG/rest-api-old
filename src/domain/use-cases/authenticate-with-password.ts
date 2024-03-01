@@ -1,9 +1,8 @@
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Hasher } from "../cryptography/hasher";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 import { RegisterSessionUseCase } from "./register-session";
 import { UsersRepository } from "../repositories/users-repository";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 
 interface AuthenticateRequest {
   email: string;
@@ -38,7 +37,7 @@ export class AuthenticateWithPasswordUseCase {
     }
 
     if (!user.verified_at) {
-      throw new AccountNotVerifiedError();
+      throw new UserNotVerifiedError();
     }
 
     const { token } = await this.registerSessionUseCase.execute({

@@ -1,6 +1,6 @@
 import { OneTimePasswordsRepository } from "../repositories/one-time-passwords-repository";
 import { UsersRepository } from "../repositories/users-repository";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { RegisterSessionUseCase } from "./register-session";
 
@@ -38,7 +38,7 @@ export class AuthenticateWithOneTimePasswordUseCase {
     }
 
     if (!user.verified_at) {
-      throw new AccountNotVerifiedError();
+      throw new UserNotVerifiedError();
     }
 
     oneTimePassword.expire();

@@ -1,6 +1,5 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { Encrypter } from "../cryptography/encrypter";
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { InvalidValidationCodeError } from "./errors/invalid-validation-code-error";
 import { UsersRepository } from "../repositories/users-repository";
 
