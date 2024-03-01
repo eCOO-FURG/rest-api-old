@@ -61,6 +61,10 @@ export class User extends Entity<UserProps> {
     this.props.phone = phone;
   }
 
+  get verified_at() {
+    return this.props.verified_at;
+  }
+
   verify() {
     this.props.verified_at = new Date();
     this.touch();

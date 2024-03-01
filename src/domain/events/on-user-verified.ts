@@ -1,23 +1,22 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { DomainEvent } from "@/core/events/domain-event";
-import { Account } from "../entities/account";
 import { EventHandler } from "@/core/events/event-handler";
 import { PaymentsProcessor } from "../payments/payments-processor";
 import { DomainEvents } from "@/core/events/domain-events";
 import { PeopleRepository } from "../repositories/people-repository";
-import { Customer } from "../entities/customer";
+import { User } from "../entities/user";
+import { UUID } from "@/core/entities/uuid";
 
 export class UserVerifiedEvent implements DomainEvent {
   public ocurredAt: Date;
-  public account: Account;
+  public user: User;
 
-  constructor(account: Account) {
+  constructor(user: User) {
     this.ocurredAt = new Date();
-    this.account = account;
+    this.user = user;
   }
 
-  getAggregateId(): UniqueEntityID {
-    return this.account.id;
+  getAggregateId(): UUID {
+    return this.user.id;
   }
 }
 
@@ -36,23 +35,17 @@ export class OnUserVerified implements EventHandler {
     );
   }
 
-  public async registerCustomerOnPaymentProcessor({
-    account,
-  }: UserVerifiedEvent) {
-    const person = await this.peopleRepository.findByAccountId(
-      account.id.toString()
-    );
-
-    if (!person) return; // log issue
-
-    const customerFullName = `${person.first_name} ${person.last_name}`;
-
-    const customer = Customer.create({
-      name: customerFullName,
-      email: account.email,
-      cpf: person.cpf,
-    });
-
-    await this.paymentsProcessor.registerCustomer(customer);
+  public async registerCustomerOnPaymentProcessor({ user }: UserVerifiedEvent) {
+    // const person = await this.peopleRepository.findByAccountId(
+    //   account.id.toString()
+    // );
+    // if (!person) return; // log issue
+    // const customerFullName = `${person.first_name} ${person.last_name}`;
+    // const customer = Customer.create({
+    //   name: customerFullName,
+    //   email: account.email,
+    //   cpf: person.cpf,
+    // });
+    // await this.paymentsProcessor.registerCustomer(customer);
   }
 }

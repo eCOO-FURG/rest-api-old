@@ -1,10 +1,14 @@
 import { randomUUID } from "crypto";
 
 export class UUID {
-  private value: string;
+  private _value: string;
 
   constructor(value?: string) {
-    this.value = value ?? randomUUID();
+    this._value = value ?? randomUUID();
+  }
+
+  get value() {
+    return this._value;
   }
 
   public equals(id: string | UUID) {

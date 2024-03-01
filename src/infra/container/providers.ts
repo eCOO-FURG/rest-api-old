@@ -1,7 +1,5 @@
 import { diContainer } from "@fastify/awilix";
 import { Lifetime, asClass, asFunction } from "awilix";
-import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
-import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 import { PrismaProductsRepository } from "../database/repositories/prisma-products-repository";
 import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
@@ -21,12 +19,10 @@ import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
 import { OtpProvider } from "../cryptography/otp-generator";
 import { PrismaOneTimePasswordsRepository } from "../database/repositories/prisma-one-time-passwords-repository";
+import { PrismaUsersRepository } from "../database/repositories/prisma-users-repository";
 
 diContainer.register({
-  accountsRepository: asClass(PrismaAccountsRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  peopleRepository: asClass(PrismaPeopleRepository, {
+  usersRepository: asClass(PrismaUsersRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   sessionsRepository: asClass(PrismaSessionsRepository, {

@@ -5,7 +5,7 @@ import { UUID } from "./uuid";
 
 export interface EntityProps {
   created_at: Date;
-  updated_at?: Date;
+  updated_at?: Date | null;
 }
 
 export abstract class Entity<Props> {
