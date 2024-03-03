@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 
 interface UpdateAgribusinessStatusUseCaseRequest {
@@ -11,9 +12,14 @@ export class UpdateAgribusinessStatusUseCase {
     const agribusiness = await this.agribusinessesRepository.findById(
       agribusiness_id
     );
-    agribusiness!.active = !agribusiness!.active;
-    agribusiness!.touch();
 
-    await this.agribusinessesRepository.update(agribusiness!);
+    if (!agribusiness) {
+      throw new ResourceNotFoundError("Agronégocio", agribusiness_id);
+    }
+
+    agribusiness.active = !agribusiness.active;
+    agribusiness.touch();
+
+    await this.agribusinessesRepository.update(agribusiness);
   }
 }
