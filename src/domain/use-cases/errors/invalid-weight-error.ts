@@ -1,5 +1,5 @@
 export class InvalidWeightError extends Error {
-  constructor(action: "offered" | "ordered", product_name: string) {
-    super(`Invalid weight ${action} for product ${product_name}.`);
+  constructor(action: "ofertado" | "solicitado", product_name: string) {
+    super(`Peso inválido ${action} para o produto ${product_name}.`);
   }
 }

@@ -1,5 +1,5 @@
 export class NotAgrobusinessAdminError extends Error {
   constructor() {
-    super(`This account is not an agribusiness administrator.`);
+    super(`Esse usuário não é administrador de um agronegócio.`);
   }
 }

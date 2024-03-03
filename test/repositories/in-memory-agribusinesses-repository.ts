@@ -7,7 +7,7 @@ export class InMemoryAgribusinessesRepository
   items: Agribusiness[] = [];
 
   async findById(id: string): Promise<Agribusiness | null> {
-    const agribusiness = this.items.find((item) => item.id.toString() === id);
+    const agribusiness = this.items.find((item) => item.id.equals(id));
 
     if (!agribusiness) return null;
 

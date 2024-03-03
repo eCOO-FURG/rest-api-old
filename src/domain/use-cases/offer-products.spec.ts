@@ -3,165 +3,237 @@ import { Agribusiness } from "../entities/agribusiness";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { Offer } from "../entities/offer";
-import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
 import { Product } from "../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { InMemoryProductsTypesRepository } from "test/repositories/in-memory-products-types-repository";
-import { ProductType } from "../entities/product-type";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { Account } from "../entities/account";
-import { Cellphone } from "../entities/value-objects/cellphone";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { UUID } from "@/core/entities/uuid";
+import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
-let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
-let inMemoryProductsTypesRepository: InMemoryProductsTypesRepository;
 let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
-      inMemoryOffersRepository
-    );
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    inMemoryProductsTypesRepository = new InMemoryProductsTypesRepository();
 
     sut = new OfferProductsUseCase(
       inMemoryAgribusinessesRepository,
       inMemoryOffersRepository,
-      inMemoryOffersProductsRepository,
       inMemoryProductsRepository
     );
   });
 
   it("should be able to offer products", async () => {
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("519876543"),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
-    const agribussines = Agribusiness.create({
-      admin_id: account.id,
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
       caf: "123456",
-      name: "fake name",
+      name: "fake-name",
     });
 
-    inMemoryAgribusinessesRepository.save(agribussines);
+    await inMemoryAgribusinessesRepository.save(agribusiness);
 
-    const productType = ProductType.create(
-      {
-        name: "herbaceous",
-      },
-      new UniqueEntityID("1")
-    );
-
-    inMemoryProductsTypesRepository.save(productType);
-
-    const product = Product.create({
-      name: "potato",
-      image: "potato.url",
-      type_id: new UniqueEntityID("1"),
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
       pricing: "WEIGHT",
+      type_id: "fake-id",
     });
 
-    await inMemoryProductsRepository.save(product);
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      image: "image",
+      name: "apple",
+      pricing: "UNIT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product2);
 
     await sut.execute({
-      agribusiness_id: agribussines.id.toString(),
+      agribusiness_id: agribusiness.id.value,
       products: [
         {
-          id: product.id.toString(),
-          price: 6.6,
-          quantity_or_weight: 50,
+          id: product1.id.value,
+          price: 10.0,
+          quantity_or_weight: 100,
+        },
+        {
+          id: product2.id.value,
+          price: 10.0,
+          quantity_or_weight: 5,
         },
       ],
     });
 
     expect(inMemoryOffersRepository.items[0]).toBeInstanceOf(Offer);
-    expect(
-      inMemoryOffersProductsRepository.items[0].product_id.toString()
-    ).toBe(product.id.toString());
   });
 
   it("should not be able to offer products that do not exist", async () => {
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("519876543"),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
-    const agribussines = Agribusiness.create({
-      admin_id: account.id,
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
       caf: "123456",
-      name: "fake name",
+      name: "fake-name",
     });
 
-    inMemoryAgribusinessesRepository.save(agribussines);
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
+      pricing: "WEIGHT",
+      type_id: "fake-id",
+    });
 
-    await expect(async () =>
+    await inMemoryProductsRepository.save(product1);
+
+    await expect(() =>
       sut.execute({
-        agribusiness_id: agribussines.id.toString(),
+        agribusiness_id: agribusiness.id.value,
         products: [
           {
-            id: "wrong-id",
-            price: 6.6,
-            quantity_or_weight: 10,
+            id: product1.id.value,
+            price: 10.0,
+            quantity_or_weight: 100,
+          },
+          {
+            id: "fake-id",
+            price: 10.0,
+            quantity_or_weight: 5,
           },
         ],
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
 
-  it("should no be able to offer products with an invalid weight", async () => {
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("519876543"),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
-    const agribussines = Agribusiness.create({
-      admin_id: account.id,
+  it("should not be able to offer products from an agribusiness that do not exist", async () => {
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
       caf: "123456",
-      name: "fake name",
+      name: "fake-name",
     });
 
-    inMemoryAgribusinessesRepository.save(agribussines);
-
-    const product = Product.create({
-      name: "potato",
-      image: "potato.url",
-      type_id: new UniqueEntityID("1"),
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
       pricing: "WEIGHT",
+      type_id: "fake-id",
     });
 
-    await inMemoryProductsRepository.save(product);
+    await inMemoryProductsRepository.save(product1);
 
-    await expect(async () =>
+    const product2 = Product.create({
+      image: "image",
+      name: "apple",
+      pricing: "UNIT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    await expect(() =>
       sut.execute({
-        agribusiness_id: agribussines.id.toString(),
+        agribusiness_id: agribusiness.id.value,
         products: [
           {
-            id: product.id.toString(),
-            price: 6.6,
-            quantity_or_weight: 10,
+            id: product1.id.value,
+            price: 10.0,
+            quantity_or_weight: 100,
+          },
+          {
+            id: product2.id.value,
+            price: 10.0,
+            quantity_or_weight: 5,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(ResourceNotFoundError);
+  });
+
+  it("should not be able to offer items with an invalid weight", async () => {
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
+      caf: "123456",
+      name: "fake-name",
+    });
+
+    await inMemoryAgribusinessesRepository.save(agribusiness);
+
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
+      pricing: "WEIGHT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      image: "image",
+      name: "apple",
+      pricing: "UNIT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    await expect(() =>
+      sut.execute({
+        agribusiness_id: agribusiness.id.value,
+        products: [
+          {
+            id: product1.id.value,
+            price: 10.0,
+            quantity_or_weight: 30,
           },
         ],
       })
     ).rejects.toBeInstanceOf(InvalidWeightError);
+  });
+
+  it("should not be able to offer from an inactive agribusiness", async () => {
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
+      caf: "123456",
+      name: "fake-name",
+      active: false,
+    });
+
+    await inMemoryAgribusinessesRepository.save(agribusiness);
+
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
+      pricing: "WEIGHT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      image: "image",
+      name: "apple",
+      pricing: "UNIT",
+      type_id: "fake-id",
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    await expect(() =>
+      sut.execute({
+        agribusiness_id: agribusiness.id.value,
+        products: [
+          {
+            id: product1.id.value,
+            price: 10.0,
+            quantity_or_weight: 30,
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(AgribusinessNotActiveError);
   });
 });
