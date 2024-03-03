@@ -13,6 +13,10 @@ export class Offer extends Entity<OfferProps> {
     return this.props.agribusiness_id;
   }
 
+  get items() {
+    return this.props.items;
+  }
+
   add(item: OfferProduct) {
     this.props.items.push(item);
   }

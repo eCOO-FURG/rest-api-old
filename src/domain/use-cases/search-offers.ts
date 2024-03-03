@@ -1,8 +1,6 @@
 import { ProductsRepository } from "../repositories/products-repository";
-import { OffersProductsRepository } from "../repositories/offers-products-repository";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
-import { OfferProduct } from "../entities/offer-product";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
+import { OffersRepository } from "../repositories/offers-repository";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -12,60 +10,26 @@ export class SearchOffersUseCase {
   constructor(
     private naturalLanguageProcessor: NaturalLanguageProcessor,
     private productsRepository: ProductsRepository,
-    private offersProductsRepository: OffersProductsRepository
+    private offersRepository: OffersRepository
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
     const similarProducts = await this.naturalLanguageProcessor.infer(product);
 
-    const similarProductsNames = similarProducts.map((item) => item.name);
+    const productsNames = similarProducts.map((item) => item.name);
 
     const products = await this.productsRepository.findManyByNames(
-      similarProductsNames
+      productsNames
     );
 
-    const productsIds = products.map((product) => product.id.toString());
+    const productsIds = products.map((product) => product.id.value);
 
-    const offersProductsWithRemainingQuantity =
-      await this.offersProductsRepository.findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
-        productsIds,
-        "AVAILABLE"
-      );
-
-    const productsOffered = offersProductsWithRemainingQuantity.reduce(
-      (
-        items: {
-          id: UniqueEntityID;
-          name: string;
-          offers: OfferProduct[];
-        }[],
-        current
-      ) => {
-        const productIndex = items.findIndex((item) =>
-          item.id.equals(current.product_id)
-        );
-
-        if (productIndex >= 0) {
-          items[productIndex].offers.push(current);
-        } else {
-          const product = products.find((product) =>
-            product.id.equals(current.product_id)
-          );
-
-          if (product) {
-            items.push({
-              id: product.id,
-              name: product.name,
-              offers: [current],
-            });
-          }
-        }
-
-        return items;
-      },
-      []
+    const offersItems = await this.offersRepository.findManyItemsByProductIds(
+      productsIds
     );
 
-    return productsOffered;
+    return {
+      offersItems,
+    };
   }
 }
