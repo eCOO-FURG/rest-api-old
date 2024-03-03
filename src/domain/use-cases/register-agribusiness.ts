@@ -1,46 +1,47 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { AccountsRepository } from "../repositories/accounts-repository";
-import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { Agribusiness } from "../entities/agribusiness";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
+import { UsersRepository } from "../repositories/users-repository";
+import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
 
 interface RegisterAgribusinessUseCaseRequest {
-  account_id: string;
+  user_id: string;
   caf: string;
   name: string;
 }
 
 export class RegisterAgribusinessUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private agribusinessesRepository: AgribusinessesRepository
   ) {}
 
-  async execute({ account_id, caf, name }: RegisterAgribusinessUseCaseRequest) {
-    const account = await this.accountsRepository.findById(account_id);
+  async execute({ user_id, caf, name }: RegisterAgribusinessUseCaseRequest) {
+    const user = await this.usersRepository.findById(user_id);
 
-    if (!account) {
-      throw new ResourceNotFoundError(account_id);
+    if (!user) {
+      throw new ResourceNotFoundError("Usuário", user_id);
     }
 
     const agribusinessWithSameCaf =
       await this.agribusinessesRepository.findByCaf(caf);
 
     if (agribusinessWithSameCaf) {
-      throw new ResourceAlreadyExistsError(caf);
+      throw new ResourceAlreadyExistsError("CAF", caf);
     }
 
     const agribusinessWithSameAdmin =
-      await this.agribusinessesRepository.findByAdminId(account.id.toString());
+      await this.agribusinessesRepository.findByAdminId(user_id);
+
+    console.log(agribusinessWithSameAdmin);
 
     if (agribusinessWithSameAdmin) {
       throw new AlreadyAgribusinessAdminError();
     }
 
     const agribusiness = Agribusiness.create({
-      admin_id: new UniqueEntityID(account_id),
+      admin_id: user.id,
       caf,
       name,
     });

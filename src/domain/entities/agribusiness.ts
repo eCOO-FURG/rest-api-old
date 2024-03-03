@@ -1,17 +1,17 @@
-import { AggregateRoot } from "@/core/entities/aggregate-root";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
 export interface AgribusinessProps {
   name: string;
   caf: string;
   active: boolean;
-  admin_id: UniqueEntityID;
+  admin_id: UUID;
   created_at: Date;
   updated_at?: Date | null;
 }
 
-export class Agribusiness extends AggregateRoot<AgribusinessProps> {
+export class Agribusiness extends Entity<AgribusinessProps> {
   get name() {
     return this.props.name;
   }
@@ -54,7 +54,7 @@ export class Agribusiness extends AggregateRoot<AgribusinessProps> {
 
   static create(
     props: Optional<AgribusinessProps, "created_at" | "active">,
-    id?: UniqueEntityID
+    id?: UUID
   ) {
     const agribusiness = new Agribusiness(
       {

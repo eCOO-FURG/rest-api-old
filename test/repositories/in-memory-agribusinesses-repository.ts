@@ -23,8 +23,8 @@ export class InMemoryAgribusinessesRepository
   }
 
   async findByAdminId(admin_id: string): Promise<Agribusiness | null> {
-    const agribusiness = this.items.find(
-      (item) => item.admin_id.toString() === admin_id
+    const agribusiness = this.items.find((item) =>
+      item.admin_id.equals(admin_id)
     );
 
     if (!agribusiness) return null;
