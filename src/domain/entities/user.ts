@@ -2,6 +2,7 @@ import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 import { UserVerifiedEvent } from "../events/on-user-verified";
+import { UserRegisteredEvent } from "../events/on-user-registered";
 
 interface UserProps extends Optional<EntityProps, "created_at"> {
   first_name: string;
@@ -74,6 +75,11 @@ export class User extends Entity<UserProps> {
 
   static create(props: UserProps, id?: UUID) {
     const user = new User(props, id);
+
+    if (!id) {
+      user.registerEvent(new UserRegisteredEvent(user));
+    }
+
     return user;
   }
 }

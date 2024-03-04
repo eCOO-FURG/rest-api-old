@@ -1,33 +1,31 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { EventHandler } from "@/core/events/event-handler";
-import { Account } from "../entities/account";
 import { DomainEvent } from "@/core/events/domain-event";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
-import { PeopleRepository } from "../repositories/people-repository";
 import { Encrypter } from "../cryptography/encrypter";
 import { env } from "@/infra/env";
 import { ViewLoader } from "../mail/view-loader";
 import { Email } from "../entities/email";
 import { Mailer } from "../mail/mailer";
+import { UUID } from "@/core/entities/uuid";
+import { User } from "../entities/user";
 
 export class UserRegisteredEvent implements DomainEvent {
-  public ocurredAt: Date;
-  public account: Account;
+  public ocurred_at: Date;
+  public user: User;
 
-  constructor(account: Account) {
-    this.ocurredAt = new Date();
-    this.account = account;
+  constructor(user: User) {
+    this.ocurred_at = new Date();
+    this.user = user;
   }
 
-  getAggregateId(): UniqueEntityID {
-    return this.account.id;
+  getEntityId(): UUID {
+    return this.user.id;
   }
 }
 
 export class OnUserRegistered implements EventHandler {
   constructor(
     private mailer: Mailer,
-    private peopleRepository: PeopleRepository,
     private encrypter: Encrypter,
     private viewLoader: ViewLoader
   ) {
@@ -41,25 +39,19 @@ export class OnUserRegistered implements EventHandler {
     );
   }
 
-  public async sendAccountVerificationEmail({ account }: UserRegisteredEvent) {
-    const person = await this.peopleRepository.findByAccountId(
-      account.id.toString()
-    );
-
-    if (!person) return;
-
+  public async sendAccountVerificationEmail({ user }: UserRegisteredEvent) {
     const code = await this.encrypter.encrypt({
-      account_id: account.id.toString(),
+      user_id: user.id.value,
     });
 
     const view = await this.viewLoader.load("verifyAccount", {
-      first_name: person.first_name,
+      first_name: user.first_name,
       url: `${env.SERVER_URL}:${env.PORT}/users/verify?code=${code}`,
     });
 
     const email = Email.create({
       from: env.ECOO_EMAIL,
-      to: account.email,
+      to: user.email,
       subject: "Bem-vindo(a) - Verifique sua conta!",
       view,
     });
