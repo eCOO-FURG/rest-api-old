@@ -10,7 +10,6 @@ import { registerAgribusiness } from "./register-agribusiness";
 import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admin";
 import { searchOffers } from "./search-offers";
 import { orderProducts } from "./order-products";
-import { handleOrder } from "./handle-order";
 import { updateAgribusiness } from "./update-agribusiness";
 import { updateAgribusinessStatus } from "./update-agribusiness-status";
 import { ensureAdministrator } from "../middlewares/ensure-administrator";
@@ -58,8 +57,6 @@ export async function routes(app: FastifyInstance) {
     },
     orderProducts
   );
-
-  app.post("/payments", handleOrder);
 
   app.patch(
     "/agribusiness",

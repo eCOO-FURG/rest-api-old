@@ -1,7 +1,6 @@
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authenticate-with-one-time-password";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
-import { HandleOrderUseCase } from "@/domain/use-cases/handle-order";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -18,8 +17,8 @@ import { asFunction, Lifetime } from "awilix";
 
 diContainer.register({
   registerUseCase: asFunction(
-    ({ accountsRepository, peopleRepository, hasher }) =>
-      new RegisterUseCase(accountsRepository, peopleRepository, hasher),
+    ({ usersRepository, hasher }) =>
+      new RegisterUseCase(usersRepository, hasher),
     {
       lifetime: Lifetime.SCOPED,
     }
@@ -29,9 +28,9 @@ diContainer.register({
       new RegisterSessionUseCase(sessionsRepository, encrypter)
   ),
   authenticateWithPasswordUseCase: asFunction(
-    ({ accountsRepository, hasher, registerSessionUseCase }) =>
+    ({ usersRepository, hasher, registerSessionUseCase }) =>
       new AuthenticateWithPasswordUseCase(
-        accountsRepository,
+        usersRepository,
         hasher,
         registerSessionUseCase
       )
@@ -49,8 +48,7 @@ diContainer.register({
       )
   ),
   getUserProfileUseCase: asFunction(
-    ({ accountsRepository, peopleRepository }) =>
-      new GetUserProfileUseCase(accountsRepository, peopleRepository)
+    ({ usersRepository }) => new GetUserProfileUseCase(usersRepository)
   ),
   refreshUseCase: asFunction(
     ({ accountsRepository, sessionsRepository, encrypter }) =>
@@ -68,16 +66,10 @@ diContainer.register({
       )
   ),
   offerProductsUseCase: asFunction(
-    ({
-      agribusinessesRepository,
-      offersRepository,
-      offersProductsRepository,
-      productsRepository,
-    }) =>
+    ({ agribusinessesRepository, offersRepository, productsRepository }) =>
       new OfferProductsUseCase(
         agribusinessesRepository,
         offersRepository,
-        offersProductsRepository,
         productsRepository
       )
   ),
@@ -95,32 +87,16 @@ diContainer.register({
   ),
   orderProductsUseCase: asFunction(
     ({
+      usersRepository,
       productsRepository,
       offersProductsRepository,
       ordersRepository,
-      ordersProductsRepository,
-      paymentsProcessor,
-      accountsRepository,
     }) =>
       new OrderProductsUseCase(
+        usersRepository,
         productsRepository,
         offersProductsRepository,
-        ordersRepository,
-        ordersProductsRepository,
-        paymentsProcessor,
-        accountsRepository
-      )
-  ),
-  handleOrderUseCase: asFunction(
-    ({
-      ordersRepository,
-      ordersProductsRepository,
-      offersProductsRepository,
-    }) =>
-      new HandleOrderUseCase(
-        ordersRepository,
-        ordersProductsRepository,
-        offersProductsRepository
+        ordersRepository
       )
   ),
   updateAgribusinessUseCase: asFunction(

@@ -14,7 +14,6 @@ import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
-import { Asaas } from "../payments/asaas-service";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
 import { OtpProvider } from "../cryptography/otp-generator";
@@ -75,9 +74,6 @@ diContainer.register({
     lifetime: "SINGLETON",
   }),
   paymentsProcessor: asFunction(() => {
-    // if (env.ENV === "prod") {
-    //   return new Asaas();
-    // }
     return new FakePaymentsProcessor();
   }),
   otpGenerator: asFunction(() => new OtpProvider()),
