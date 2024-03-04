@@ -1,5 +1,6 @@
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
-import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
+import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
 
 interface UpdateAgribusinessUseCaseRequest {
   agribusiness_id: string;
@@ -19,18 +20,22 @@ export class UpdateAgribusinessUseCase {
       agribusiness_id
     );
 
-    if (caf != agribusiness!.caf) {
+    if (!agribusiness) {
+      throw new ResourceNotFoundError("Agronegócio", agribusiness_id);
+    }
+
+    if (caf != agribusiness.caf) {
       const agribusinessWithSameCaf =
-        await this.agribusinessesRepository.findByCaf(caf.toString());
+        await this.agribusinessesRepository.findByCaf(caf);
 
       if (agribusinessWithSameCaf) {
-        throw new ResourceAlreadyExistsError(caf.toString());
+        throw new ResourceAlreadyExistsError("CAF", caf);
       }
     }
 
-    agribusiness!.name = name;
-    agribusiness!.caf = caf;
-    agribusiness!.touch();
+    agribusiness.name = name;
+    agribusiness.caf = caf;
+    agribusiness.touch();
 
     await this.agribusinessesRepository.update(agribusiness!);
   }

@@ -37,8 +37,8 @@ export class InMemoryAgribusinessesRepository
   }
 
   async update(agribusiness: Agribusiness): Promise<void> {
-    const itemIndex = this.items.findIndex(
-      (item) => item.id === agribusiness.id
+    const itemIndex = this.items.findIndex((item) =>
+      item.id.equals(agribusiness.id)
     );
 
     this.items[itemIndex] = agribusiness;

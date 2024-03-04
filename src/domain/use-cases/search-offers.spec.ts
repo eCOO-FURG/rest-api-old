@@ -91,6 +91,6 @@ describe("search offers", () => {
       product: "banana",
     });
 
-    console.log(JSON.stringify(result));
+    expect(result.offersItems).toHaveLength(2);
   });
 });
