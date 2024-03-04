@@ -1,4 +1,3 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { RegisterOneTimePasswordUseCase } from "../use-cases/register-one-time-password";
 import { FakeOtpGenerator } from "test/cryptography/fake-otp-generator";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
@@ -7,10 +6,10 @@ import { FakeMailer } from "test/mail/fake-mailer";
 import { FakeViewLoader } from "test/mail/fake-view-loader";
 import { waitFor } from "test/utils/wait-for";
 import { SpyInstance } from "vitest";
-import { Account } from "../entities/account";
-import { Cellphone } from "../entities/value-objects/cellphone";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeOtpGenerator: FakeOtpGenerator;
 let inMemoryOneTimePasswordsRepository: InMemoryOneTimePasswordsRepository;
 let registerOneTimePasswordUseCase: RegisterOneTimePasswordUseCase;
@@ -20,13 +19,13 @@ let fakeMailerSpy: SpyInstance;
 
 describe("on one time password registered", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeOtpGenerator = new FakeOtpGenerator();
     inMemoryOneTimePasswordsRepository =
       new InMemoryOneTimePasswordsRepository();
 
     registerOneTimePasswordUseCase = new RegisterOneTimePasswordUseCase(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       fakeOtpGenerator,
       inMemoryOneTimePasswordsRepository
     );
@@ -36,28 +35,30 @@ describe("on one time password registered", () => {
     fakeMailerSpy = vi.spyOn(fakeMailer, "send");
 
     new OnOneTimePasswordRegistered(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       fakeMailer,
       fakeViewLoader
     );
   });
 
   it("should send a email when a one time password is registered", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
+    const user = User.create({
+      email: "test@gmail.com",
+      phone: "51987654321",
       password: "123456",
-      verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await registerOneTimePasswordUseCase.execute({
-      email: "johndoe@example.com",
+      email: "test@gmail.com",
     });
 
-    // await waitFor(() => {
-    //   expect(fakeMailerSpy).toHaveBeenCalled();
-    // });
+    await waitFor(() => {
+      expect(fakeMailerSpy).toHaveBeenCalled();
+    });
   });
 });

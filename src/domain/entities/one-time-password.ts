@@ -47,6 +47,12 @@ export class OneTimePassword extends Entity<OneTimePasswordProps> {
       id
     );
 
+    if (!id) {
+      oneTimePassword.registerEvent(
+        new OneTimePasswordRegisteredEvent(oneTimePassword)
+      );
+    }
+
     return oneTimePassword;
   }
 }
