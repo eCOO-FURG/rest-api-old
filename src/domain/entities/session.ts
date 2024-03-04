@@ -1,8 +1,8 @@
-import { Entity } from "@/core/entities/entity";
+import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface SessionProps {
+interface SessionProps extends Optional<EntityProps, "created_at"> {
   user_id: UUID;
   ip_address: string;
   user_agent: string;
@@ -31,15 +31,8 @@ export class Session extends Entity<SessionProps> {
     return this.props.updated_at;
   }
 
-  static create(props: Optional<SessionProps, "created_at">, id?: UUID) {
-    const session = new Session(
-      {
-        ...props,
-        created_at: props.created_at ?? new Date(),
-      },
-      id
-    );
-
+  static create(props: SessionProps, id?: UUID) {
+    const session = new Session({ ...props }, id);
     return session;
   }
 }

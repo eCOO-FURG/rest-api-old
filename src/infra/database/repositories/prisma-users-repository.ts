@@ -18,6 +18,43 @@ export class PrismaUsersRepository implements UsersRepository {
     ]);
   }
 
+  async update(user: User): Promise<void> {
+    const { account, person } = PrismaUserMapper.toPrisma(user);
+
+    await prisma.$transaction([
+      prisma.account.update({
+        data: account,
+        where: {
+          id: account.id,
+        },
+      }),
+
+      prisma.person.update({
+        data: person,
+        where: {
+          id: person.id,
+        },
+      }),
+    ]);
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const account = await prisma.account.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        person: true,
+      },
+    });
+
+    if (!account || !account.person) {
+      return null;
+    }
+
+    return PrismaUserMapper.toDomain({ ...account, person: account.person });
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const account = await prisma.account.findUnique({
       where: {
@@ -34,6 +71,7 @@ export class PrismaUsersRepository implements UsersRepository {
 
     return PrismaUserMapper.toDomain({ ...account, person: account.person });
   }
+
   async findByPhone(phone: string): Promise<User | null> {
     const account = await prisma.account.findUnique({
       where: {
@@ -50,6 +88,7 @@ export class PrismaUsersRepository implements UsersRepository {
 
     return PrismaUserMapper.toDomain({ ...account, person: account.person });
   }
+
   async findByCpf(cpf: string): Promise<User | null> {
     const person = await prisma.person.findUnique({
       where: {

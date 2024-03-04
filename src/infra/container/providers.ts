@@ -4,7 +4,6 @@ import { PrismaSessionsRepository } from "../database/repositories/prisma-sessio
 import { PrismaProductsRepository } from "../database/repositories/prisma-products-repository";
 import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
 import { PrismaOffersRepository } from "../database/repositories/prisma-offers-repository";
-import { PrismaOffersProductsRepository } from "../database/repositories/prisma-offers-products-repository";
 import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
 import { createTransport } from "nodemailer";
 import { JwtEncrypter } from "../cryptography/jwt-encrypter";
@@ -13,7 +12,6 @@ import { EjsLoader } from "../mail/ejs-loader";
 import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
-import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
 import { OtpProvider } from "../cryptography/otp-generator";
@@ -36,13 +34,7 @@ diContainer.register({
   offersRepository: asClass(PrismaOffersRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  offersProductsRepository: asClass(PrismaOffersProductsRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
   ordersRepository: asClass(PrismaOrdersRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  ordersProductsRepository: asClass(PrismaOrderProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   oneTimePasswordsRepository: asClass(PrismaOneTimePasswordsRepository, {

@@ -35,10 +35,7 @@ export class OneTimePassword extends Entity<OneTimePasswordProps> {
     this.touch();
   }
 
-  static create(
-    props: Optional<OneTimePasswordProps, "used" | "created_at">,
-    id?: UUID
-  ) {
+  static create(props: Optional<OneTimePasswordProps, "used">, id?: UUID) {
     const oneTimePassword = new OneTimePassword(
       {
         ...props,

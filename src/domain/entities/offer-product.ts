@@ -30,14 +30,8 @@ export class OfferProduct extends Entity<OfferProductProps> {
     this.props.quantity_or_weight = quantity_or_weight;
   }
 
-  static create(props: Optional<OfferProductProps, "created_at">, id?: UUID) {
-    const offerProduct = new OfferProduct(
-      {
-        ...props,
-      },
-      id
-    );
-
+  static create(props: OfferProductProps, id?: UUID) {
+    const offerProduct = new OfferProduct({ ...props }, id);
     return offerProduct;
   }
 }

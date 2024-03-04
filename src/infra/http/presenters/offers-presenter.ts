@@ -1,10 +1,10 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { UUID } from "@/core/entities/uuid";
 import { OfferProduct } from "@/domain/entities/offer-product";
 
 export class OffersPresenter {
   static toHttp(
     offersForEachProduct: {
-      id: UniqueEntityID;
+      id: UUID;
       name: string;
       offers: OfferProduct[];
     }[]

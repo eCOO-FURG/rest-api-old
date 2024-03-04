@@ -1,4 +1,4 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { UUID } from "@/core/entities/uuid";
 import { Session } from "@/domain/entities/session";
 import { Session as PrismaSession, Prisma } from "@prisma/client";
 
@@ -8,11 +8,11 @@ export class PrismaSessionMapper {
       {
         ip_address: raw.ip_address,
         user_agent: raw.user_agent,
-        account_id: new UniqueEntityID(raw.account_id),
+        user_id: new UUID(raw.account_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      new UniqueEntityID(raw.id)
+      new UUID(raw.id)
     );
   }
 
@@ -21,7 +21,7 @@ export class PrismaSessionMapper {
       id: session.id.toString(),
       ip_address: session.ip_address,
       user_agent: session.user_agent,
-      account_id: session.account_id.toString(),
+      account_id: session.user_id.value,
       created_at: session.created_at,
       updated_at: session.updated_at,
     };

@@ -1,4 +1,4 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { UUID } from "@/core/entities/uuid";
 import { Agribusiness } from "@/domain/entities/agribusiness";
 import { Prisma, Agribusiness as PrismaAgribusiness } from "@prisma/client";
 
@@ -9,11 +9,11 @@ export class PrismaAgribusinessMapper {
         name: raw.name,
         caf: raw.caf,
         active: raw.active,
-        admin_id: new UniqueEntityID(raw.admin_id),
+        admin_id: new UUID(raw.admin_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      new UniqueEntityID(raw.id)
+      new UUID(raw.id)
     );
   }
 
@@ -21,11 +21,11 @@ export class PrismaAgribusinessMapper {
     agribusiness: Agribusiness
   ): Prisma.AgribusinessUncheckedCreateInput {
     return {
-      id: agribusiness.id.toString(),
+      id: agribusiness.id.value,
       name: agribusiness.name,
       caf: agribusiness.caf,
       active: agribusiness.active,
-      admin_id: agribusiness.admin_id.toString(),
+      admin_id: agribusiness.admin_id.value,
       created_at: agribusiness.created_at,
       updated_at: agribusiness.updated_at,
     };

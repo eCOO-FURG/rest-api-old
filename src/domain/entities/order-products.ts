@@ -1,7 +1,8 @@
-import { Entity } from "@/core/entities/entity";
+import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
+import { Optional } from "@/core/types/optional";
 
-interface OrderProductProps {
+interface OrderProductProps extends Optional<EntityProps, "created_at"> {
   order_id: UUID;
   offer_id: UUID;
   product_id: UUID;

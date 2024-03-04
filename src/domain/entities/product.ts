@@ -1,12 +1,12 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface ProductProps {
+interface ProductProps extends Optional<EntityProps, "created_at"> {
   name: string;
   image: string;
   pricing: "UNIT" | "WEIGHT";
-  type_id: UniqueEntityID;
+  type_id: UUID;
   created_at: Date;
   updated_at?: Date | null;
 }
@@ -36,18 +36,8 @@ export class Product extends Entity<ProductProps> {
     return this.props.updated_at;
   }
 
-  static create(
-    props: Optional<ProductProps, "created_at">,
-    id?: UniqueEntityID
-  ) {
-    const product = new Product(
-      {
-        ...props,
-        created_at: props.created_at ?? new Date(),
-      },
-      id
-    );
-
+  static create(props: ProductProps, id?: UUID) {
+    const product = new Product({ ...props }, id);
     return product;
   }
 }

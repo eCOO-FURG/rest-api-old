@@ -25,7 +25,7 @@ export class PrismaOneTimePasswordsRepository
     });
   }
 
-  async expirePreviousForAccountId(account_id: string): Promise<void> {
+  async expirePreviousForUserId(account_id: string): Promise<void> {
     await prisma.oneTimePassword.updateMany({
       where: {
         account_id,
@@ -38,9 +38,7 @@ export class PrismaOneTimePasswordsRepository
     });
   }
 
-  async findValidByAccountId(
-    account_id: string
-  ): Promise<OneTimePassword | null> {
+  async findValidByUserId(account_id: string): Promise<OneTimePassword | null> {
     const fifteenMinutesAgo = new Date(new Date().getTime() - 15 * 60 * 1000);
 
     const oneTimePassword = await prisma.oneTimePassword.findFirst({
