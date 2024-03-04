@@ -1,8 +1,9 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
+import { Optional } from "@/core/types/optional";
 
-interface PaymentProps {
-  charge_id?: UniqueEntityID;
+interface PaymentProps extends Optional<EntityProps, "created_at"> {
+  charge_id?: UUID;
   key?: string;
   qrcode?: string;
   value: string;
@@ -34,14 +35,8 @@ export class Payment extends Entity<PaymentProps> {
     return this.props.expiration_date;
   }
 
-  static create(props: PaymentProps, id?: UniqueEntityID) {
-    const payment = new Payment(
-      {
-        ...props,
-      },
-      id
-    );
-
+  static create(props: PaymentProps, id?: UUID) {
+    const payment = new Payment({ ...props }, id);
     return payment;
   }
 }

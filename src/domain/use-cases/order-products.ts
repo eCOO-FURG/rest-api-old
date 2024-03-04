@@ -1,21 +1,15 @@
 import { ProductsRepository } from "../repositories/products-repository";
-import { OffersProductsRepository } from "../repositories/offers-products-repository";
 import { OrdersRepository } from "../repositories/orders-repository";
-import { OrdersProductsRepository } from "../repositories/orders-products-repository";
-import { PaymentsProcessor } from "../payments/payments-processor";
-import { AccountsRepository } from "../repositories/accounts-repository";
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { Order } from "../entities/order";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
-import { OfferProduct } from "../entities/offer-product";
+import { UsersRepository } from "../repositories/users-repository";
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { OffersRepository } from "../repositories/offers-repository";
 import { OrderProduct } from "../entities/order-products";
-import { Charge } from "../entities/charge";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
-import { Payment } from "../entities/payment";
 
 interface OrderProductsUseCaseRequest {
-  account_id: string;
+  user_id: string;
   shipping_address: string;
   payment_method: "PIX" | "ON_DELIVERY";
   products: {
@@ -26,140 +20,100 @@ interface OrderProductsUseCaseRequest {
 
 export class OrderProductsUseCase {
   constructor(
+    private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
-    private offersProductsRepository: OffersProductsRepository,
-    private ordersRepository: OrdersRepository,
-    private ordersProductsRepository: OrdersProductsRepository,
-    private paymentsProcessor: PaymentsProcessor,
-    private accountsRepository: AccountsRepository
+    private offersRepository: OffersRepository,
+    private ordersRepository: OrdersRepository
   ) {}
 
   async execute({
-    account_id,
+    user_id,
     shipping_address,
     payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
-    const orderedProductsIds = orderedProducts.map((item) => item.id);
+    const user = await this.usersRepository.findById(user_id);
+
+    if (!user) {
+      throw new ResourceNotFoundError("Usuário", user_id);
+    }
+
+    const orderedProductsIds = orderedProducts.map((product) => product.id);
 
     const products = await this.productsRepository.findManyByIds(
       orderedProductsIds
     );
 
-    const productsIds = products.map((product) => product.id.toString());
+    const offers = await this.offersRepository.findManyItemsByProductIds(
+      orderedProductsIds
+    );
 
-    const offersProducts =
-      await this.offersProductsRepository.findManyWithRemainingQuantityOrWeightByProductsIdsAndStatus(
-        productsIds,
-        "AVAILABLE"
-      );
+    const offersByLowestPrice = offers.sort((a, b) => a.price - b.price);
 
     const order = Order.create({
-      customer_id: new UniqueEntityID(account_id),
+      customer_id: user.id,
       payment_method,
       shipping_address,
     });
 
-    let totalPrice = 0;
-    const orderProducts: OrderProduct[] = [];
-    const updatedOffersProducts: OfferProduct[] = [];
-
     for (const item of orderedProducts) {
-      const itemExists = productsIds.includes(item.id);
+      const product = products.find((product) => product.id.equals(item.id));
 
-      if (!itemExists) {
-        throw new ResourceNotFoundError(item.id);
+      if (!product) {
+        throw new ResourceNotFoundError("Produto", item.id);
       }
-
-      const offersForItem = offersProducts.filter((offerProduct) =>
-        offerProduct.product_id.equals(new UniqueEntityID(item.id))
-      );
-
-      const product = products.find((product) =>
-        product.id.equals(new UniqueEntityID(item.id))
-      )!;
 
       if (product.pricing === "WEIGHT" && item.quantity_or_weight % 50 !== 0) {
-        throw new InvalidWeightError("ordered", item.id);
+        throw new InvalidWeightError("solicitado", item.id);
       }
 
-      const available = offersForItem.reduce(
-        (total, product) => total + product.quantity_or_weight,
-        0
+      const offersForItem = offersByLowestPrice.filter((offer) =>
+        offer.product_id.equals(item.id)
       );
 
-      if (item.quantity_or_weight > available) {
-        throw new InsufficientProductQuantityOrWeightError(
-          product.pricing === "UNIT" ? "quantity" : "weight",
-          item.id
+      offersForItem.reduce((acc, current, index) => {
+        const needed = Math.min(
+          item.quantity_or_weight - acc,
+          current.quantity_or_weight
         );
-      }
 
-      const offersByLowestPrice = offersForItem.sort(
-        (a, b) => a.price - b.price
-      );
-
-      offersByLowestPrice.reduce((selected, offerProduct, index) => {
-        if (selected === item.quantity_or_weight) {
-          offersByLowestPrice.slice(0, index);
+        if (!needed) {
+          offersForItem.slice(0, index - 1);
+          return 0;
         }
 
-        const orderProduct = OrderProduct.create({
-          offer_product_id: offerProduct.id,
-          order_id: order.id,
+        if (
+          index === offersForItem.length - 1 &&
+          item.quantity_or_weight > needed + acc
+        ) {
+          throw new InsufficientProductQuantityOrWeightError(
+            product.pricing,
+            product.id.value
+          );
+        }
+
+        current.quantity_or_weight -= needed;
+        acc += needed;
+
+        const orderItem = OrderProduct.create({
+          offer_id: current.offer_id,
           product_id: product.id,
-          quantity_or_weight: 0,
+          order_id: order.id,
+          quantity_or_weight: needed,
         });
 
-        const needed = Math.min(
-          item.quantity_or_weight - selected,
-          offerProduct.quantity_or_weight
-        );
+        order.add(orderItem);
 
-        totalPrice += needed * offerProduct.price;
+        order.price += needed * current.price;
 
-        orderProduct.quantity_or_weight = needed;
-        orderProducts.push(orderProduct);
-
-        selected += needed;
-        offerProduct.quantity_or_weight -= needed;
-
-        return selected;
+        return acc;
       }, 0);
-
-      updatedOffersProducts.push(...offersByLowestPrice);
     }
 
-    const account = await this.accountsRepository.findById(account_id);
-
-    if (!account) {
-      throw new ResourceNotFoundError(account_id);
-    }
-
-    const payment = Payment.create({
-      value: totalPrice.toString(),
-    });
-
-    if (payment_method === "PIX") {
-      const charge = Charge.create({
-        customer_email: account.email,
-        due_date: new Date(),
-        order_id: order.id,
-        payment_method,
-        value: totalPrice.toString(),
-      });
-
-      const props = await this.paymentsProcessor.registerCharge(charge);
-
-      Object.assign(payment, {
-        ...props,
-      });
-    }
-
-    await this.offersProductsRepository.update(updatedOffersProducts);
     await this.ordersRepository.save(order);
-    await this.ordersProductsRepository.save(orderProducts);
 
-    return payment;
+    return {
+      order,
+    };
   }
 }

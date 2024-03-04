@@ -34,7 +34,6 @@ export class OfferProduct extends Entity<OfferProductProps> {
     const offerProduct = new OfferProduct(
       {
         ...props,
-        created_at: props.created_at ?? new Date(),
       },
       id
     );

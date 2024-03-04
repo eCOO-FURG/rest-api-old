@@ -1,17 +1,18 @@
-import { AggregateRoot } from "@/core/entities/aggregate-root";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
+import { OrderProduct } from "./order-products";
 
-interface OrderProps {
-  customer_id: UniqueEntityID;
+export interface OrderProps extends Optional<EntityProps, "created_at"> {
+  customer_id: UUID;
   shipping_address: string;
   payment_method: "PIX" | "ON_DELIVERY";
-  status: "READY" | "ON_HOLD" | "PENDING" | "DISPATCHED" | "CANCELED";
-  created_at: Date;
-  updated_at?: Date | null;
+  status: "READY" | "PENDING" | "DISPATCHED" | "CANCELED" | "PAID";
+  items: OrderProduct[];
+  price: number;
 }
 
-export class Order extends AggregateRoot<OrderProps> {
+export class Order extends Entity<OrderProps> {
   get customer_id() {
     return this.props.customer_id;
   }
@@ -24,16 +25,8 @@ export class Order extends AggregateRoot<OrderProps> {
     return this.props.payment_method;
   }
 
-  get status() {
-    return this.props.status;
-  }
-
-  get created_at() {
-    return this.props.created_at;
-  }
-
-  get updated_at() {
-    return this.props.updated_at;
+  get items() {
+    return this.props.items;
   }
 
   set status(status: OrderProps["status"]) {
@@ -41,19 +34,28 @@ export class Order extends AggregateRoot<OrderProps> {
     this.touch();
   }
 
-  private touch() {
-    this.props.updated_at = new Date();
+  get price() {
+    return this.props.price;
+  }
+
+  set price(price: number) {
+    this.props.price = price;
+  }
+
+  add(item: OrderProduct) {
+    this.props.items.push(item);
   }
 
   static create(
-    props: Optional<OrderProps, "created_at" | "status">,
-    id?: UniqueEntityID
+    props: Optional<OrderProps, "status" | "items" | "price">,
+    id?: UUID
   ) {
     const order = new Order(
       {
         ...props,
         status: props.status ?? "PENDING",
-        created_at: props.created_at ?? new Date(),
+        items: props.items ?? [],
+        price: props.price ?? 0,
       },
       id
     );

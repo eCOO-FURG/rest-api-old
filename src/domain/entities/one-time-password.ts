@@ -1,14 +1,12 @@
 import { Optional } from "@/core/types/optional";
 import { OneTimePasswordRegisteredEvent } from "../events/on-one-time-password-registered";
-import { Entity } from "@/core/entities/entity";
+import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 
-interface OneTimePasswordProps {
+interface OneTimePasswordProps extends Optional<EntityProps, "created_at"> {
   user_id: UUID;
   value: string;
   used: boolean;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class OneTimePassword extends Entity<OneTimePasswordProps> {
@@ -45,7 +43,6 @@ export class OneTimePassword extends Entity<OneTimePasswordProps> {
       {
         ...props,
         used: props.used ?? false,
-        created_at: props.created_at ?? new Date(),
       },
       id
     );

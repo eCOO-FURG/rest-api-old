@@ -1,12 +1,10 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
+import { Optional } from "@/core/types/optional";
 
-interface ChargeProps {
-  order_id: UniqueEntityID;
-  customer_email: string;
-  payment_method: "PIX" | "ON_DELIVERY";
-  value: string;
-  due_date: Date;
+interface ChargeProps extends Optional<EntityProps, "created_at"> {
+  order_id: UUID;
+  value: number;
 }
 
 export class Charge extends Entity<ChargeProps> {
@@ -14,30 +12,16 @@ export class Charge extends Entity<ChargeProps> {
     return this.props.order_id;
   }
 
-  get customer_email() {
-    return this.props.customer_email;
-  }
-
-  get payment_method() {
-    return this.props.payment_method;
-  }
-
   get value() {
     return this.props.value;
   }
 
-  get due_date() {
-    return this.props.due_date;
+  set value(value: number) {
+    this.props.value = value;
   }
 
-  static create(props: ChargeProps, id?: UniqueEntityID) {
-    const charge = new Charge(
-      {
-        ...props,
-      },
-      id
-    );
-
+  static create(props: Optional<ChargeProps, "value">, id?: UUID) {
+    const charge = new Charge({ ...props, value: props.value ?? 0 }, id);
     return charge;
   }
 }
