@@ -23,7 +23,7 @@ describe("update", () => {
     inMemoryAgribusinessesRepository.save(agribusiness);
 
     await sut.execute({
-      agribusiness_id: agribusiness.id.toString(),
+      agribusiness_id: agribusiness.id.value,
     });
 
     expect(inMemoryAgribusinessesRepository.items[0].active).toBe(false);

@@ -14,7 +14,7 @@ export class UpdateAgribusinessStatusUseCase {
     );
 
     if (!agribusiness) {
-      throw new ResourceNotFoundError("Agronégocio", agribusiness_id);
+      throw new ResourceNotFoundError("Agronegócio", agribusiness_id);
     }
 
     agribusiness.active = !agribusiness.active;
