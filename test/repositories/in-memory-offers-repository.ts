@@ -15,10 +15,9 @@ export class InMemoryOffersRepository implements OffersRepository {
     const items: OfferProduct[] = [];
 
     for (const offer of this.items) {
-      const match = offer.items.filter(({ product_id }) => {
-        console.log(product_ids);
-        return product_ids.includes(product_id.value);
-      });
+      const match = offer.items.filter(({ product_id }) =>
+        product_ids.includes(product_id.value)
+      );
 
       items.push(...match);
     }

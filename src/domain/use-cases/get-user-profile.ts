@@ -12,7 +12,7 @@ export class GetUserProfileUseCase {
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
-      throw new ResourceNotFoundError(user_id);
+      throw new ResourceNotFoundError("Usuário", user_id);
     }
 
     return {

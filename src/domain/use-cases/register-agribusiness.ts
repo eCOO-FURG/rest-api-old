@@ -34,8 +34,6 @@ export class RegisterAgribusinessUseCase {
     const agribusinessWithSameAdmin =
       await this.agribusinessesRepository.findByAdminId(user_id);
 
-    console.log(agribusinessWithSameAdmin);
-
     if (agribusinessWithSameAdmin) {
       throw new AlreadyAgribusinessAdminError();
     }
