@@ -140,4 +140,11 @@ Authorization: Bearer {{access_token}}
 
 ###
 
+# @name update-order-status
+PATCH {{base_url}}/orders/6d858235-c75e-4e92-9aef-ce210880d33a
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
+{
+  "status": "DISPATCHED"
+}
