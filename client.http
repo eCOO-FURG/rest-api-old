@@ -1,5 +1,5 @@
 @base_url = http://localhost:3333
-@access_token = {{authenticate_with_password.response.body.access_token}}
+@token = {{authenticate_with_password.response.body.token}}
 
 # @name register
 POST {{base_url}}/users
@@ -30,7 +30,7 @@ Content-Type: application/json
 # @name authenticate-with-one-time-password
 POST {{base_url}}/auth/otp
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
   "email": "timoteostifft@gmail.com",
@@ -44,7 +44,7 @@ POST {{base_url}}/auth/refresh
 Content-Type: application/json
 
 {
-  "access_token": "{{access_token}}"
+  "token": "{{token}}"
 }
 
 ###
@@ -52,14 +52,14 @@ Content-Type: application/json
 # @name get_user-profile
 GET {{base_url}}/me
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 ###
 
 # @name register-agribusiness
 POST {{base_url}}/agribusinesses
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
  "caf": "88888888",
@@ -71,7 +71,7 @@ Authorization: Bearer {{access_token}}
 # @name offer-products
 POST {{base_url}}/offers
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
   "products": [
@@ -88,14 +88,14 @@ Authorization: Bearer {{access_token}}
 # @name search-offers
 GET {{base_url}}/offers?product=queijo
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 ###
 
 # @name order-products
 POST {{base_url}}/orders
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
   "shipping_address": "test address",
@@ -113,7 +113,7 @@ Authorization: Bearer {{access_token}}
 # @name update-agribusiness
 PATCH {{base_url}}/agribusiness
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
   "caf": "1111221111111111",
@@ -125,7 +125,7 @@ Authorization: Bearer {{access_token}}
 # @name register-one-time-password
 POST {{base_url}}/users/otp
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 {
   "email": "timoteostifft@gmail.com"
@@ -136,7 +136,7 @@ Authorization: Bearer {{access_token}}
 # @name update-agribusiness-status
 GET {{base_url}}/agribusiness/0c3ffa93-4f46-4c25-ad2d-403c3a6b1b39
 Content-Type: application/json
-Authorization: Bearer {{access_token}}
+Authorization: Bearer {{token}}
 
 ###
 

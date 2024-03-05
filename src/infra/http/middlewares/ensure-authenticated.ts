@@ -17,7 +17,7 @@ export async function ensureAuthenticated(
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-      return reply.status(401).send({ message: "Unauthorized." });
+      return reply.status(401).send({ message: "Não authorizado." });
     }
     const [, token] = authHeader.split(" ");
 
