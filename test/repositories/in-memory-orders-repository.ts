@@ -36,4 +36,13 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
     return order;
   }
+
+  async findManyByDate(page: number, pageSize: number): Promise<Order[]> {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    const paginatedOrders = this.items.slice(startIndex, endIndex);
+
+    return paginatedOrders;
+  }
 }

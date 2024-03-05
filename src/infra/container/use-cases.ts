@@ -3,6 +3,7 @@ import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
+import { OrdersListingUseCase } from "@/domain/use-cases/orders-listing";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
@@ -98,6 +99,12 @@ diContainer.register({
   updateAgribusinessStatusUseCase: asFunction(
     ({ agribusinessesRepository }) =>
       new UpdateAgribusinessStatusUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
+  ),
+  ordersListingUseCase: asFunction(
+    ({ ordersRepository }) => new OrdersListingUseCase(ordersRepository),
     {
       lifetime: Lifetime.SCOPED,
     }

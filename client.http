@@ -76,8 +76,8 @@ Authorization: Bearer {{token}}
 {
   "products": [
     {
-      "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
-      "quantity_or_weight": 50,
+      "id": "00268fd1-1933-4d1b-abb4-e5db9f8d00e5",
+      "quantity_or_weight": 500,
       "price": "10"
     }
   ]
@@ -102,7 +102,7 @@ Authorization: Bearer {{token}}
   "payment_method": "PIX",
   "products": [
     {
-      "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
+      "id": "00268fd1-1933-4d1b-abb4-e5db9f8d00e5",
       "quantity_or_weight": 50
     }
   ]
@@ -140,4 +140,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-
+# @name orders-listing
+GET {{base_url}}/orders/1
+Content-Type: application/json
+Authorization: Bearer {{token}}

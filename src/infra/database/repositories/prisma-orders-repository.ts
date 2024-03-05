@@ -21,6 +21,23 @@ export class PrismaOrdersRepository implements OrdersRepository {
     return PrismaOrderMapper.toDomain(order);
   }
 
+  async findManyByDate(page: number, pageSize: number = 20): Promise<Order[]> {
+    const skip = (page - 1) * pageSize;
+
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+      skip,
+      take: pageSize,
+    });
+
+    const mappedOrders = orders.map((order) =>
+      PrismaOrderMapper.toDomain(order)
+    );
+    return mappedOrders;
+  }
+
   async save(order: Order): Promise<void> {
     const data = PrismaOrderMapper.toPrisma(order);
 
