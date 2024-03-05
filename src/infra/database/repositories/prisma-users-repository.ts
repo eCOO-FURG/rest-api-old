@@ -32,7 +32,7 @@ export class PrismaUsersRepository implements UsersRepository {
       prisma.person.update({
         data: person,
         where: {
-          id: person.id,
+          cpf: person.cpf,
         },
       }),
     ]);

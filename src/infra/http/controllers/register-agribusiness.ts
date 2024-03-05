@@ -1,5 +1,5 @@
-import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { AlreadyAgribusinessAdminError } from "@/domain/use-cases/errors/already-agribusiness-admin-error";
+import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -22,7 +22,7 @@ export async function registerAgribusiness(
       );
 
     await registerAgribusinessUseCase.execute({
-      account_id: request.payload.sub,
+      user_id: request.payload.user_id,
       caf,
       name,
     });

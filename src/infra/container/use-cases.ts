@@ -36,13 +36,9 @@ diContainer.register({
       )
   ),
   authenticateWithOneTimePasswordUseCase: asFunction(
-    ({
-      accountsRepository,
-      oneTimePasswordsRepository,
-      registerSessionUseCase,
-    }) =>
+    ({ usersRepository, oneTimePasswordsRepository, registerSessionUseCase }) =>
       new AuthenticateWithOneTimePasswordUseCase(
-        accountsRepository,
+        usersRepository,
         oneTimePasswordsRepository,
         registerSessionUseCase
       )
@@ -51,19 +47,16 @@ diContainer.register({
     ({ usersRepository }) => new GetUserProfileUseCase(usersRepository)
   ),
   refreshUseCase: asFunction(
-    ({ accountsRepository, sessionsRepository, encrypter }) =>
-      new RefreshUseCase(accountsRepository, sessionsRepository, encrypter)
+    ({ usersRepository, sessionsRepository, encrypter }) =>
+      new RefreshUseCase(usersRepository, sessionsRepository, encrypter)
   ),
   verifyUseCase: asFunction(
-    ({ accountsRepository, encrypter }) =>
-      new VerifyUseCase(accountsRepository, encrypter)
+    ({ usersRepository, encrypter }) =>
+      new VerifyUseCase(usersRepository, encrypter)
   ),
   registerAgribusinessUseCase: asFunction(
-    ({ accountsRepository, agribusinessesRepository }) =>
-      new RegisterAgribusinessUseCase(
-        accountsRepository,
-        agribusinessesRepository
-      )
+    ({ usersRepository, agribusinessesRepository }) =>
+      new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
   offerProductsUseCase: asFunction(
     ({ agribusinessesRepository, offersRepository, productsRepository }) =>
@@ -74,15 +67,11 @@ diContainer.register({
       )
   ),
   searchOffersUseCase: asFunction(
-    ({
-      naturalLanguageProcessor,
-      productsRepository,
-      offersProductsRepository,
-    }) =>
+    ({ naturalLanguageProcessor, productsRepository, offersRepository }) =>
       new SearchOffersUseCase(
         naturalLanguageProcessor,
         productsRepository,
-        offersProductsRepository
+        offersRepository
       )
   ),
   orderProductsUseCase: asFunction(
@@ -114,9 +103,9 @@ diContainer.register({
     }
   ),
   registerOneTimePasswordUseCase: asFunction(
-    ({ accountsRepository, otpGenerator, oneTimePasswordsRepository }) =>
+    ({ usersRepository, otpGenerator, oneTimePasswordsRepository }) =>
       new RegisterOneTimePasswordUseCase(
-        accountsRepository,
+        usersRepository,
         otpGenerator,
         oneTimePasswordsRepository
       )

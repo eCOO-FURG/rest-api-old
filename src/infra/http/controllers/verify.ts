@@ -21,7 +21,6 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
     await verifyUseCase.execute({
       code,
     });
-    
 
     return reply.redirect(301, `${env.SERVER_URL}:3000/cadastrar`).send({});
   } catch (err) {

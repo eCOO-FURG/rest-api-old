@@ -3,7 +3,7 @@ import fastify from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import { env } from "./env";
-import { ZodError } from "zod";
+import { ZodError, ZodInvalidTypeIssue } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
 import { FastifySwaggerOptions } from "./helpers/swagger";
@@ -27,15 +27,17 @@ app.register(swaggerUI, {
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
-    return reply
-      .status(400)
-      .send({ message: "Validation error.", issues: error.format() });
+    const issues = error.issues.map((issue) => ({
+      property: issue.path[0],
+      reason: issue.message,
+    }));
+
+    return reply.status(400).send({ message: "Erro de validação.", issues });
   }
 
   if (env.ENV !== "prod") {
     console.error(error);
   } else {
-    console.log(error);
     // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
   }
 

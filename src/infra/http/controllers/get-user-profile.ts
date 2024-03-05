@@ -11,11 +11,11 @@ export async function getUserProfile(
     const getUserProfileUseCase =
       request.diScope.resolve<GetUserProfileUseCase>("getUserProfileUseCase");
 
-    const { account, person } = await getUserProfileUseCase.execute({
-      account_id: request.payload.sub,
+    const { user } = await getUserProfileUseCase.execute({
+      user_id: request.payload.user_id,
     });
 
-    return reply.status(200).send(UserPresenter.toHttp(account, person));
+    return reply.status(200).send(UserPresenter.toHttp(user));
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });

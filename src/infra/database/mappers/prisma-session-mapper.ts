@@ -18,7 +18,7 @@ export class PrismaSessionMapper {
 
   static toPrisma(session: Session): Prisma.SessionUncheckedCreateInput {
     return {
-      id: session.id.toString(),
+      id: session.id.value,
       ip_address: session.ip_address,
       user_agent: session.user_agent,
       account_id: session.user_id.value,

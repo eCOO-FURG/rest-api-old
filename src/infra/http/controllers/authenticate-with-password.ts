@@ -1,8 +1,8 @@
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { AccountNotVerifiedError } from "@/domain/use-cases/errors/account-not-verified-error";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
+import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -21,7 +21,7 @@ export async function authenticateWithPassword(
         "authenticateWithPasswordUseCase"
       );
 
-    const { accessToken } = await authenticateWithPasswordUseCase.execute({
+    const { token } = await authenticateWithPasswordUseCase.execute({
       email,
       password,
       ip_address: request.ip,
@@ -29,12 +29,12 @@ export async function authenticateWithPassword(
     });
 
     return reply.status(200).send({
-      access_token: accessToken,
+      token,
     });
   } catch (err) {
     if (
       err instanceof WrongCredentialsError ||
-      err instanceof AccountNotVerifiedError
+      err instanceof UserNotVerifiedError
     ) {
       return reply.status(400).send({ message: err.message });
     }

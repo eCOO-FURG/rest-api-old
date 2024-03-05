@@ -5,7 +5,7 @@ import * as JwtService from "jsonwebtoken";
 import { z } from "zod";
 
 const jwtPayloadSchema = z.object({
-  sub: z.string(),
+  user_id: z.string(),
   iat: z.coerce.number(),
 });
 
@@ -19,14 +19,13 @@ export async function ensureAuthenticated(
     if (!authHeader) {
       return reply.status(401).send({ message: "Unauthorized." });
     }
-
     const [, token] = authHeader.split(" ");
 
     const payload = JwtService.verify(token, env.JWT_SECRET, {
       ignoreExpiration: true,
     });
 
-    const { sub, iat } = jwtPayloadSchema.parse(payload);
+    const { user_id, iat } = jwtPayloadSchema.parse(payload);
 
     const now = Date.now();
 
@@ -39,7 +38,7 @@ export async function ensureAuthenticated(
 
       const session = await prisma.session.findFirst({
         where: {
-          account_id: sub,
+          account_id: user_id,
           user_agent: request.headers["user-agent"] ?? "not-identified",
           created_at: {
             gte: new Date(sessionExpiration),
@@ -51,7 +50,7 @@ export async function ensureAuthenticated(
         return reply.status(401).send({ message: "Session expired." });
       }
 
-      const newAccessToken = JwtService.sign({ sub }, env.JWT_SECRET, {
+      const newAccessToken = JwtService.sign({ user_id }, env.JWT_SECRET, {
         expiresIn: "24h",
       });
 
@@ -59,7 +58,7 @@ export async function ensureAuthenticated(
     }
 
     request.payload = {
-      sub,
+      user_id,
     };
   } catch (err) {
     return reply.status(401).send({ message: "Unauthorized." });

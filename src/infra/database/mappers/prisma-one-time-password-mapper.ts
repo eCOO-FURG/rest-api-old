@@ -15,7 +15,7 @@ export class PrismaOneTimePasswordMapper {
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      new UUID()
+      new UUID(raw.id)
     );
   }
 

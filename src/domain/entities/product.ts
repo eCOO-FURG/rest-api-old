@@ -7,8 +7,6 @@ interface ProductProps extends Optional<EntityProps, "created_at"> {
   image: string;
   pricing: "UNIT" | "WEIGHT";
   type_id: UUID;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class Product extends Entity<ProductProps> {

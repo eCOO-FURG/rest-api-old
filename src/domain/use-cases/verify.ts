@@ -16,7 +16,7 @@ export class VerifyUseCase {
   async execute({ code }: VerifyUseCaseRequest) {
     const decryptedCode = await this.encrypter.decode(code);
 
-    if (!decryptedCode || decryptedCode.user_id === null) {
+    if (!decryptedCode || !decryptedCode.user_id) {
       throw new InvalidValidationCodeError();
     }
 

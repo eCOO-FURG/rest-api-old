@@ -1,11 +1,10 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { DayRestrictedError } from "@/domain/use-cases/errors/day-restricted-error";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { PaymentPresenter } from "../presenters/payment-presenter";
 import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
+import { OrderPresenter } from "../presenters/order-presenter";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
@@ -34,20 +33,17 @@ export async function orderProducts(
       "orderProductsUseCase"
     );
 
-    const payment = await orderProductsUseCase.execute({
-      account_id: request.payload.sub,
+    const { order } = await orderProductsUseCase.execute({
+      user_id: request.payload.user_id,
       shipping_address,
       products,
       payment_method,
     });
 
-    return reply.status(201).send(PaymentPresenter.toHttp(payment));
+    return reply.status(201).send(OrderPresenter);
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
-    }
-    if (err instanceof DayRestrictedError) {
-      return reply.status(403).send({ message: err.message });
     }
     if (err instanceof InsufficientProductQuantityOrWeightError) {
       return reply.status(400).send({ message: err.message });

@@ -4,23 +4,24 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 export const refreshBodySchema = z.object({
-  access_token: z.string(),
+  token: z.string(),
 });
 
 export async function refresh(request: FastifyRequest, reply: FastifyReply) {
-  const { access_token } = refreshBodySchema.parse(request.body);
+  const { token } = refreshBodySchema.parse(request.body);
 
   try {
     const refreshUseCase =
       request.diScope.resolve<RefreshUseCase>("refreshUseCase");
 
-    const { newAccessToken } = await refreshUseCase.execute({
-      access_token,
+    const { token: newToken } = await refreshUseCase.execute({
+      access_token: token,
       user_agent: request.headers["user-agent"] || "not-identified",
+      ip_address: request.ip,
     });
 
     return reply.status(200).send({
-      access_token: newAccessToken,
+      access_token: newToken,
     });
   } catch (err) {
     if (err instanceof SessionExpiredError) {

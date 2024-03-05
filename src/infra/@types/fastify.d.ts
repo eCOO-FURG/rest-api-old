@@ -3,7 +3,7 @@ import { FastifyRequest } from "fastify";
 declare module "fastify" {
   interface FastifyRequest {
     payload: {
-      sub: string;
+      user_id: string;
       agribusiness_id?: string | null;
     };
   }

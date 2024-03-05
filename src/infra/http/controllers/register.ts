@@ -1,13 +1,13 @@
-import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
 import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
 import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
+import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export const registerBodySchema = z.object({
   email: z.string().email(),
-  cellphone: z.number(),
+  cellphone: z.string(),
   password: z.string().min(8),
   first_name: z.string(),
   last_name: z.string(),
@@ -23,10 +23,10 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
     request.diScope.resolve("onUserRegistered");
-    
+
     await registerUseCase.execute({
       email,
-      cellphone: cellphone.toString(),
+      phone: cellphone,
       password,
       first_name,
       last_name,

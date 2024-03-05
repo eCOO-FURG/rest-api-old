@@ -6,8 +6,6 @@ interface SessionProps extends Optional<EntityProps, "created_at"> {
   user_id: UUID;
   ip_address: string;
   user_agent: string;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class Session extends Entity<SessionProps> {

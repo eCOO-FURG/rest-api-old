@@ -6,11 +6,11 @@ export async function ensureAgribusinessAdmin(
   reply: FastifyReply
 ) {
   try {
-    const sub = request.payload.sub;
+    const user_id = request.payload.user_id;
 
     const agribusiness = await prisma.agribusiness.findUniqueOrThrow({
       where: {
-        admin_id: sub,
+        admin_id: user_id,
       },
     });
 

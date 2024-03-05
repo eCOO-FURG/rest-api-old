@@ -16,6 +16,7 @@ export class PrismaUserMapper {
         password: raw.password,
         cpf: raw.person.cpf,
         phone: raw.cellphone,
+        verified_at: raw.verified_at ?? undefined,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },

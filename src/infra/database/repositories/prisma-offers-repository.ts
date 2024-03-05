@@ -9,9 +9,18 @@ export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
     const data = PrismaOfferMapper.toPrisma(offer);
 
-    await prisma.offer.create({
-      data,
-    });
+    const items = offer.items.map((item) =>
+      PrismaOfferProductMapper.toPrisma(item)
+    );
+
+    await prisma.$transaction(async (ctx) => [
+      await ctx.offer.create({
+        data,
+      }),
+      await ctx.offerProduct.createMany({
+        data: items,
+      }),
+    ]);
   }
 
   async findManyItemsByProductIds(
@@ -24,9 +33,6 @@ export class PrismaOffersRepository implements OffersRepository {
         },
         quantity_or_weight: {
           gt: 0,
-        },
-        offer: {
-          status: "AVAILABLE",
         },
       },
     });
