@@ -4,37 +4,37 @@
     "items": [
       {
         "name": "Abóbora Japonesa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "abobora_cabotia.jpg"
       },
       {
         "name": "Abóbora Moranga",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "abobora_moranga.jpg"
       },
       {
         "name": "Abóbora Paulista",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "abobora_paulista.jpg"
       },
       {
         "name": "Abobrinha Brasileira",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "abobrinha_brasileira.jpg"
       },
       {
         "name": "Abobrinha Italiana",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "abobrinha_italiana.jpg"
       },
       {
         "name": "Acelga",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "acelga.jpg"
       },
       {
         "name": "Agrião",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "agriao.jpg"
       },
       {
@@ -44,42 +44,42 @@
       },
       {
         "name": "Alcachofra",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alcachofra.jpg"
       },
       {
         "name": "Alecrim",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alecrim.jpg"
       },
       {
         "name": "Alface Americana",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_americana.jpg"
       },
       {
         "name": "Alface Crespa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_crespa.jpg"
       },
       {
         "name": "Alface Lisa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_lisa.jpg"
       },
       {
         "name": "Alface Mimosa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_mimosa.jpg"
       },
       {
         "name": "Alface Quatro Estações",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_quatro_estacoes.jpg"
       },
       {
         "name": "Alface Roxa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alface_roxa.jpg"
       },
       {
@@ -89,7 +89,7 @@
       },
       {
         "name": "Alho Poró",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alho_poro.jpg"
       },
       {
@@ -119,7 +119,7 @@
       },
       {
         "name": "Berinjela Comum",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "berinjela_comum.jpg"
       },
       {
@@ -134,7 +134,7 @@
       },
       {
         "name": "Brócolis",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "brocolis.jpg"
       },
       {
@@ -149,7 +149,7 @@
       },
       {
         "name": "Cebolinha",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "cebolinha.jpg"
       },
       {
@@ -164,7 +164,7 @@
       },
       {
         "name": "Coentro",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "coentro.jpg"
       },
       {
@@ -174,7 +174,7 @@
       },
       {
         "name": "Couve",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "couve.jpg"
       },
       {
@@ -184,17 +184,17 @@
       },
       {
         "name": "Couve-Flor",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "couve_flor.jpg"
       },
       {
         "name": "Erva-Doce",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "erva_doce.jpg"
       },
       {
         "name": "Espinafre",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "espinafre.jpg"
       },
       {
@@ -204,7 +204,7 @@
       },
       {
         "name": "Hortelã",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "hortela.jpg"
       },
       {
@@ -214,17 +214,17 @@
       },
       {
         "name": "Louro",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "louro.jpg"
       },
       {
         "name": "Manjericão",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "manjericao.jpg"
       },
       {
         "name": "Mostarda",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "mostarda.jpg"
       },
       {
@@ -239,7 +239,7 @@
       },
       {
         "name": "Pepino",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "pepino.jpg"
       },
       {
@@ -294,17 +294,17 @@
       },
       {
         "name": "Rúcula",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "rucula.jpg"
       },
       {
         "name": "Salsa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "salsa.jpg"
       },
       {
         "name": "Salsão",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "salsao.jpg"
       },
       {
@@ -329,7 +329,7 @@
       },
       {
         "name": "Tomilho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "tomilho.jpg"
       },
       {
@@ -644,17 +644,17 @@
       },
       {
         "name": "Ovo Branco",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "ovo_branco.jpg"
       },
       {
         "name": "Ovo de Codorna",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "ovo_codorna.jpg"
       },
       {
         "name": "Ovo vermelho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "ovo_vermelho.jpg"
       }
     ]
