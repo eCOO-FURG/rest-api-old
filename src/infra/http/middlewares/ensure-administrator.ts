@@ -6,11 +6,11 @@ export async function ensureAdministrator(
   reply: FastifyReply
 ) {
   try {
-    const sub = request.payload.sub;
+    const user_id = request.payload.user_id;
 
     const account = await prisma.account.findUniqueOrThrow({
       where: {
-        id: sub,
+        id: user_id,
       },
     });
 
@@ -18,6 +18,6 @@ export async function ensureAdministrator(
       throw new Error();
     }
   } catch (err) {
-    return reply.status(401).send({ message: "Not an administrator." });
+    return reply.status(401).send({ message: "Não é um administrador." });
   }
 }

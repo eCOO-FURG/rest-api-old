@@ -61,6 +61,6 @@ export async function ensureAuthenticated(
       user_id,
     };
   } catch (err) {
-    return reply.status(401).send({ message: "Unauthorized." });
+    return reply.status(401).send({ message: "Não authorizado." });
   }
 }

@@ -18,6 +18,6 @@ export async function ensureAgribusinessAdmin(
   } catch (err) {
     return reply
       .status(401)
-      .send({ message: "Not an agribusiness administrator." });
+      .send({ message: "Não é um administrador de agronegócio." });
   }
 }
