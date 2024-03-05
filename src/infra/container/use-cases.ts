@@ -78,13 +78,13 @@ diContainer.register({
     ({
       usersRepository,
       productsRepository,
-      offersProductsRepository,
+      offersRepository,
       ordersRepository,
     }) =>
       new OrderProductsUseCase(
         usersRepository,
         productsRepository,
-        offersProductsRepository,
+        offersRepository,
         ordersRepository
       )
   ),

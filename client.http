@@ -7,8 +7,8 @@ Content-Type: application/json
 
 {
   "email": "timoteostifft@gmail.com",
-  "cellphone": 51981280499,
-  "password": "Ts#1042003",
+  "cellphone": "51981280499",
+  "password": "password",
   "first_name": "Timóteo",
   "last_name": "Stifft",
   "cpf": "04437220056"

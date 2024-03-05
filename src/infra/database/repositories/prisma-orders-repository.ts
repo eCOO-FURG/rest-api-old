@@ -3,6 +3,8 @@ import { OrdersRepository } from "@/domain/repositories/orders-repository";
 import { prisma } from "../prisma-service";
 import { PrismaOrderMapper } from "../mappers/prisma-order-mapper";
 import { Decimal } from "@prisma/client/runtime/library";
+import { PrismaOrderProductMapper } from "../mappers/prisma-order-product.mapper";
+import { updateManyRawQuery } from "../utils/update-many-raw-query";
 
 export class PrismaOrdersRepository implements OrdersRepository {
   async findById(id: string): Promise<Order | null> {
@@ -22,13 +24,17 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async save(order: Order): Promise<void> {
     const data = PrismaOrderMapper.toPrisma(order);
 
+    const items = order.items.map((item) =>
+      PrismaOrderProductMapper.toPrisma(item)
+    );
+
     await prisma.$transaction(async (ctx) => {
       await ctx.order.create({
         data,
       });
 
-      const productsIds = order.items.map((item) => item.product_id.value);
-      const offersIds = order.items.map((item) => item.offer_id.value);
+      const productsIds = items.map((item) => item.product_id);
+      const offersIds = items.map((item) => item.offer_id);
 
       const offerProducts = await prisma.offerProduct.findMany({
         where: {
@@ -53,37 +59,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         );
       }
 
-      const fields = Object.keys(offerProducts).filter(
-        (key) => key !== "id"
-      ) as (keyof (typeof offerProducts)[0])[];
-
-      const set = fields
-        .map((field) => `"${field}" = data."${field}"`)
-        .join(", ");
-
-      const values = offerProducts
-        .map((entry) => {
-          const values = fields.map((field) => {
-            const value = entry[field];
-            if (typeof value === "string") {
-              return `'${value.replace(/'/g, "''")}'`;
-            } else if (value instanceof Date) {
-              return `'${value.toISOString()}'`;
-            }
-            return value;
-          });
-          return `('${entry.id}', ${values.join(", ")})`;
-        })
-        .join(", ");
-
-      const sql = `
-        UPDATE "offers_products"
-        SET ${set}
-        FROM (VALUES ${values}) AS data(id, ${fields
-        .map((field) => `"${field}"`)
-        .join(", ")})
-        WHERE "offers_products".id = data.id;
-    `;
+      const { sql } = updateManyRawQuery(offerProducts, "offers_products");
 
       await ctx.$executeRawUnsafe(sql);
     });

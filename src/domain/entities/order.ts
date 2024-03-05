@@ -29,6 +29,10 @@ export class Order extends Entity<OrderProps> {
     return this.props.items;
   }
 
+  get status() {
+    return this.props.status;
+  }
+
   set status(status: OrderProps["status"]) {
     this.props.status = status;
     this.touch();

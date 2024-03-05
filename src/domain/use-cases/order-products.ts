@@ -71,15 +71,16 @@ export class OrderProductsUseCase {
         offer.product_id.equals(item.id)
       );
 
-      offersForItem.reduce((acc, current, index) => {
+      let acc = 0;
+      for (let index = 0; index < offersForItem.length; index++) {
+        const current = offersForItem[index];
         const needed = Math.min(
           item.quantity_or_weight - acc,
           current.quantity_or_weight
         );
 
         if (!needed) {
-          offersForItem.slice(0, index - 1);
-          return 0;
+          break;
         }
 
         if (
@@ -105,9 +106,7 @@ export class OrderProductsUseCase {
         order.add(orderItem);
 
         order.price += needed * current.price;
-
-        return acc;
-      }, 0);
+      }
     }
 
     await this.ordersRepository.save(order);
