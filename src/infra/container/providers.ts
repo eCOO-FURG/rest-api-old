@@ -1,12 +1,9 @@
 import { diContainer } from "@fastify/awilix";
 import { Lifetime, asClass, asFunction } from "awilix";
-import { PrismaAccountsRepository } from "../database/repositories/prisma-accounts-repository";
-import { PrismaPeopleRepository } from "../database/repositories/prisma-people-repository";
 import { PrismaSessionsRepository } from "../database/repositories/prisma-sessions-repository";
 import { PrismaProductsRepository } from "../database/repositories/prisma-products-repository";
 import { PrismaAgribusinessesRepository } from "../database/repositories/prisma-agribusinesses-repository";
 import { PrismaOffersRepository } from "../database/repositories/prisma-offers-repository";
-import { PrismaOffersProductsRepository } from "../database/repositories/prisma-offers-products-repository";
 import { BcrypterHasher } from "../cryptography/bcrypt-hasher";
 import { createTransport } from "nodemailer";
 import { JwtEncrypter } from "../cryptography/jwt-encrypter";
@@ -15,18 +12,14 @@ import { EjsLoader } from "../mail/ejs-loader";
 import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
-import { PrismaOrderProductsRepository } from "../database/repositories/prisma-order-products-repository";
-import { Asaas } from "../payments/asaas-service";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { NlpService } from "../search/nlp-service";
 import { OtpProvider } from "../cryptography/otp-generator";
 import { PrismaOneTimePasswordsRepository } from "../database/repositories/prisma-one-time-passwords-repository";
+import { PrismaUsersRepository } from "../database/repositories/prisma-users-repository";
 
 diContainer.register({
-  accountsRepository: asClass(PrismaAccountsRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  peopleRepository: asClass(PrismaPeopleRepository, {
+  usersRepository: asClass(PrismaUsersRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   sessionsRepository: asClass(PrismaSessionsRepository, {
@@ -41,13 +34,7 @@ diContainer.register({
   offersRepository: asClass(PrismaOffersRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
-  offersProductsRepository: asClass(PrismaOffersProductsRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
   ordersRepository: asClass(PrismaOrdersRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  ordersProductsRepository: asClass(PrismaOrderProductsRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   oneTimePasswordsRepository: asClass(PrismaOneTimePasswordsRepository, {
@@ -79,9 +66,6 @@ diContainer.register({
     lifetime: "SINGLETON",
   }),
   paymentsProcessor: asFunction(() => {
-    // if (env.ENV === "prod") {
-    //   return new Asaas();
-    // }
     return new FakePaymentsProcessor();
   }),
   otpGenerator: asFunction(() => new OtpProvider()),

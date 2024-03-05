@@ -1,28 +1,28 @@
 import { DomainEvent } from "../events/domain-event";
-import { AggregateRoot } from "../entities/aggregate-root";
-import { DomainEvents } from "@/core/events/domain-events";
+import { Entity } from "../entities/entity";
 import { vi } from "vitest";
-import { UniqueEntityID } from "../entities/value-objects/unique-entity-id";
+import { UUID } from "../entities/uuid";
+import { DomainEvents } from "./domain-events";
 
-class CustomAggregateCreated implements DomainEvent {
-  public ocurredAt: Date;
-  private aggregate: CustomAggregate; // eslint-disable-line
+class CustomEntityCreated implements DomainEvent {
+  public ocurred_at: Date;
+  private entity: CustomEntity;
 
-  constructor(aggregate: CustomAggregate) {
-    this.aggregate = aggregate;
-    this.ocurredAt = new Date();
+  constructor(entity: CustomEntity) {
+    this.entity = entity;
+    this.ocurred_at = new Date();
   }
 
-  public getAggregateId(): UniqueEntityID {
-    return this.aggregate.id;
+  public getEntityId(): UUID {
+    return this.entity.id;
   }
 }
 
-class CustomAggregate extends AggregateRoot<null> {
+class CustomEntity extends Entity<any> {
   static create() {
-    const aggregate = new CustomAggregate(null);
+    const aggregate = new CustomEntity({});
 
-    aggregate.addDomainEvent(new CustomAggregateCreated(aggregate));
+    aggregate.registerEvent(new CustomEntityCreated(aggregate));
 
     return aggregate;
   }
@@ -33,20 +33,20 @@ describe("domain events", () => {
     const callbackSpy = vi.fn();
 
     // Subscriber cadastrado (ouvindo o evento de "resposta criada")
-    DomainEvents.register(callbackSpy, CustomAggregateCreated.name);
+    DomainEvents.register(callbackSpy, CustomEntityCreated.name);
 
     // Estou criando uma resposta porém SEM salvar no banco
-    const aggregate = CustomAggregate.create();
+    const entity = CustomEntity.create();
 
     // Estou assegurando que o evento foi criado porém NÃO foi disparado
-    expect(aggregate.domainEvents).toHaveLength(1);
+    expect(entity.events).toHaveLength(1);
 
     // Estou salvando a resposta no banco de dados e assim disparando o evento
-    DomainEvents.dispatchEventsForAggregate(aggregate.id);
+    DomainEvents.dispatchEventsForEntity(entity.id);
 
     // O subscriber ouve o evento e faz o que precisa ser feito com o dado
     expect(callbackSpy).toHaveBeenCalled();
 
-    expect(aggregate.domainEvents).toHaveLength(0);
+    expect(entity.events).toHaveLength(0);
   });
 });

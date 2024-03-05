@@ -1,39 +1,40 @@
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { RegisterAgribusinessUseCase } from "./register-agribusiness";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { Account } from "../entities/account";
 import { Agribusiness } from "../entities/agribusiness";
-import { ResourceAlreadyExistsError } from "@/core/errors/resource-already-exists-error";
-import { Cellphone } from "../entities/value-objects/cellphone";
-import { rejects } from "assert";
 import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
+import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let sut: RegisterAgribusinessUseCase;
 
 describe("create agribusiness", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     sut = new RegisterAgribusinessUseCase(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       inMemoryAgribusinessesRepository
     );
   });
 
   it("should be able to create a agribusiness", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
-      password: "123456",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await sut.execute({
-      account_id: account.id.toString(),
+      user_id: user.id.value,
       caf: "123456",
       name: "fake-agribusiness",
     });
@@ -43,52 +44,76 @@ describe("create agribusiness", () => {
     );
   });
 
-  it("should not be able to create and agribusiness that already exists", async () => {
-    const account = Account.create({
+  it("should not be able to create two agribusiness with the same caf", async () => {
+    const user1 = User.create({
       email: "johndoe@example.com",
-      password: "123456",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user1);
 
-    await sut.execute({
-      account_id: account.id.toString(),
-      caf: "123456",
-      name: "fake-agribusiness",
+    const user2 = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
     });
+
+    await inMemoryUsersRepository.save(user2);
+
+    const caf = "12345678";
+
+    const agribusiness = Agribusiness.create({
+      admin_id: user1.id,
+      caf,
+      name: "agronegocio-1",
+    });
+
+    await inMemoryAgribusinessesRepository.save(agribusiness);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
-        caf: "123456",
-        name: "fake-agribusiness",
+        user_id: user2.id.value,
+        caf,
+        name: "agronegocio-2",
       })
     ).rejects.toBeInstanceOf(ResourceAlreadyExistsError);
   });
 
   it("should not be able to create an agribusiness with an admin who is already an admin of another agribusiness", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
-      password: "123456",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
-      cellphone: Cellphone.createFromText("519876543"),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
-    await sut.execute({
-      account_id: account.id.toString(),
-      caf: "123456",
-      name: "fake-agribusiness",
+    const agribusiness = Agribusiness.create({
+      admin_id: user.id,
+      caf: "12345678",
+      name: "agronegocio-1",
     });
+
+    await inMemoryAgribusinessesRepository.save(agribusiness);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
+        user_id: user.id.value,
         caf: "777777",
-        name: "seconda agribusiness but with same admin",
+        name: "second agribusiness but with same admin",
       })
     ).rejects.toBeInstanceOf(AlreadyAgribusinessAdminError);
   });

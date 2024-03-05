@@ -6,11 +6,11 @@ export async function ensureAgribusinessAdmin(
   reply: FastifyReply
 ) {
   try {
-    const sub = request.payload.sub;
+    const user_id = request.payload.user_id;
 
     const agribusiness = await prisma.agribusiness.findUniqueOrThrow({
       where: {
-        admin_id: sub,
+        admin_id: user_id,
       },
     });
 
@@ -18,6 +18,6 @@ export async function ensureAgribusinessAdmin(
   } catch (err) {
     return reply
       .status(401)
-      .send({ message: "Not an agribusiness administrator." });
+      .send({ message: "Não é um administrador de agronegócio." });
   }
 }

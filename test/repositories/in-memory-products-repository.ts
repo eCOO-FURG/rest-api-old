@@ -5,7 +5,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
   items: Product[] = [];
 
   async findById(id: string): Promise<Product | null> {
-    const product = this.items.find((item) => item.id.toString() === id);
+    const product = this.items.find((item) => item.id.equals(id));
 
     if (!product) return null;
 
@@ -13,9 +13,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
   }
 
   async findManyByIds(ids: string[]): Promise<Product[]> {
-    const products = this.items.filter((item) =>
-      ids.includes(item.id.toString())
-    );
+    const products = this.items.filter((item) => ids.includes(item.id.value));
 
     return products;
   }

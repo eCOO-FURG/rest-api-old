@@ -13,7 +13,7 @@ export class PrismaSessionsRepository implements SessionsRepository {
     });
   }
 
-  async findValidSessionByAccountIdAndUserAgent(
+  async findValidSession(
     account_id: string,
     user_agent: string
   ): Promise<Session | null> {
@@ -26,7 +26,7 @@ export class PrismaSessionsRepository implements SessionsRepository {
         account_id,
         user_agent,
         created_at: {
-          gte: sessionExpiration, // greater than or equal
+          gte: sessionExpiration,
         },
       },
     });

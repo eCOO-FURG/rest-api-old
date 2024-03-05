@@ -19,12 +19,15 @@ export async function searchOffers(
       "searchOffersUseCase"
     );
 
-    const offersForEachProduct = await searchOffersUseCase.execute({
+    const { offersItems, products } = await searchOffersUseCase.execute({
       product,
     });
 
-    return reply.status(200).send(OffersPresenter.toHttp(offersForEachProduct));
+    return reply
+      .status(200)
+      .send(OffersPresenter.toHttp(offersItems, products));
   } catch (err) {
+    console.log(err);
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
     }

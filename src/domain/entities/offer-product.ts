@@ -1,14 +1,12 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface OfferProductProps {
-  offer_id: UniqueEntityID;
-  product_id: UniqueEntityID;
+interface OfferProductProps extends Optional<EntityProps, "created_at"> {
+  offer_id: UUID;
+  product_id: UUID;
   price: number;
   quantity_or_weight: number;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class OfferProduct extends Entity<OfferProductProps> {
@@ -32,26 +30,8 @@ export class OfferProduct extends Entity<OfferProductProps> {
     this.props.quantity_or_weight = quantity_or_weight;
   }
 
-  get created_at() {
-    return this.props.created_at;
-  }
-
-  get updated_at() {
-    return this.props.updated_at;
-  }
-
-  static create(
-    props: Optional<OfferProductProps, "created_at">,
-    id?: UniqueEntityID
-  ) {
-    const offerProduct = new OfferProduct(
-      {
-        ...props,
-        created_at: props.created_at ?? new Date(),
-      },
-      id
-    );
-
+  static create(props: OfferProductProps, id?: UUID) {
+    const offerProduct = new OfferProduct({ ...props }, id);
     return offerProduct;
   }
 }

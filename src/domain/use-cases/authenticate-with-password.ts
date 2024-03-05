@@ -1,8 +1,8 @@
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { Hasher } from "../cryptography/hasher";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
 import { RegisterSessionUseCase } from "./register-session";
+import { UsersRepository } from "../repositories/users-repository";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 
 interface AuthenticateRequest {
   email: string;
@@ -13,7 +13,7 @@ interface AuthenticateRequest {
 
 export class AuthenticateWithPasswordUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private hasher: Hasher,
     private registerSessionUseCase: RegisterSessionUseCase
   ) {}
@@ -24,33 +24,30 @@ export class AuthenticateWithPasswordUseCase {
     ip_address,
     user_agent,
   }: AuthenticateRequest) {
-    const account = await this.accountsRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email);
 
-    if (!account) {
+    if (!user) {
       throw new WrongCredentialsError();
     }
 
-    const isPasswordValid = await this.hasher.compare(
-      password,
-      account.password
-    );
+    const isPasswordValid = await this.hasher.compare(password, user.password);
 
     if (!isPasswordValid) {
       throw new WrongCredentialsError();
     }
 
-    if (!account.verified_at) {
-      throw new AccountNotVerifiedError();
+    if (!user.verified_at) {
+      throw new UserNotVerifiedError();
     }
 
-    const accessToken = await this.registerSessionUseCase.execute({
-      account_id: account.id.toString(),
+    const { token } = await this.registerSessionUseCase.execute({
+      user_id: user.id.value,
       ip_address,
       user_agent,
     });
 
     return {
-      accessToken,
+      token,
     };
   }
 }

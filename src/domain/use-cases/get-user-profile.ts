@@ -1,33 +1,22 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { AccountsRepository } from "../repositories/accounts-repository";
-import { PeopleRepository } from "../repositories/people-repository";
+import { UsersRepository } from "../repositories/users-repository";
 
 interface GetUserProfileUseCaserRequest {
-  account_id: string;
+  user_id: string;
 }
 
 export class GetUserProfileUseCase {
-  constructor(
-    private accountsRepository: AccountsRepository,
-    private peopleRepository: PeopleRepository
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
 
-  async execute({ account_id }: GetUserProfileUseCaserRequest) {
-    const account = await this.accountsRepository.findById(account_id);
+  async execute({ user_id }: GetUserProfileUseCaserRequest) {
+    const user = await this.usersRepository.findById(user_id);
 
-    if (!account) {
-      throw new ResourceNotFoundError(account_id);
-    }
-
-    const person = await this.peopleRepository.findByAccountId(account_id);
-
-    if (!person) {
-      throw new ResourceNotFoundError(account_id);
+    if (!user) {
+      throw new ResourceNotFoundError("Usuário", user_id);
     }
 
     return {
-      account,
-      person,
+      user,
     };
   }
 }

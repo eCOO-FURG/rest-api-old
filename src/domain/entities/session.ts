@@ -1,18 +1,16 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface SessionProps {
-  account_id: UniqueEntityID;
+interface SessionProps extends Optional<EntityProps, "created_at"> {
+  user_id: UUID;
   ip_address: string;
   user_agent: string;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class Session extends Entity<SessionProps> {
-  get account_id() {
-    return this.props.account_id;
+  get user_id() {
+    return this.props.user_id;
   }
 
   get ip_address() {
@@ -31,18 +29,8 @@ export class Session extends Entity<SessionProps> {
     return this.props.updated_at;
   }
 
-  static create(
-    props: Optional<SessionProps, "created_at">,
-    id?: UniqueEntityID
-  ) {
-    const session = new Session(
-      {
-        ...props,
-        created_at: props.created_at ?? new Date(),
-      },
-      id
-    );
-
+  static create(props: SessionProps, id?: UUID) {
+    const session = new Session({ ...props }, id);
     return session;
   }
 }

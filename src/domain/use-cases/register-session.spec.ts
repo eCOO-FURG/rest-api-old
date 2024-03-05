@@ -16,12 +16,12 @@ describe("register session", () => {
 
   it("should be able to register a session", async () => {
     const result = await sut.execute({
-      account_id: "test-id",
+      user_id: "test-id",
       ip_address: "test-ip-address",
       user_agent: "test-user-agent",
     });
 
     expect(inMemorySessionsRepository.items[0]).toBeInstanceOf(Session);
-    expect(result).toBeTypeOf("string");
+    expect(result.token).toBeTypeOf("string");
   });
 });

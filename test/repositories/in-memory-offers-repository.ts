@@ -1,4 +1,5 @@
 import { Offer } from "@/domain/entities/offer";
+import { OfferProduct } from "@/domain/entities/offer-product";
 import { OffersRepository } from "@/domain/repositories/offers-repository";
 
 export class InMemoryOffersRepository implements OffersRepository {
@@ -8,9 +9,19 @@ export class InMemoryOffersRepository implements OffersRepository {
     this.items.push(offer);
   }
 
-  async findManyByStatus(status: Offer["status"]) {
-    const offers = this.items.filter((offer) => offer.status === status);
+  async findManyItemsByProductIds(
+    product_ids: string[]
+  ): Promise<OfferProduct[]> {
+    const items: OfferProduct[] = [];
 
-    return offers;
+    for (const offer of this.items) {
+      const match = offer.items.filter(({ product_id }) =>
+        product_ids.includes(product_id.value)
+      );
+
+      items.push(...match);
+    }
+
+    return items;
   }
 }

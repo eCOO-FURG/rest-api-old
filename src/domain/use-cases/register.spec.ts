@@ -1,58 +1,51 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { RegisterUseCase } from "./register";
-import { Account } from "../entities/account";
-import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
-import { Person } from "../entities/person";
 import { FakeHasher } from "test/cryptography/fake-hasher";
-import { ResourceAlreadyExistsError } from "../../core/errors/resource-already-exists-error";
+import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
-let inMemoryPeopleRepository: InMemoryPeopleRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
 let sut: RegisterUseCase;
 
 describe("register", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
-    inMemoryPeopleRepository = new InMemoryPeopleRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
-    sut = new RegisterUseCase(
-      inMemoryAccountsRepository,
-      inMemoryPeopleRepository,
-      fakeHasher
-    );
+    sut = new RegisterUseCase(inMemoryUsersRepository, fakeHasher);
   });
 
   it("should be able to able to register", async () => {
     await sut.execute({
       email: "johndoe@example.com",
-      cellphone: "51987654321",
+      phone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
       cpf: "523.065.281-01",
     });
 
-    expect(inMemoryAccountsRepository.items[0]).toBeInstanceOf(Account);
-    expect(inMemoryPeopleRepository.items[0]).toBeInstanceOf(Person);
+    expect(inMemoryUsersRepository.items[0]).toBeInstanceOf(User);
   });
 
   it("should not be able to register with the same email twice", async () => {
     const email = "johndoe@example.com";
 
-    await sut.execute({
+    const user = User.create({
       email,
-      cellphone: "51987654321",
+      phone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
       cpf: "523.065.281-01",
     });
 
+    await inMemoryUsersRepository.save(user);
+
     await expect(() =>
       sut.execute({
         email,
-        cellphone: "51987654321",
+        phone: "51987654321",
         password: "123456",
         first_name: "Rodrigo",
         last_name: "Goes",
@@ -62,21 +55,23 @@ describe("register", () => {
   });
 
   it("should not be able to register with the same cellphone twice", async () => {
-    const cellphone = "51987654321";
+    const phone = "51987654321";
 
-    await sut.execute({
+    const user = User.create({
       email: "johndoe@example.com",
-      cellphone,
+      phone,
       password: "123456",
       first_name: "John",
       last_name: "Doe",
       cpf: "523.065.281-01",
     });
 
+    await inMemoryUsersRepository.save(user);
+
     await expect(() =>
       sut.execute({
         email: "rodrigogoes@example.com",
-        cellphone,
+        phone,
         password: "123456",
         first_name: "Rodrigo",
         last_name: "Goes",
@@ -88,19 +83,21 @@ describe("register", () => {
   it("should not be able to register with the same CPF twice", async () => {
     const cpf = "523.065.281-01";
 
-    await sut.execute({
+    const user = User.create({
       email: "johndoe@example.com",
-      cellphone: "51987654321",
+      phone: "51987654321",
       password: "123456",
       first_name: "John",
       last_name: "Doe",
       cpf,
     });
 
+    await inMemoryUsersRepository.save(user);
+
     await expect(() =>
       sut.execute({
         email: "rodrigogoes@example.com",
-        cellphone: "51987654321",
+        phone: "51cellphone987654321",
         password: "123456",
         first_name: "Rodrigo",
         last_name: "Goes",
@@ -114,13 +111,13 @@ describe("register", () => {
 
     await sut.execute({
       email: "johndoe@example.com",
-      cellphone: "51987654321",
+      phone: "51987654321",
       password,
       first_name: "John",
       last_name: "Doe",
       cpf: "523.065.281-01",
     });
 
-    expect(inMemoryAccountsRepository.items[0].password === password).toBeFalsy;
+    expect(inMemoryUsersRepository.items[0].password === password).toBeFalsy;
   });
 });

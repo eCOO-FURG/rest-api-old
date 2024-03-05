@@ -61,7 +61,7 @@ export class PrismaAgribusinessesRepository
 
     await prisma.agribusiness.update({
       where: {
-        id: agribusiness.id.toString(),
+        id: agribusiness.id.value,
       },
       data,
     });

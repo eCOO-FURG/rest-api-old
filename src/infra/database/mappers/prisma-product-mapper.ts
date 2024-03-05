@@ -1,4 +1,4 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { UUID } from "@/core/entities/uuid";
 import { Product } from "@/domain/entities/product";
 import { Prisma, Product as PrismaProduct } from "@prisma/client";
 
@@ -9,11 +9,11 @@ export class PrismaProductMapper {
         name: raw.name,
         image: raw.image,
         pricing: "WEIGHT",
-        type_id: new UniqueEntityID(raw.type_id),
+        type_id: new UUID(raw.type_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      new UniqueEntityID(raw.id)
+      new UUID(raw.id)
     );
   }
 

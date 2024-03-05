@@ -1,8 +1,8 @@
-import { Charge } from "../entities/charge";
-import { Customer } from "../entities/customer";
-import { Payment } from "../entities/payment";
+import { Order } from "../entities/order";
+import { Pix } from "../entities/pix";
+import { User } from "../entities/user";
 
 export interface PaymentsProcessor {
-  registerCustomer(customer: Customer): Promise<void>;
-  registerCharge(charge: Charge): Promise<Payment>;
+  register(user: User): Promise<void>;
+  charge(order: Order): Promise<Pix>;
 }

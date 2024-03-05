@@ -1,19 +1,17 @@
-import { AggregateRoot } from "@/core/entities/aggregate-root";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { OneTimePasswordRegisteredEvent } from "../events/on-one-time-password-registered";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 
-interface OneTimePasswordProps {
-  account_id: UniqueEntityID;
+interface OneTimePasswordProps extends Optional<EntityProps, "created_at"> {
+  user_id: UUID;
   value: string;
   used: boolean;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
-export class OneTimePassword extends AggregateRoot<OneTimePasswordProps> {
-  get account_id() {
-    return this.props.account_id;
+export class OneTimePassword extends Entity<OneTimePasswordProps> {
+  get user_id() {
+    return this.props.user_id;
   }
 
   get value() {
@@ -37,26 +35,20 @@ export class OneTimePassword extends AggregateRoot<OneTimePasswordProps> {
     this.touch();
   }
 
-  private touch() {
-    this.props.updated_at = new Date();
-  }
-
-  static create(
-    props: Optional<OneTimePasswordProps, "used" | "created_at">,
-    id?: UniqueEntityID
-  ) {
+  static create(props: Optional<OneTimePasswordProps, "used">, id?: UUID) {
     const oneTimePassword = new OneTimePassword(
       {
         ...props,
         used: props.used ?? false,
-        created_at: props.created_at ?? new Date(),
       },
       id
     );
 
-    oneTimePassword.addDomainEvent(
-      new OneTimePasswordRegisteredEvent(oneTimePassword)
-    );
+    if (!id) {
+      oneTimePassword.registerEvent(
+        new OneTimePasswordRegisteredEvent(oneTimePassword)
+      );
+    }
 
     return oneTimePassword;
   }

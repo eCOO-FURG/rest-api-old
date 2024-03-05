@@ -1,8 +1,8 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { OtpGenerator } from "../cryptography/otp-generator";
 import { OneTimePassword } from "../entities/one-time-password";
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { OneTimePasswordsRepository } from "../repositories/one-time-passwords-repository";
+import { UsersRepository } from "../repositories/users-repository";
 
 interface RegisterOneTimePasswordRequest {
   email: string;
@@ -10,29 +10,29 @@ interface RegisterOneTimePasswordRequest {
 
 export class RegisterOneTimePasswordUseCase {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private otpGenerator: OtpGenerator,
     private oneTimePasswordsRepository: OneTimePasswordsRepository
   ) {}
 
   async execute({ email }: RegisterOneTimePasswordRequest) {
-    const account = await this.accountsRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email);
 
-    if (!account) {
+    if (!user) {
       return;
     }
 
-    await this.oneTimePasswordsRepository.expirePreviousForAccountId(
-      account.id.toString()
+    await this.oneTimePasswordsRepository.expirePreviousForUserId(
+      user.id.value
     );
 
     const oneTimePassword = OneTimePassword.create({
-      account_id: account.id,
+      user_id: user.id,
       value: await this.otpGenerator.generate(),
     });
 
     await this.oneTimePasswordsRepository.save(oneTimePassword);
 
-    DomainEvents.dispatchEventsForAggregate(oneTimePassword.id);
+    DomainEvents.dispatchEventsForEntity(oneTimePassword.id);
   }
 }

@@ -1,318 +1,406 @@
-import { InMemoryOffersProductsRepository } from "test/repositories/in-memory-offers-products-repository";
-import { InMemoryOrdersProductsRepository } from "test/repositories/in-memory-orders-products-repository";
 import { InMemoryOrdersRepository } from "test/repositories/in-memory-orders-repository";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { OrderProductsUseCase } from "./order-products";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { Product } from "../entities/product";
 import { OfferProduct } from "../entities/offer-product";
-import { Order } from "../entities/order";
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
-import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { Account } from "../entities/account";
-import { Cellphone } from "../entities/value-objects/cellphone";
-import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { UUID } from "@/core/entities/uuid";
+import { User } from "../entities/user";
+import { Offer } from "../entities/offer";
+import { Order } from "../entities/order";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
+import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
-let inMemoryOffersProductsRepository: InMemoryOffersProductsRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
-let inMemoryOrdersProductsRepository: InMemoryOrdersProductsRepository;
-let fakePaymentsProcessor: FakePaymentsProcessor;
 let sut: OrderProductsUseCase;
 
 describe("order products", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
-    inMemoryOffersProductsRepository = new InMemoryOffersProductsRepository(
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
       inMemoryOffersRepository
     );
-    inMemoryOrdersRepository = new InMemoryOrdersRepository();
-    inMemoryOrdersProductsRepository = new InMemoryOrdersProductsRepository();
-    fakePaymentsProcessor = new FakePaymentsProcessor();
     sut = new OrderProductsUseCase(
+      inMemoryUsersRepository,
       inMemoryProductsRepository,
-      inMemoryOffersProductsRepository,
-      inMemoryOrdersRepository,
-      inMemoryOrdersProductsRepository,
-      fakePaymentsProcessor,
-      inMemoryAccountsRepository
+      inMemoryOffersRepository,
+      inMemoryOrdersRepository
     );
   });
 
   it("should be able to order products", async () => {
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "potato",
-          image: "potato.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "UNIT",
-        },
-        new UniqueEntityID("1")
-      )
-    );
-
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "apple",
-          image: "apple.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "WEIGHT",
-        },
-        new UniqueEntityID("2")
-      )
-    );
-
-    await inMemoryOffersProductsRepository.save([
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 4,
-      }),
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 2,
-        offer_id: new UniqueEntityID("2"),
-        quantity_or_weight: 4,
-      }),
-      OfferProduct.create({
-        product_id: new UniqueEntityID("2"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 200,
-      }),
-      OfferProduct.create({
-        product_id: new UniqueEntityID("2"),
-        price: 2,
-        offer_id: new UniqueEntityID("2"),
-        quantity_or_weight: 100,
-      }),
-    ]);
-
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("51987654321"),
+    const product1 = Product.create({
+      name: "apple",
+      image: "image",
+      pricing: "UNIT",
+      type_id: new UUID("id"),
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      name: "banana",
+      image: "image",
+      pricing: "WEIGHT",
+      type_id: new UUID("id"),
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    const offer = Offer.create({
+      agribusiness_id: new UUID("fake-id"),
+    });
+
+    const offerProduct1 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct2 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct3 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product2.id,
+      quantity_or_weight: 50,
+    });
+
+    const offerProduct4 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product2.id,
+      quantity_or_weight: 100,
+    });
+
+    offer.add(offerProduct1);
+    offer.add(offerProduct2);
+    offer.add(offerProduct3);
+    offer.add(offerProduct4);
+
+    await inMemoryOffersRepository.save(offer);
 
     const result = await sut.execute({
-      account_id: account.id.toString(),
+      user_id: user.id.value,
+      payment_method: "ON_DELIVERY",
+      shipping_address: "shipping-address",
       products: [
         {
-          id: "1",
-          quantity_or_weight: 6,
+          id: product1.id.value,
+          quantity_or_weight: 18,
         },
-        {
-          id: "2",
-          quantity_or_weight: 250,
-        },
+        { id: product2.id.value, quantity_or_weight: 100 },
       ],
-      shipping_address: "shipping address",
-      payment_method: "ON_DELIVERY",
     });
 
-    expect(result.value).toBe("308");
-    expect(inMemoryOffersProductsRepository.items[0].quantity_or_weight).toBe(
-      0
-    );
-    expect(inMemoryOffersProductsRepository.items[1].quantity_or_weight).toBe(
-      2
-    );
-    expect(inMemoryOffersProductsRepository.items[2].quantity_or_weight).toBe(
-      0
-    );
-    expect(inMemoryOffersProductsRepository.items[3].quantity_or_weight).toBe(
-      50
-    );
-    expect(inMemoryOrdersRepository.items[0]).toBeInstanceOf(Order);
-    expect(inMemoryOrdersRepository.items).toHaveLength(1);
+    expect(result.order).toBeInstanceOf(Order);
   });
 
   it("should not be able to order an unavailable quantity of products", async () => {
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "potato",
-          image: "potato.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "UNIT",
-        },
-        new UniqueEntityID("1")
-      )
-    );
-
-    await inMemoryOffersProductsRepository.save([
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 2,
-      }),
-    ]);
-
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("51987654321"),
+    const product1 = Product.create({
+      name: "apple",
+      image: "image",
+      pricing: "UNIT",
+      type_id: new UUID("id"),
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      name: "banana",
+      image: "image",
+      pricing: "WEIGHT",
+      type_id: new UUID("id"),
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    const offer = Offer.create({
+      agribusiness_id: new UUID("fake-id"),
+    });
+
+    const offerProduct1 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct2 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct3 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product2.id,
+      quantity_or_weight: 50,
+    });
+
+    const offerProduct4 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product2.id,
+      quantity_or_weight: 100,
+    });
+
+    offer.add(offerProduct1);
+    offer.add(offerProduct2);
+    offer.add(offerProduct3);
+    offer.add(offerProduct4);
+
+    await inMemoryOffersRepository.save(offer);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
-        shipping_address: "shipping address",
-        payment_method: "PIX",
+        user_id: user.id.value,
+        payment_method: "ON_DELIVERY",
+        shipping_address: "shipping-address",
         products: [
           {
-            id: "1",
-            quantity_or_weight: 1000,
+            id: product1.id.value,
+            quantity_or_weight: 21,
           },
+          { id: product2.id.value, quantity_or_weight: 50 },
         ],
       })
     ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
   });
 
   it("should not be able to order an unavailable weight of products", async () => {
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "potato",
-          image: "potato.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "WEIGHT",
-        },
-        new UniqueEntityID("1")
-      )
-    );
-
-    await inMemoryOffersProductsRepository.save([
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 2,
-      }),
-    ]);
-
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("51987654321"),
+    const product1 = Product.create({
+      name: "apple",
+      image: "image",
+      pricing: "UNIT",
+      type_id: new UUID("id"),
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      name: "banana",
+      image: "image",
+      pricing: "WEIGHT",
+      type_id: new UUID("id"),
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    const offer = Offer.create({
+      agribusiness_id: new UUID("fake-id"),
+    });
+
+    const offerProduct1 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct2 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct3 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product2.id,
+      quantity_or_weight: 50,
+    });
+
+    const offerProduct4 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product2.id,
+      quantity_or_weight: 100,
+    });
+
+    offer.add(offerProduct1);
+    offer.add(offerProduct2);
+    offer.add(offerProduct3);
+    offer.add(offerProduct4);
+
+    await inMemoryOffersRepository.save(offer);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
-        shipping_address: "shipping address",
-        payment_method: "PIX",
+        user_id: user.id.value,
+        payment_method: "ON_DELIVERY",
+        shipping_address: "shipping-address",
         products: [
           {
-            id: "1",
-            quantity_or_weight: 1000,
+            id: product1.id.value,
+            quantity_or_weight: 18,
           },
+          { id: product2.id.value, quantity_or_weight: 200 },
         ],
       })
     ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
   });
 
   it("should not be able to order an invalid weight products", async () => {
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "potato",
-          image: "potato.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "WEIGHT",
-        },
-        new UniqueEntityID("1")
-      )
-    );
-
-    await inMemoryOffersProductsRepository.save([
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 2,
-      }),
-    ]);
-
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("51987654321"),
+    const product1 = Product.create({
+      name: "apple",
+      image: "image",
+      pricing: "UNIT",
+      type_id: new UUID("id"),
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryProductsRepository.save(product1);
+
+    const product2 = Product.create({
+      name: "banana",
+      image: "image",
+      pricing: "WEIGHT",
+      type_id: new UUID("id"),
+    });
+
+    await inMemoryProductsRepository.save(product2);
+
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    const offer = Offer.create({
+      agribusiness_id: new UUID("fake-id"),
+    });
+
+    const offerProduct1 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct2 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product1.id,
+      quantity_or_weight: 10,
+    });
+
+    const offerProduct3 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 10.0,
+      product_id: product2.id,
+      quantity_or_weight: 50,
+    });
+
+    const offerProduct4 = OfferProduct.create({
+      offer_id: offer.id,
+      price: 9.0,
+      product_id: product2.id,
+      quantity_or_weight: 100,
+    });
+
+    offer.add(offerProduct1);
+    offer.add(offerProduct2);
+    offer.add(offerProduct3);
+    offer.add(offerProduct4);
+
+    await inMemoryOffersRepository.save(offer);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
-        shipping_address: "shipping address",
-        payment_method: "PIX",
+        user_id: user.id.value,
+        payment_method: "ON_DELIVERY",
+        shipping_address: "shipping-address",
         products: [
           {
-            id: "1",
-            quantity_or_weight: 40,
+            id: product1.id.value,
+            quantity_or_weight: 18,
           },
+          { id: product2.id.value, quantity_or_weight: 90 },
         ],
       })
     ).rejects.toBeInstanceOf(InvalidWeightError);
   });
 
   it("should not be able to order products that do not exist", async () => {
-    await inMemoryProductsRepository.save(
-      Product.create(
-        {
-          name: "potato",
-          image: "potato.jpg",
-          type_id: new UniqueEntityID("1"),
-          pricing: "WEIGHT",
-        },
-        new UniqueEntityID("2")
-      )
-    );
-
-    await inMemoryOffersProductsRepository.save([
-      OfferProduct.create({
-        product_id: new UniqueEntityID("1"),
-        price: 1,
-        offer_id: new UniqueEntityID("1"),
-        quantity_or_weight: 2,
-      }),
-    ]);
-
-    const account = Account.create({
-      email: "test@gmail.com",
-      password: "password",
-      cellphone: Cellphone.createFromText("51987654321"),
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await expect(() =>
       sut.execute({
-        account_id: account.id.toString(),
-        shipping_address: "shipping address",
-        payment_method: "PIX",
+        user_id: user.id.value,
+        payment_method: "ON_DELIVERY",
+        shipping_address: "shipping-address",
         products: [
           {
-            id: "1",
-            quantity_or_weight: 2,
+            id: "fake-id",
+            quantity_or_weight: 18,
           },
         ],
       })

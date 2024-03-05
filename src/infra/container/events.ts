@@ -6,15 +6,14 @@ import { asFunction } from "awilix";
 
 diContainer.register({
   onUserRegistered: asFunction(
-    ({ mailer, peopleRepository, encrypter, viewLoader }) =>
-      new OnUserRegistered(mailer, peopleRepository, encrypter, viewLoader)
+    ({ mailer, encrypter, viewLoader }) =>
+      new OnUserRegistered(mailer, encrypter, viewLoader)
   ),
   onUserVerified: asFunction(
-    ({ peopleRepository, paymentsProcessor }) =>
-      new OnUserVerified(peopleRepository, paymentsProcessor)
+    ({ paymentsProcessor }) => new OnUserVerified(paymentsProcessor)
   ),
   onOneTimePasswordRegistered: asFunction(
-    ({ accountsRepository, mailer, viewLoader }) =>
-      new OnOneTimePasswordRegistered(accountsRepository, mailer, viewLoader)
+    ({ usersRepository, mailer, viewLoader }) =>
+      new OnOneTimePasswordRegistered(usersRepository, mailer, viewLoader)
   ),
 });

@@ -1,5 +1,5 @@
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authenticate-with-one-time-password";
-import { AccountNotVerifiedError } from "@/domain/use-cases/errors/account-not-verified-error";
+import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -23,7 +23,7 @@ export async function authenticateWithOneTimePassword(
         "authenticateWithOneTimePasswordUseCase"
       );
 
-    const { accessToken } = await authenticateWithPasswordUseCase.execute({
+    const { token } = await authenticateWithPasswordUseCase.execute({
       email,
       one_time_password,
       ip_address: request.ip,
@@ -31,12 +31,12 @@ export async function authenticateWithOneTimePassword(
     });
 
     return reply.status(200).send({
-      access_token: accessToken,
+      token,
     });
   } catch (err) {
     if (
       err instanceof WrongCredentialsError ||
-      err instanceof AccountNotVerifiedError
+      err instanceof UserNotVerifiedError
     ) {
       return reply.status(400).send({ message: err.message });
     }

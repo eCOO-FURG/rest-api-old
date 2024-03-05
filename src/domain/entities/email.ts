@@ -1,7 +1,8 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
+import { Optional } from "@prisma/client/runtime/library";
 
-interface EmailProps {
+interface EmailProps extends Optional<EntityProps, "created_at"> {
   to: string;
   from: string;
   subject: string;
@@ -25,14 +26,8 @@ export class Email extends Entity<EmailProps> {
     return this.props.view;
   }
 
-  static create(props: EmailProps, id?: UniqueEntityID) {
-    const email = new Email(
-      {
-        ...props,
-      },
-      id
-    );
-
+  static create(props: EmailProps, id?: UUID) {
+    const email = new Email({ ...props }, id);
     return email;
   }
 }

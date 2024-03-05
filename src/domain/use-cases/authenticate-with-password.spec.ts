@@ -1,23 +1,22 @@
 import { FakeHasher } from "test/cryptography/fake-hasher";
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
-import { Account } from "../entities/account";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { Session } from "../entities/session";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
-import { Cellphone } from "../entities/value-objects/cellphone";
 import { AuthenticateWithPasswordUseCase } from "./authenticate-with-password";
 import { RegisterSessionUseCase } from "./register-session";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;
 let registerSessionUseCase: RegisterSessionUseCase;
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
 let sut: AuthenticateWithPasswordUseCase;
 
-describe("authenticate", () => {
+describe("authenticate with password", () => {
   beforeEach(() => {
     inMemorySessionsRepository = new InMemorySessionsRepository();
     fakeEncrypter = new FakeEncrypter();
@@ -25,24 +24,29 @@ describe("authenticate", () => {
       inMemorySessionsRepository,
       fakeEncrypter
     );
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
     sut = new AuthenticateWithPasswordUseCase(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       fakeHasher,
       registerSessionUseCase
     );
   });
 
   it("should be able to authenticate an verified account", async () => {
-    const account = Account.create({
+    const hashedPassword = await fakeHasher.hash("123456");
+
+    const user = User.create({
       email: "johndoe@example.com",
-      password: await fakeHasher.hash("123456"),
-      cellphone: Cellphone.createFromText("519876543"),
+      phone: "51987654321",
+      password: hashedPassword,
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     const result = await sut.execute({
       email: "johndoe@example.com",
@@ -52,20 +56,10 @@ describe("authenticate", () => {
     });
 
     expect(inMemorySessionsRepository.items[0]).toBeInstanceOf(Session);
-    expectTypeOf(result).toMatchTypeOf<{ access_token: string }>;
+    expectTypeOf(result).toMatchTypeOf<{ token: string }>;
   });
 
   it("should not be able to authenticate an account with wrong credentials", async () => {
-    const account = Account.create({
-      email: "johndoe@example.com",
-      password: await fakeHasher.hash("123456"),
-      cellphone: Cellphone.createFromText("519876543"),
-
-      verified_at: new Date(),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
     await expect(() =>
       sut.execute({
         email: "wrong-email",
@@ -77,13 +71,18 @@ describe("authenticate", () => {
   });
 
   it("should not be able to authenticate an account that is not verified", async () => {
-    const account = Account.create({
+    const hashedPassword = await fakeHasher.hash("123456");
+
+    const user = User.create({
       email: "johndoe@example.com",
-      password: await fakeHasher.hash("123456"),
-      cellphone: Cellphone.createFromText("519876543"),
+      phone: "51987654321",
+      password: hashedPassword,
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     await expect(() =>
       sut.execute({
@@ -92,6 +91,6 @@ describe("authenticate", () => {
         ip_address: "ip_address",
         user_agent: "mozila-firefox 5.0",
       })
-    ).rejects.toBeInstanceOf(AccountNotVerifiedError);
+    ).rejects.toBeInstanceOf(UserNotVerifiedError);
   });
 });

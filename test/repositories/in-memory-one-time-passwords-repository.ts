@@ -1,4 +1,3 @@
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { OneTimePassword } from "@/domain/entities/one-time-password";
 import { OneTimePasswordsRepository } from "@/domain/repositories/one-time-passwords-repository";
 
@@ -12,43 +11,41 @@ export class InMemoryOneTimePasswordsRepository
   }
 
   async update(oneTimePassword: OneTimePassword): Promise<void> {
-    const oneTimePasswordIndex = this.items.findIndex((item) =>
+    const index = this.items.findIndex((item) =>
       item.id.equals(oneTimePassword.id)
     );
 
-    if (oneTimePasswordIndex >= 0) {
-      this.items[oneTimePasswordIndex] = oneTimePassword;
-    }
-  }
-
-  async expirePreviousForAccountId(account_id: string): Promise<void> {
-    const previousOneTimePasswordIndex = this.items.findIndex((item) =>
-      item.account_id.equals(new UniqueEntityID(account_id))
-    );
-
-    if (previousOneTimePasswordIndex < 0) {
+    if (index < 0) {
       return;
     }
 
-    this.items[previousOneTimePasswordIndex].expire();
+    this.items[index] = oneTimePassword;
   }
 
-  async findValidByAccountId(
-    account_id: string
-  ): Promise<OneTimePassword | null> {
+  async findValidByUserId(user_id: string): Promise<OneTimePassword | null> {
     const fifteenMinutesAgo = new Date(new Date().getTime() - 15 * 60 * 1000);
 
-    const oneTimePassword = this.items.find(
+    const item = this.items.find(
       (item) =>
+        item.user_id.equals(user_id) &&
         item.used === false &&
-        item.created_at > fifteenMinutesAgo &&
-        item.account_id.equals(new UniqueEntityID(account_id))
+        item.created_at > fifteenMinutesAgo
     );
 
-    if (!oneTimePassword) {
+    if (!item) {
       return null;
     }
 
-    return oneTimePassword;
+    return item;
+  }
+
+  async expirePreviousForUserId(user_id: string): Promise<void> {
+    const index = this.items.findIndex((item) => item.user_id.equals(user_id));
+
+    if (index < 0) {
+      return;
+    }
+
+    this.items[index].expire();
   }
 }

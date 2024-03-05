@@ -1,7 +1,6 @@
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authenticate-with-one-time-password";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
-import { HandleOrderUseCase } from "@/domain/use-cases/handle-order";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -18,8 +17,8 @@ import { asFunction, Lifetime } from "awilix";
 
 diContainer.register({
   registerUseCase: asFunction(
-    ({ accountsRepository, peopleRepository, hasher }) =>
-      new RegisterUseCase(accountsRepository, peopleRepository, hasher),
+    ({ usersRepository, hasher }) =>
+      new RegisterUseCase(usersRepository, hasher),
     {
       lifetime: Lifetime.SCOPED,
     }
@@ -29,98 +28,64 @@ diContainer.register({
       new RegisterSessionUseCase(sessionsRepository, encrypter)
   ),
   authenticateWithPasswordUseCase: asFunction(
-    ({ accountsRepository, hasher, registerSessionUseCase }) =>
+    ({ usersRepository, hasher, registerSessionUseCase }) =>
       new AuthenticateWithPasswordUseCase(
-        accountsRepository,
+        usersRepository,
         hasher,
         registerSessionUseCase
       )
   ),
   authenticateWithOneTimePasswordUseCase: asFunction(
-    ({
-      accountsRepository,
-      oneTimePasswordsRepository,
-      registerSessionUseCase,
-    }) =>
+    ({ usersRepository, oneTimePasswordsRepository, registerSessionUseCase }) =>
       new AuthenticateWithOneTimePasswordUseCase(
-        accountsRepository,
+        usersRepository,
         oneTimePasswordsRepository,
         registerSessionUseCase
       )
   ),
   getUserProfileUseCase: asFunction(
-    ({ accountsRepository, peopleRepository }) =>
-      new GetUserProfileUseCase(accountsRepository, peopleRepository)
+    ({ usersRepository }) => new GetUserProfileUseCase(usersRepository)
   ),
   refreshUseCase: asFunction(
-    ({ accountsRepository, sessionsRepository, encrypter }) =>
-      new RefreshUseCase(accountsRepository, sessionsRepository, encrypter)
+    ({ usersRepository, sessionsRepository, encrypter }) =>
+      new RefreshUseCase(usersRepository, sessionsRepository, encrypter)
   ),
   verifyUseCase: asFunction(
-    ({ accountsRepository, encrypter }) =>
-      new VerifyUseCase(accountsRepository, encrypter)
+    ({ usersRepository, encrypter }) =>
+      new VerifyUseCase(usersRepository, encrypter)
   ),
   registerAgribusinessUseCase: asFunction(
-    ({ accountsRepository, agribusinessesRepository }) =>
-      new RegisterAgribusinessUseCase(
-        accountsRepository,
-        agribusinessesRepository
-      )
+    ({ usersRepository, agribusinessesRepository }) =>
+      new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
   offerProductsUseCase: asFunction(
-    ({
-      agribusinessesRepository,
-      offersRepository,
-      offersProductsRepository,
-      productsRepository,
-    }) =>
+    ({ agribusinessesRepository, offersRepository, productsRepository }) =>
       new OfferProductsUseCase(
         agribusinessesRepository,
         offersRepository,
-        offersProductsRepository,
         productsRepository
       )
   ),
   searchOffersUseCase: asFunction(
-    ({
-      naturalLanguageProcessor,
-      productsRepository,
-      offersProductsRepository,
-    }) =>
+    ({ naturalLanguageProcessor, productsRepository, offersRepository }) =>
       new SearchOffersUseCase(
         naturalLanguageProcessor,
         productsRepository,
-        offersProductsRepository
+        offersRepository
       )
   ),
   orderProductsUseCase: asFunction(
     ({
+      usersRepository,
       productsRepository,
-      offersProductsRepository,
+      offersRepository,
       ordersRepository,
-      ordersProductsRepository,
-      paymentsProcessor,
-      accountsRepository,
     }) =>
       new OrderProductsUseCase(
+        usersRepository,
         productsRepository,
-        offersProductsRepository,
-        ordersRepository,
-        ordersProductsRepository,
-        paymentsProcessor,
-        accountsRepository
-      )
-  ),
-  handleOrderUseCase: asFunction(
-    ({
-      ordersRepository,
-      ordersProductsRepository,
-      offersProductsRepository,
-    }) =>
-      new HandleOrderUseCase(
-        ordersRepository,
-        ordersProductsRepository,
-        offersProductsRepository
+        offersRepository,
+        ordersRepository
       )
   ),
   updateAgribusinessUseCase: asFunction(
@@ -138,9 +103,9 @@ diContainer.register({
     }
   ),
   registerOneTimePasswordUseCase: asFunction(
-    ({ accountsRepository, otpGenerator, oneTimePasswordsRepository }) =>
+    ({ usersRepository, otpGenerator, oneTimePasswordsRepository }) =>
       new RegisterOneTimePasswordUseCase(
-        accountsRepository,
+        usersRepository,
         otpGenerator,
         oneTimePasswordsRepository
       )

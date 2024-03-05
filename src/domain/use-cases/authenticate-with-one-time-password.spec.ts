@@ -1,19 +1,18 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { AuthenticateWithOneTimePasswordUseCase } from "./authenticate-with-one-time-password";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { RegisterSessionUseCase } from "./register-session";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
-import { Cellphone } from "../entities/value-objects/cellphone";
-import { Account } from "../entities/account";
 import { OneTimePassword } from "../entities/one-time-password";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
-import { AccountNotVerifiedError } from "./errors/account-not-verified-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { User } from "../entities/user";
+import { UserNotVerifiedError } from "./errors/user-not-verified-error";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;
 let registerSessionUseCase: RegisterSessionUseCase;
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryOneTimePasswordsRepository: InMemoryOneTimePasswordsRepository;
 let sut: AuthenticateWithOneTimePasswordUseCase;
 
@@ -25,28 +24,31 @@ describe("authenticate with one time password", () => {
       inMemorySessionsRepository,
       fakeEncrypter
     );
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryOneTimePasswordsRepository =
       new InMemoryOneTimePasswordsRepository();
     sut = new AuthenticateWithOneTimePasswordUseCase(
-      inMemoryAccountsRepository,
+      inMemoryUsersRepository,
       inMemoryOneTimePasswordsRepository,
       registerSessionUseCase
     );
   });
 
   it("should be able to authenticate an verified account with an valid one time password", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     const oneTimePassword = OneTimePassword.create({
-      account_id: account.id,
+      user_id: user.id,
       value: "654321",
     });
 
@@ -54,25 +56,25 @@ describe("authenticate with one time password", () => {
 
     const result = await sut.execute({
       email: "johndoe@example.com",
-      ip_address: "test-address",
       one_time_password: "654321",
+      ip_address: "test-address",
       user_agent: "test-user-agents",
     });
 
-    expect(result).toHaveProperty("accessToken");
+    expect(result.token).toBeTypeOf("string");
     expect(inMemoryOneTimePasswordsRepository.items[0].used).toBe(true);
   });
 
   it("should not be able to authenticate an account with an invalid email", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
-
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
     });
-
-    inMemoryAccountsRepository.save(account);
 
     await expect(() =>
       sut.execute({
@@ -85,17 +87,20 @@ describe("authenticate with one time password", () => {
   });
 
   it("should not be able to authenticate an account with an invalid one time password", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
       verified_at: new Date(),
     });
 
-    inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     const oneTimePassword = OneTimePassword.create({
-      account_id: account.id,
+      user_id: user.id,
       value: "654321",
     });
 
@@ -112,16 +117,19 @@ describe("authenticate with one time password", () => {
   });
 
   it("should not be able to authenticate an unverified account", async () => {
-    const account = Account.create({
+    const user = User.create({
       email: "johndoe@example.com",
+      phone: "51987654321",
       password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
     });
 
-    await inMemoryAccountsRepository.save(account);
+    await inMemoryUsersRepository.save(user);
 
     const oneTimePassword = OneTimePassword.create({
-      account_id: account.id,
+      user_id: user.id,
       value: "654321",
     });
 
@@ -134,6 +142,6 @@ describe("authenticate with one time password", () => {
         one_time_password: "654321",
         user_agent: "test-user-agents",
       })
-    ).rejects.toBeInstanceOf(AccountNotVerifiedError);
+    ).rejects.toBeInstanceOf(UserNotVerifiedError);
   });
 });

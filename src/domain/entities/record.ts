@@ -1,7 +1,8 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
+import { Optional } from "@/core/types/optional";
 
-interface RecordProps {
+interface RecordProps extends Optional<EntityProps, "created_at"> {
   name: string;
   score?: number;
 }
@@ -15,9 +16,8 @@ export class Record extends Entity<RecordProps> {
     return this.props.score;
   }
 
-  static create(props: RecordProps, id?: UniqueEntityID) {
+  static create(props: RecordProps, id?: UUID) {
     const record = new Record({ ...props }, id);
-
     return record;
   }
 }

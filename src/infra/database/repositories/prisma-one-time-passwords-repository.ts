@@ -19,16 +19,16 @@ export class PrismaOneTimePasswordsRepository
 
     await prisma.oneTimePassword.update({
       where: {
-        id: oneTimePassword.id.toString(),
+        id: oneTimePassword.id.value,
       },
       data,
     });
   }
 
-  async expirePreviousForAccountId(account_id: string): Promise<void> {
+  async expirePreviousForUserId(user_id: string): Promise<void> {
     await prisma.oneTimePassword.updateMany({
       where: {
-        account_id,
+        account_id: user_id,
         used: false,
       },
       data: {
@@ -38,15 +38,13 @@ export class PrismaOneTimePasswordsRepository
     });
   }
 
-  async findValidByAccountId(
-    account_id: string
-  ): Promise<OneTimePassword | null> {
+  async findValidByUserId(user_id: string): Promise<OneTimePassword | null> {
     const fifteenMinutesAgo = new Date(new Date().getTime() - 15 * 60 * 1000);
 
     const oneTimePassword = await prisma.oneTimePassword.findFirst({
       where: {
         used: false,
-        account_id: account_id,
+        account_id: user_id,
         created_at: {
           gte: fifteenMinutesAgo,
         },

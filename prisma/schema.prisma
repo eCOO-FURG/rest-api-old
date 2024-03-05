@@ -103,19 +103,13 @@ model Product {
   updated_at DateTime?
 
   offers OfferProduct[]
-  orders OrderProduct[]
+  orders OrderOfferProduct[]
 
   @@map("products")
 }
 
-enum OFFER_STATUS {
-  AVAILABLE
-  ON_HOLD
-}
-
 model Offer {
-  id     String       @id @default(uuid())
-  status OFFER_STATUS
+  id String @id @default(uuid())
 
   agribusiness_id String
   agribusiness    Agribusiness @relation(fields: [agribusiness_id], references: [id], onDelete: Cascade)
@@ -124,6 +118,7 @@ model Offer {
   updated_at DateTime?
 
   items OfferProduct[]
+  sales OrderOfferProduct[]
 
   @@map("offers")
 }
@@ -139,16 +134,15 @@ model OfferProduct {
   product_id String
   product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
 
-  created_at   DateTime       @default(now())
-  updated_at   DateTime?
-  OrderProduct OrderProduct[]
+  created_at DateTime  @default(now())
+  updated_at DateTime?
 
   @@map("offers_products")
 }
 
 enum ORDER_STATUS {
   READY
-  ON_HOLD
+  PAID
   DISPATCHED
   PENDING
   CANCELED
@@ -166,20 +160,20 @@ model Order {
   created_at DateTime  @default(now())
   updated_at DateTime?
 
-  items OrderProduct[]
+  items OrderOfferProduct[]
 
   @@map("orders")
 }
 
-model OrderProduct {
+model OrderOfferProduct {
   id                 String  @id @default(uuid())
   quantity_or_weight Decimal @db.Decimal(10, 2)
 
   order_id String
   order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
-  offer_product_id String
-  offer            OfferProduct @relation(fields: [offer_product_id], references: [id], onDelete: Cascade)
+  offer_id String
+  offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
 
   product_id String
   product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)

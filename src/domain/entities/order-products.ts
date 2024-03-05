@@ -1,19 +1,17 @@
-import { Entity } from "@/core/entities/entity";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
+import { Entity, EntityProps } from "@/core/entities/entity";
+import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface OrderProductProps {
-  order_id: UniqueEntityID;
-  offer_product_id: UniqueEntityID;
-  product_id: UniqueEntityID;
+interface OrderProductProps extends Optional<EntityProps, "created_at"> {
+  order_id: UUID;
+  offer_id: UUID;
+  product_id: UUID;
   quantity_or_weight: number;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class OrderProduct extends Entity<OrderProductProps> {
-  get offer_product_id() {
-    return this.props.offer_product_id;
+  get offer_id() {
+    return this.props.offer_id;
   }
 
   get order_id() {
@@ -32,25 +30,8 @@ export class OrderProduct extends Entity<OrderProductProps> {
     this.props.quantity_or_weight = quantity_or_weight;
   }
 
-  get created_at() {
-    return this.props.created_at;
-  }
-
-  get updated_at() {
-    return this.props.updated_at;
-  }
-
-  static create(
-    props: Optional<OrderProductProps, "created_at">,
-    id?: UniqueEntityID
-  ) {
-    const orderProduct = new OrderProduct(
-      {
-        ...props,
-        created_at: props.created_at ?? new Date(),
-      },
-      id
-    );
+  static create(props: OrderProductProps, id?: UUID) {
+    const orderProduct = new OrderProduct({ ...props }, id);
     return orderProduct;
   }
 }

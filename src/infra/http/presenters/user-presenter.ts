@@ -1,18 +1,11 @@
-import { Account } from "@/domain/entities/account";
-import { Person } from "@/domain/entities/person";
+import { User } from "@/domain/entities/user";
 
 export class UserPresenter {
-  static toHttp(account: Account, person: Person) {
+  static toHttp(user: User) {
     return {
-      person: {
-        id: person.id.toString(),
-        first_name: person.first_name,
-        last_name: person.last_name,
-        account: {
-          id: account.id.toString(),
-          email: account.email,
-        },
-      },
+      id: user.id.value,
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
     };
   }
 }

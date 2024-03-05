@@ -1,31 +1,31 @@
 import { DomainEvent } from "@/core/events/domain-event";
 import { OneTimePassword } from "../entities/one-time-password";
-import { UniqueEntityID } from "@/core/entities/value-objects/unique-entity-id";
 import { EventHandler } from "@/core/events/event-handler";
 import { DomainEvents } from "@/core/events/domain-events";
-import { AccountsRepository } from "../repositories/accounts-repository";
 import { Mailer } from "../mail/mailer";
 import { ViewLoader } from "../mail/view-loader";
 import { Email } from "../entities/email";
 import { env } from "@/infra/env";
+import { UsersRepository } from "../repositories/users-repository";
+import { UUID } from "@/core/entities/uuid";
 
 export class OneTimePasswordRegisteredEvent implements DomainEvent {
-  public ocurredAt: Date;
+  public ocurred_at: Date;
   public oneTimePassword: OneTimePassword;
 
   constructor(oneTimePassword: OneTimePassword) {
-    this.ocurredAt = new Date();
+    this.ocurred_at = new Date();
     this.oneTimePassword = oneTimePassword;
   }
 
-  getAggregateId(): UniqueEntityID {
+  getEntityId(): UUID {
     return this.oneTimePassword.id;
   }
 }
 
 export class OnOneTimePasswordRegistered implements EventHandler {
   constructor(
-    private accountsRepository: AccountsRepository,
+    private usersRepository: UsersRepository,
     private mailer: Mailer,
     private viewLoader: ViewLoader
   ) {
@@ -42,11 +42,11 @@ export class OnOneTimePasswordRegistered implements EventHandler {
   public async sendOneTimePasswordEmail({
     oneTimePassword,
   }: OneTimePasswordRegisteredEvent) {
-    const account = await this.accountsRepository.findById(
-      oneTimePassword.account_id.toString()
+    const user = await this.usersRepository.findById(
+      oneTimePassword.user_id.value
     );
 
-    if (!account) return;
+    if (!user) return;
 
     const view = await this.viewLoader.load("shareOneTimePassword", {
       one_time_password: oneTimePassword.value,
@@ -54,7 +54,7 @@ export class OnOneTimePasswordRegistered implements EventHandler {
 
     const email = Email.create({
       from: env.ECOO_EMAIL,
-      to: account.email,
+      to: user.email,
       subject: "eCOO | Senha para acesso",
       view,
     });

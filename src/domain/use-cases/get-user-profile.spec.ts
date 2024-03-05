@@ -1,52 +1,42 @@
-import { InMemoryAccountsRepository } from "test/repositories/in-memory-accounts-repository";
-import { InMemoryPeopleRepository } from "test/repositories/in-memory-people-repository";
 import { GetUserProfileUseCase } from "./get-user-profile";
-import { Account } from "../entities/account";
-import { Person } from "../entities/person";
-import { Cpf } from "../entities/value-objects/cpf";
-import { Cellphone } from "../entities/value-objects/cellphone";
+import { User } from "../entities/user";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 
-let inMemoryAccountsRepository: InMemoryAccountsRepository;
-let inMemoryPeopleRepository: InMemoryPeopleRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let sut: GetUserProfileUseCase;
 
 describe("get user profile", () => {
   beforeEach(() => {
-    inMemoryAccountsRepository = new InMemoryAccountsRepository();
-    inMemoryPeopleRepository = new InMemoryPeopleRepository();
-    sut = new GetUserProfileUseCase(
-      inMemoryAccountsRepository,
-      inMemoryPeopleRepository
-    );
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    sut = new GetUserProfileUseCase(inMemoryUsersRepository);
   });
 
-  it("should be able to get a user by account id", async () => {
-    const account = Account.create({
+  it("should be able to get a user profile by the user id", async () => {
+    const user = User.create({
       email: "johndoe@example.com",
-      password: "123456",
-      cellphone: Cellphone.createFromText("519876543"),
-    });
-
-    inMemoryAccountsRepository.save(account);
-
-    const person = Person.create({
+      phone: "51987654321",
+      password: "12345678",
       first_name: "John",
       last_name: "Doe",
-      cpf: Cpf.createFromText("523.065.281-01"),
-      account_id: account.id,
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
     });
 
-    inMemoryPeopleRepository.save(person);
+    await inMemoryUsersRepository.save(user);
 
     const result = await sut.execute({
-      account_id: account.id.toString(),
+      user_id: user.id.value,
     });
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        account,
-        person,
+    expect(result).toHaveProperty("user");
+  });
+
+  it("should not be able to get a non existent user profile", async () => {
+    await expect(async () =>
+      sut.execute({
+        user_id: "user-id",
       })
-    );
+    ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
 });
