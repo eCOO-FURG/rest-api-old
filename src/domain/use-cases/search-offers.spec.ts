@@ -30,7 +30,7 @@ describe("search offers", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -39,7 +39,7 @@ describe("search offers", () => {
       image: "image",
       name: "apple",
       pricing: "UNIT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product2);

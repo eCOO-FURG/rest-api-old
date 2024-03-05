@@ -30,6 +30,7 @@ export class SearchOffersUseCase {
 
     return {
       offersItems,
+      products,
     };
   }
 }
