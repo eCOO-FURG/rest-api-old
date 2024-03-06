@@ -72,3 +72,4 @@ services:
       - smtp4dev
       - qdrant
     network_mode: "host"
+    restart: always
