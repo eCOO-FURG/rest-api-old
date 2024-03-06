@@ -15,11 +15,9 @@ const deployValidationSchema = z.object({
   ECOO_EMAIL_PASSWORD: z.string(),
   SESSION_DURATION_IN_DAYS: z.coerce.number(),
   EXPECTED_SIMILARITY_SCORE: z.coerce.number(),
-  PAYMENTS_PROCESSOR_API_KEY: z.string(),
 });
 
 const devValidationSchema = deployValidationSchema.omit({
-  PAYMENTS_PROCESSOR_API_KEY: true,
   ECOO_EMAIL_PASSWORD: true,
 });
 
