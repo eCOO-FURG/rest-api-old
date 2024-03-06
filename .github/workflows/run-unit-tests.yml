@@ -19,5 +19,5 @@ jobs:
           ENV: test
           SERVER_URL: http://localhost
           PORT: 3333
-          SESSION_DURATION_IN_DAYS: 7
-          ECOO_EMAIL: contato@ecoo.com.br"
+          SESSION_DURATION_IN_DAYS: 30
+          ECOO_EMAIL: suporte@ecoo.com.br
