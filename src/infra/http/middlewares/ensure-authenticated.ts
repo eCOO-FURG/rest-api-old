@@ -17,7 +17,7 @@ export async function ensureAuthenticated(
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-      return reply.status(401).send({ message: "Não authorizado." });
+      return reply.status(401).send({ message: "Não autorizado." });
     }
     const [, token] = authHeader.split(" ");
 
@@ -31,7 +31,7 @@ export async function ensureAuthenticated(
 
     const dateInmilliseconds = now / 1000;
 
-    const expired = dateInmilliseconds - iat > 1; // 24 * 3600
+    const expired = dateInmilliseconds - iat > 24 * 3600 * 1000;
 
     if (expired) {
       const sessionExpiration = now - env.SESSION_DURATION_IN_DAYS * 86400000;
@@ -54,7 +54,7 @@ export async function ensureAuthenticated(
         expiresIn: "24h",
       });
 
-      const cookies = `access_token=${newAccessToken}`;
+      const cookies = `token=${newAccessToken}`;
 
       reply.header("set-cookie", cookies);
     }
@@ -63,6 +63,6 @@ export async function ensureAuthenticated(
       user_id,
     };
   } catch (err) {
-    return reply.status(401).send({ message: "Não authorizado." });
+    return reply.status(401).send({ message: "Não autorizado." });
   }
 }
