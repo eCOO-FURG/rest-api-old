@@ -17,4 +17,14 @@ export class InMemoryCyclesRepository implements CyclesRepository {
 
     return cycle;
   }
+
+  async findById(id: string): Promise<Cycle | null> {
+    const cycle = this.items.find((cycle) => cycle.id.equals(id));
+
+    if (!cycle) {
+      return null;
+    }
+
+    return cycle;
+  }
 }

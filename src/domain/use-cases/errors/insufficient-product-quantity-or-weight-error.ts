@@ -7,6 +7,6 @@ const mapper = {
 
 export class InsufficientProductQuantityOrWeightError extends Error {
   constructor(pricing: Product["pricing"], product_id: string) {
-    super(`${mapper[pricing]} indisponível para o produto ${product_id}`);
+    super(`${mapper[pricing]} indisponível para o produto ${product_id}.`);
   }
 }
