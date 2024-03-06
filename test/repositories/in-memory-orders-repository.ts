@@ -1,6 +1,7 @@
 import { Order } from "@/domain/entities/order";
 import { OrdersRepository } from "@/domain/repositories/orders-repository";
 import { InMemoryOffersRepository } from "./in-memory-offers-repository";
+import { UUID } from "@/core/entities/uuid";
 
 export class InMemoryOrdersRepository implements OrdersRepository {
   items: Order[] = [];
@@ -28,7 +29,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
   }
 
   async findById(id: string): Promise<Order | null> {
-    const order = this.items.find((item) => item.id.toString() === id);
+    const order = this.items.find((item) => item.id.equals(new UUID(id)));
 
     if (!order) {
       return null;

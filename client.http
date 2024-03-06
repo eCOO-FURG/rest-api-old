@@ -144,3 +144,10 @@ Authorization: Bearer {{token}}
 GET {{base_url}}/orders/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+###
+
+# @name order-listing
+GET {{base_url}}/order/038592c9-d9df-40a6-b20e-20bdd698c779
+Content-Type: application/json
+Authorization:  Bearer {{token}}

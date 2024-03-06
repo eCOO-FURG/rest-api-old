@@ -8,7 +8,6 @@ import { UUID } from "@/core/entities/uuid";
 import { User } from "../entities/user";
 import { Offer } from "../entities/offer";
 import { OfferProduct } from "../entities/offer-product";
-import { Order } from "../entities/order";
 import { OrderProductsUseCase } from "./order-products";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -85,7 +84,6 @@ describe("orders listing", () => {
     });
 
     const orders = await sut.execute({ page: 1 });
-    console.log("Orders received:", orders);
 
     expect(orders).toHaveLength(1);
   });

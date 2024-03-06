@@ -16,6 +16,7 @@ import { ensureAdministrator } from "../middlewares/ensure-administrator";
 import { registerOneTimePassword } from "./register-one-time-password";
 import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
 import { OrdersListing } from "./orders-listing";
+import { OrderListing } from "./order-listing";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -77,8 +78,15 @@ export async function routes(app: FastifyInstance) {
   app.get(
     "/orders/:page",
     {
-      onRequest: [ensureAuthenticated],
+      onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     OrdersListing
+  );
+  app.get(
+    "/order/:order_id",
+    {
+      onRequest: [ensureAuthenticated, ensureAdministrator],
+    },
+    OrderListing
   );
 }

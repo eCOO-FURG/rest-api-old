@@ -2,6 +2,7 @@ import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authe
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
 import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
+import { OrderListingUseCase } from "@/domain/use-cases/order-listing";
 import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { OrdersListingUseCase } from "@/domain/use-cases/orders-listing";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
@@ -105,6 +106,12 @@ diContainer.register({
   ),
   ordersListingUseCase: asFunction(
     ({ ordersRepository }) => new OrdersListingUseCase(ordersRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
+  ),
+  orderListingUseCase: asFunction(
+    ({ ordersRepository }) => new OrderListingUseCase(ordersRepository),
     {
       lifetime: Lifetime.SCOPED,
     }
