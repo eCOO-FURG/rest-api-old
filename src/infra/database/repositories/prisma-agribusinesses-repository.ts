@@ -48,6 +48,26 @@ export class PrismaAgribusinessesRepository
     return PrismaAgribusinessMapper.toDomain(agribusiness);
   }
 
+  async findAllSortedByName(
+    page: number,
+    pageSize: number = 20
+  ): Promise<Agribusiness[]> {
+    const skip = (page - 1) * pageSize;
+
+    const agribusinesses = await prisma.agribusiness.findMany({
+      orderBy: {
+        name: "asc",
+      },
+      skip,
+      take: pageSize,
+    });
+
+    const mappedAgribusiness = agribusinesses.map((agribusiness) =>
+      PrismaAgribusinessMapper.toDomain(agribusiness)
+    );
+    return mappedAgribusiness;
+  }
+
   async save(agribusiness: Agribusiness): Promise<void> {
     const data = PrismaAgribusinessMapper.toPrisma(agribusiness);
 

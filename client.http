@@ -140,4 +140,9 @@ Authorization: Bearer {{token}}
 
 ###
 
+# @name agribusiness-listing
+GET {{base_url}}/agribusinesses/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
+###

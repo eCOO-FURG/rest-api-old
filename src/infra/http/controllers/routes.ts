@@ -15,6 +15,7 @@ import { updateAgribusinessStatus } from "./update-agribusiness-status";
 import { ensureAdministrator } from "../middlewares/ensure-administrator";
 import { registerOneTimePassword } from "./register-one-time-password";
 import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
+import { agribusinessListing } from "./agribusiness-listing";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -72,5 +73,13 @@ export async function routes(app: FastifyInstance) {
       onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     updateAgribusinessStatus
+  );
+
+  app.get(
+    "/agribusinesses/:page",
+    {
+      onRequest: [ensureAuthenticated, ensureAdministrator],
+    },
+    agribusinessListing
   );
 }

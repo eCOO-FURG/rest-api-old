@@ -32,6 +32,21 @@ export class InMemoryAgribusinessesRepository
     return agribusiness;
   }
 
+  async findAllSortedByName(
+    page: number,
+    pageSize: number = 20
+  ): Promise<Agribusiness[]> {
+    const skip = (page - 1) * pageSize;
+
+    const sortedItems = this.items.sort((a, b) =>
+      a.name.localeCompare(b.name, "pt-BR")
+    );
+
+    const agribusinesses = sortedItems.slice(skip, skip + pageSize);
+
+    return agribusinesses;
+  }
+
   async save(agribusiness: Agribusiness): Promise<void> {
     this.items.push(agribusiness);
   }

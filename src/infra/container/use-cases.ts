@@ -1,3 +1,4 @@
+import { AgribusinessListingUseCase } from "@/domain/use-cases/agribusiness-listing";
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/authenticate-with-one-time-password";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
@@ -98,6 +99,13 @@ diContainer.register({
   updateAgribusinessStatusUseCase: asFunction(
     ({ agribusinessesRepository }) =>
       new UpdateAgribusinessStatusUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
+  ),
+  agribusinessListingUseCase: asFunction(
+    ({ agribusinessesRepository }) =>
+      new AgribusinessListingUseCase(agribusinessesRepository),
     {
       lifetime: Lifetime.SCOPED,
     }
