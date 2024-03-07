@@ -6,7 +6,6 @@ import { Offer } from "../entities/offer";
 import { Product } from "../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InMemoryProductsTypesRepository } from "test/repositories/in-memory-products-types-repository";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { UUID } from "@/core/entities/uuid";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
@@ -42,7 +41,7 @@ describe("offer product", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -51,7 +50,7 @@ describe("offer product", () => {
       image: "image",
       name: "apple",
       pricing: "UNIT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product2);
@@ -86,7 +85,7 @@ describe("offer product", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -121,7 +120,7 @@ describe("offer product", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -130,7 +129,7 @@ describe("offer product", () => {
       image: "image",
       name: "apple",
       pricing: "UNIT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product2);
@@ -167,7 +166,7 @@ describe("offer product", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -176,7 +175,7 @@ describe("offer product", () => {
       image: "image",
       name: "apple",
       pricing: "UNIT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product2);
@@ -209,7 +208,7 @@ describe("offer product", () => {
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product1);
@@ -218,7 +217,7 @@ describe("offer product", () => {
       image: "image",
       name: "apple",
       pricing: "UNIT",
-      type_id: "fake-id",
+      type_id: new UUID("fake-id"),
     });
 
     await inMemoryProductsRepository.save(product2);

@@ -1,11 +1,17 @@
 import { Optional } from "@/core/types/optional";
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
-import { OfferProduct } from "./offer-product";
+
+interface Item extends Optional<EntityProps, "created_at"> {
+  offer_id: UUID;
+  product_id: UUID;
+  price: number;
+  quantity_or_weight: number;
+}
 
 interface OfferProps extends Optional<EntityProps, "created_at"> {
   agribusiness_id: UUID;
-  items: OfferProduct[];
+  items: Item[];
 }
 
 export class Offer extends Entity<OfferProps> {
@@ -17,7 +23,7 @@ export class Offer extends Entity<OfferProps> {
     return this.props.items;
   }
 
-  add(item: OfferProduct) {
+  add(item: Item) {
     this.props.items.push(item);
   }
 
@@ -26,7 +32,6 @@ export class Offer extends Entity<OfferProps> {
       {
         ...props,
         items: props.items ?? [],
-        created_at: props.created_at ?? new Date(),
       },
       id
     );

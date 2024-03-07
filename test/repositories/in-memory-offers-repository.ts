@@ -1,5 +1,4 @@
 import { Offer } from "@/domain/entities/offer";
-import { OfferProduct } from "@/domain/entities/offer-product";
 import { OffersRepository } from "@/domain/repositories/offers-repository";
 
 export class InMemoryOffersRepository implements OffersRepository {
@@ -11,8 +10,8 @@ export class InMemoryOffersRepository implements OffersRepository {
 
   async findManyItemsByProductIds(
     product_ids: string[]
-  ): Promise<OfferProduct[]> {
-    const items: OfferProduct[] = [];
+  ): Promise<Offer["items"]> {
+    const items: Offer["items"] = [];
 
     for (const offer of this.items) {
       const match = offer.items.filter(({ product_id }) =>

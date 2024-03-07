@@ -1,11 +1,9 @@
 import { OffersRepository } from "../repositories/offers-repository";
 import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
-import { NotAgrobusinessAdminError } from "./errors/not-agrobusiness-admin-error";
 import { Offer } from "../entities/offer";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
-import { OfferProduct } from "../entities/offer-product";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
 
 interface OfferProductsUseCaseRequest {
@@ -63,14 +61,12 @@ export class OfferProductsUseCase {
         }
       }
 
-      const offerItem = OfferProduct.create({
+      offer.add({
         offer_id: offer.id,
         price: item.price,
         product_id: product.id,
         quantity_or_weight: item.quantity_or_weight,
       });
-
-      offer.add(offerItem);
     }
 
     await this.offersRepository.save(offer);

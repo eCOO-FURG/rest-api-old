@@ -2,30 +2,20 @@ import { Offer } from "@/domain/entities/offer";
 import { OffersRepository } from "@/domain/repositories/offers-repository";
 import { PrismaOfferMapper } from "../mappers/prisma-offer-mapper";
 import { prisma } from "../prisma-service";
-import { OfferProduct } from "@/domain/entities/offer-product";
-import { PrismaOfferProductMapper } from "../mappers/prisma-offer-product-mapper";
+import { UUID } from "@/core/entities/uuid";
 
 export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
     const data = PrismaOfferMapper.toPrisma(offer);
 
-    const items = offer.items.map((item) =>
-      PrismaOfferProductMapper.toPrisma(item)
-    );
-
-    await prisma.$transaction(async (ctx) => [
-      await ctx.offer.create({
-        data,
-      }),
-      await ctx.offerProduct.createMany({
-        data: items,
-      }),
-    ]);
+    await prisma.offer.create({
+      data,
+    });
   }
 
   async findManyItemsByProductIds(
     product_ids: string[]
-  ): Promise<OfferProduct[]> {
+  ): Promise<Offer["items"]> {
     const data = await prisma.offerProduct.findMany({
       where: {
         product_id: {
@@ -37,9 +27,14 @@ export class PrismaOffersRepository implements OffersRepository {
       },
     });
 
-    const mappedOffersProducts = data.map((offerProduct) =>
-      PrismaOfferProductMapper.toDomain(offerProduct)
-    );
+    const mappedOffersProducts: Offer["items"] = data.map((item) => ({
+      offer_id: new UUID(item.offer_id),
+      product_id: new UUID(item.product_id),
+      price: item.price.toNumber(),
+      quantity_or_weight: item.quantity_or_weight.toNumber(),
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+    }));
 
     return mappedOffersProducts;
   }
