@@ -2,7 +2,6 @@ import { InMemoryOrdersRepository } from "test/repositories/in-memory-orders-rep
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { OrderProductsUseCase } from "./order-products";
 import { Product } from "../entities/product";
-import { OfferProduct } from "../entities/offer-product";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { UUID } from "@/core/entities/uuid";
@@ -70,33 +69,35 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = OfferProduct.create({
+    const offerProduct1 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct2 = OfferProduct.create({
+    const offerProduct2 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct3 = OfferProduct.create({
+    const offerProduct3 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
       quantity_or_weight: 50,
-    });
+    };
 
-    const offerProduct4 = OfferProduct.create({
+    const offerProduct4 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
       quantity_or_weight: 100,
-    });
+    };
 
     offer.add(offerProduct1);
     offer.add(offerProduct2);
@@ -156,33 +157,33 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = OfferProduct.create({
+    const offerProduct1 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct2 = OfferProduct.create({
+    const offerProduct2 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct3 = OfferProduct.create({
+    const offerProduct3 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
       quantity_or_weight: 50,
-    });
+    };
 
-    const offerProduct4 = OfferProduct.create({
+    const offerProduct4 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
       quantity_or_weight: 100,
-    });
+    };
 
     offer.add(offerProduct1);
     offer.add(offerProduct2);
@@ -242,33 +243,33 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = OfferProduct.create({
+    const offerProduct1 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct2 = OfferProduct.create({
+    const offerProduct2 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct3 = OfferProduct.create({
+    const offerProduct3 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
       quantity_or_weight: 50,
-    });
+    };
 
-    const offerProduct4 = OfferProduct.create({
+    const offerProduct4 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
       quantity_or_weight: 100,
-    });
+    };
 
     offer.add(offerProduct1);
     offer.add(offerProduct2);
@@ -328,33 +329,33 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = OfferProduct.create({
+    const offerProduct1 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct2 = OfferProduct.create({
+    const offerProduct2 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct3 = OfferProduct.create({
+    const offerProduct3 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
       quantity_or_weight: 50,
-    });
+    };
 
-    const offerProduct4 = OfferProduct.create({
+    const offerProduct4 = {
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
       quantity_or_weight: 100,
-    });
+    };
 
     offer.add(offerProduct1);
     offer.add(offerProduct2);

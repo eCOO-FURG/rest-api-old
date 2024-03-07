@@ -4,7 +4,6 @@ import { Order } from "../entities/order";
 import { UsersRepository } from "../repositories/users-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OffersRepository } from "../repositories/offers-repository";
-import { OrderProduct } from "../entities/order-products";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 
@@ -96,14 +95,12 @@ export class OrderProductsUseCase {
         current.quantity_or_weight -= needed;
         acc += needed;
 
-        const orderItem = OrderProduct.create({
+        order.add({
           offer_id: current.offer_id,
           product_id: product.id,
           order_id: order.id,
           quantity_or_weight: needed,
         });
-
-        order.add(orderItem);
 
         order.price += needed * current.price;
       }

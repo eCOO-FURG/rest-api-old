@@ -1,15 +1,21 @@
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
-import { OrderProduct } from "./order-products";
+
+interface Item extends Optional<EntityProps, "created_at"> {
+  order_id: UUID;
+  offer_id: UUID;
+  product_id: UUID;
+  quantity_or_weight: number;
+}
 
 export interface OrderProps extends Optional<EntityProps, "created_at"> {
   customer_id: UUID;
   shipping_address: string;
+  price: number;
   payment_method: "PIX" | "ON_DELIVERY";
   status: "READY" | "PENDING" | "DISPATCHED" | "CANCELED" | "PAID";
-  items: OrderProduct[];
-  price: number;
+  items: Item[];
 }
 
 export class Order extends Entity<OrderProps> {
@@ -46,12 +52,12 @@ export class Order extends Entity<OrderProps> {
     this.props.price = price;
   }
 
-  add(item: OrderProduct) {
+  add(item: Item) {
     this.props.items.push(item);
   }
 
   static create(
-    props: Optional<OrderProps, "status" | "items" | "price">,
+    props: Optional<OrderProps, "status" | "price" | "items">,
     id?: UUID
   ) {
     const order = new Order(

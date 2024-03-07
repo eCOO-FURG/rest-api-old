@@ -1,15 +1,28 @@
 import { UUID } from "@/core/entities/uuid";
 import { Order } from "@/domain/entities/order";
-import { Order as PrismaOrder, Prisma } from "@prisma/client";
+import {
+  Order as PrismaOrder,
+  OrderOfferProduct,
+  Prisma,
+} from "@prisma/client";
 
 export class PrismaOrderMapper {
-  static toDomain(raw: PrismaOrder) {
+  static toDomain(raw: PrismaOrder & { items?: OrderOfferProduct[] }) {
     return Order.create(
       {
         customer_id: new UUID(raw.customer_id),
         payment_method: "PIX",
         shipping_address: raw.shipping_address,
         status: raw.status,
+        items: raw.items?.map((item) => ({
+          id: new UUID(item.id),
+          offer_id: new UUID(item.offer_id),
+          order_id: new UUID(item.order_id),
+          product_id: new UUID(item.product_id),
+          quantity_or_weight: item.quantity_or_weight.toNumber(),
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        })),
         created_at: raw.created_at,
         updated_at: raw.created_at,
       },
@@ -18,12 +31,25 @@ export class PrismaOrderMapper {
   }
 
   static toPrisma(order: Order): Prisma.OrderUncheckedCreateInput {
+    const items: Prisma.OrderUncheckedCreateInput["items"] = {
+      createMany: {
+        data: order.items.map((item) => ({
+          offer_id: item.offer_id.value,
+          product_id: item.product_id.value,
+          quantity_or_weight: item.quantity_or_weight,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        })),
+      },
+    };
+
     return {
       id: order.id.value,
       customer_id: order.customer_id.value,
       payment_method: order.payment_method,
       shipping_address: order.shipping_address,
       status: order.status,
+      items,
       created_at: order.created_at,
       updated_at: order.updated_at,
     };
