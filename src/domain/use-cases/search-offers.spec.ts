@@ -4,7 +4,6 @@ import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-rep
 import { FakeNaturalLanguageProcessor } from "test/search/fake-natural-language-processor";
 import { Product } from "../entities/product";
 import { Offer } from "../entities/offer";
-import { OfferProduct } from "../entities/offer-product";
 import { UUID } from "@/core/entities/uuid";
 import { Record } from "../entities/record";
 
@@ -60,26 +59,26 @@ describe("search offers", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = OfferProduct.create({
+    const offerProduct1 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct2 = OfferProduct.create({
+    const offerProduct2 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
       quantity_or_weight: 10,
-    });
+    };
 
-    const offerProduct3 = OfferProduct.create({
+    const offerProduct3 = {
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
       quantity_or_weight: 10,
-    });
+    };
 
     offer.add(offerProduct1);
     offer.add(offerProduct2);
