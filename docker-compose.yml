@@ -13,6 +13,8 @@ services:
   qdrant:
     container_name: ecoo-qdrant
     image: qdrant/qdrant:latest
+    environment:
+      QDRANT_URL: "http://localhost:6333/"
     ports:
       - "6333:6333"
 
@@ -28,6 +30,9 @@ services:
       - ./products.json:/app/products.json
     ports:
       - "5000:5000"
+    environment:
+      NLP_URL: "${NLP_URL:-http://localhost:5000}"
+      EXPECTED_SIMILARITY_SCORE: "${EXPECTED_SIMILARITY_SCORE:-0.6}"
     depends_on:
       - qdrant
 
@@ -48,9 +53,22 @@ services:
       - ./test:/app/test
       - ./prisma:/app/prisma
     environment:
-      NLP_URL: http://localhost:5000
+      ENV: "${ENV:-dev}"
+      SERVER_URL: "${SERVER_URL:-http://localhost}"
+      PORT: "${PORT:-3333}"
+      JWT_SECRET: "${JWT_SECRET:-token}"
+      SESSION_DURATION_IN_DAYS: "${SESSION_DURATION_IN_DAYS:-7}"
+      POSTGRES_URL: "${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/ecoo_db?schema=public}"
+      QDRANT_URL: "${QDRANT_URL:-http://localhost:6333/}"
+      NLP_URL: "${NLP_URL:-http://localhost:5000}"
+      EXPECTED_SIMILARITY_SCORE: "${EXPECTED_SIMILARITY_SCORE:-0.6}"
+      ECOO_EMAIL: "${ECOO_EMAIL:-suporte@ecoo.org.br}"
+      ECOO_EMAIL_PASSWORD: "${ECOO_EMAIL_PASSWORD:-}"
+      SMTP_HOST: "${SMTP_HOST:-localhost}"
+      SMTP_PORT: "${SMTP_PORT:-2525}"
     depends_on:
       - postgres
       - smtp4dev
       - qdrant
     network_mode: "host"
+    restart: always
