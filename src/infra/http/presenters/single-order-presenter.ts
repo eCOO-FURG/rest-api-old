@@ -10,7 +10,7 @@ export class SingleOrderPresenter {
         shipping_address: order.shipping_address,
         status: order.status,
         created_at: order.created_at.toISOString(),
-        updated_at: order.updated_at!.toISOString(),
+        updated_at: order.updated_at?.toISOString(),
         items: order.items.map((item) => ({
           product_id: item.product_id.value,
           quantity_or_weight: item.quantity_or_weight,
