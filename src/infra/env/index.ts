@@ -3,18 +3,18 @@ import { z } from "zod";
 
 const deployValidationSchema = z.object({
   ENV: z.enum(["dev", "test", "homolog", "prod"]),
-  SERVER_URL: z.string(),
+  SERVER_URL: z.string().min(1),
   PORT: z.coerce.number().default(3333),
-  POSTGRES_URL: z.string(),
-  QDRANT_URL: z.string(),
-  NLP_URL: z.string(),
-  JWT_SECRET: z.string(),
-  SMTP_HOST: z.string(),
-  SMTP_PORT: z.coerce.number(),
-  ECOO_EMAIL: z.string(),
-  ECOO_EMAIL_PASSWORD: z.string(),
-  SESSION_DURATION_IN_DAYS: z.coerce.number(),
-  EXPECTED_SIMILARITY_SCORE: z.coerce.number(),
+  POSTGRES_URL: z.string().min(1),
+  QDRANT_URL: z.string().min(1),
+  NLP_URL: z.string().min(1),
+  JWT_SECRET: z.string().min(1),
+  SMTP_HOST: z.string().min(1),
+  SMTP_PORT: z.coerce.number().min(1),
+  ECOO_EMAIL: z.string().min(1),
+  ECOO_EMAIL_PASSWORD: z.string().min(1),
+  SESSION_DURATION_IN_DAYS: z.coerce.number().min(1),
+  EXPECTED_SIMILARITY_SCORE: z.coerce.number().min(0.1),
 });
 
 const devValidationSchema = deployValidationSchema.omit({
