@@ -27,6 +27,7 @@ export class PrismaOfferMapper {
     const items: Prisma.OfferUncheckedCreateInput["items"] = {
       createMany: {
         data: offer.items.map((item) => ({
+          id: item.id.value,
           price: item.price,
           product_id: item.product_id.value,
           quantity_or_weight: item.quantity_or_weight,

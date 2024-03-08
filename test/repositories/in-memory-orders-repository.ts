@@ -12,7 +12,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
     for (const item of order.items) {
       const offer = this.offersRepository.items.find((offer) =>
-        offer.id.equals(item.id)
+        offer.id.equals(item.id.value)
       );
 
       if (!offer) {
@@ -20,7 +20,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
       }
 
       const index = offer.items.findIndex((offerItem) =>
-        offerItem.product_id.equals(item.id)
+        offerItem.product_id.equals(item.id.value)
       );
 
       offer.items[index].quantity_or_weight -= item.quantity_or_weight;

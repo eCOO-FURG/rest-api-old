@@ -3,6 +3,7 @@ import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
 interface Item extends Optional<EntityProps, "created_at"> {
+  id: UUID;
   order_id: UUID;
   offer_id: UUID;
   product_id: UUID;

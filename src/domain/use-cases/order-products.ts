@@ -6,6 +6,7 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OffersRepository } from "../repositories/offers-repository";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
+import { UUID } from "@/core/entities/uuid";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
@@ -96,6 +97,7 @@ export class OrderProductsUseCase {
         acc += needed;
 
         order.add({
+          id: new UUID(),
           offer_id: current.offer_id,
           product_id: product.id,
           order_id: order.id,

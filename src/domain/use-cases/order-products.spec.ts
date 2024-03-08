@@ -70,6 +70,7 @@ describe("order products", () => {
     });
 
     const offerProduct1 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
@@ -77,6 +78,7 @@ describe("order products", () => {
     };
 
     const offerProduct2 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
@@ -158,6 +160,7 @@ describe("order products", () => {
     });
 
     const offerProduct1 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
@@ -165,6 +168,7 @@ describe("order products", () => {
     };
 
     const offerProduct2 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
@@ -172,6 +176,7 @@ describe("order products", () => {
     };
 
     const offerProduct3 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
@@ -179,6 +184,7 @@ describe("order products", () => {
     };
 
     const offerProduct4 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
@@ -244,6 +250,7 @@ describe("order products", () => {
     });
 
     const offerProduct1 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
@@ -251,6 +258,7 @@ describe("order products", () => {
     };
 
     const offerProduct2 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
@@ -258,6 +266,7 @@ describe("order products", () => {
     };
 
     const offerProduct3 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
@@ -265,6 +274,7 @@ describe("order products", () => {
     };
 
     const offerProduct4 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
@@ -330,6 +340,7 @@ describe("order products", () => {
     });
 
     const offerProduct1 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product1.id,
@@ -337,6 +348,7 @@ describe("order products", () => {
     };
 
     const offerProduct2 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product1.id,
@@ -344,6 +356,7 @@ describe("order products", () => {
     };
 
     const offerProduct3 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 10.0,
       product_id: product2.id,
@@ -351,6 +364,7 @@ describe("order products", () => {
     };
 
     const offerProduct4 = {
+      id: new UUID(),
       offer_id: offer.id,
       price: 9.0,
       product_id: product2.id,
