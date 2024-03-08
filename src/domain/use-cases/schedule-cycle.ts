@@ -4,6 +4,7 @@ import { Schedule } from "../entities/schedule";
 import { SchedulesRepository } from "../repositories/schedules-repository";
 import { ScheduleConflictError } from "./errors/schedule-conflict-error";
 import { InvalidScheduleDate } from "./errors/invalid-schedule-date";
+import { start } from "repl";
 
 interface ScheduleCycleUseCaseRequest {
   cycle_id: string;
@@ -18,6 +19,7 @@ export class ScheduleCycleUseCase {
 
   async execute({ cycle_id, start_at }: ScheduleCycleUseCaseRequest) {
     const now = new Date();
+    start_at.setHours(0, 0, 0, 0);
 
     if (now > start_at) {
       throw new InvalidScheduleDate();
@@ -29,9 +31,7 @@ export class ScheduleCycleUseCase {
       throw new ResourceNotFoundError("Ciclo", cycle_id);
     }
 
-    start_at.setHours(0, 0, 0, 0);
-
-    const duration = cycle.duration * 24 * 60 * 60 * 1000;
+    const duration = (cycle.duration - 1) * 24 * 60 * 60 * 1000;
 
     const end = new Date(start_at.getTime() + duration);
 

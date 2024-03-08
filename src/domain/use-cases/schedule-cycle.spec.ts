@@ -33,9 +33,11 @@ describe("schedule cycle", () => {
 
     await inMemoryCyclesRepository.save(cycle);
 
+    const tomorrow = new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000);
+
     await sut.execute({
       cycle_id: cycle.id.value,
-      start_at: new Date(),
+      start_at: tomorrow,
     });
 
     expect(inMemorySchedulesRepository.items[0]).toBeInstanceOf(Schedule);
@@ -47,14 +49,12 @@ describe("schedule cycle", () => {
       offering: [1, 2, 3],
       ordering: [3, 4, 5],
       dispatching: [5, 6],
-      duration: 7,
+      duration: 3,
     });
 
     await inMemoryCyclesRepository.save(cycle);
 
     const now = new Date();
-    const days = 7;
-    const future = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
     const schedule = Schedule.create({
       cycle_id: cycle.id,
@@ -62,6 +62,9 @@ describe("schedule cycle", () => {
     });
 
     await inMemorySchedulesRepository.save(schedule);
+
+    const days = 3;
+    const future = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
     await expect(() =>
       sut.execute({
