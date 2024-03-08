@@ -1,10 +1,11 @@
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
+import { Cycle } from "./cycle";
 
 interface ScheduleProps extends Optional<EntityProps, "created_at"> {
   start_at: Date;
-  cycle_id: UUID;
+  cycle: Cycle;
 }
 
 export class Schedule extends Entity<ScheduleProps> {
@@ -12,8 +13,8 @@ export class Schedule extends Entity<ScheduleProps> {
     return this.props.start_at;
   }
 
-  get cycle_id() {
-    return this.props.cycle_id;
+  get cycle() {
+    return this.props.cycle;
   }
 
   static create(props: ScheduleProps, id?: UUID) {

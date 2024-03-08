@@ -4,7 +4,6 @@ import { Schedule } from "../entities/schedule";
 import { SchedulesRepository } from "../repositories/schedules-repository";
 import { ScheduleConflictError } from "./errors/schedule-conflict-error";
 import { InvalidScheduleDate } from "./errors/invalid-schedule-date";
-import { start } from "repl";
 
 interface ScheduleCycleUseCaseRequest {
   cycle_id: string;
@@ -44,8 +43,8 @@ export class ScheduleCycleUseCase {
     }
 
     const schedule = Schedule.create({
-      cycle_id: cycle.id,
       start_at,
+      cycle,
     });
 
     await this.scheduleRepository.save(schedule);

@@ -13,9 +13,7 @@ let sut: ScheduleCycleUseCase;
 describe("schedule cycle", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    inMemorySchedulesRepository = new InMemorySchedulesRepository(
-      inMemoryCyclesRepository
-    );
+    inMemorySchedulesRepository = new InMemorySchedulesRepository();
     sut = new ScheduleCycleUseCase(
       inMemoryCyclesRepository,
       inMemorySchedulesRepository
@@ -57,7 +55,7 @@ describe("schedule cycle", () => {
     const now = new Date();
 
     const schedule = Schedule.create({
-      cycle_id: cycle.id,
+      cycle: cycle,
       start_at: now,
     });
 
