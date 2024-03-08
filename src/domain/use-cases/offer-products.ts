@@ -6,7 +6,7 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
@@ -19,7 +19,7 @@ interface OfferProductsUseCaseRequest {
 
 export class OfferProductsUseCase {
   constructor(
-    private validateActionDayUseCase: ValidateActionDayUseCase,
+    private validateScheduleCase: ValidateScheduleUseCase,
     private agribusinessRepository: AgribusinessesRepository,
     private offersRepository: OffersRepository,
     private productsRepository: ProductsRepository
@@ -29,7 +29,7 @@ export class OfferProductsUseCase {
     agribusiness_id,
     products: offeredProducts,
   }: OfferProductsUseCaseRequest) {
-    await this.validateActionDayUseCase.execute({
+    await this.validateScheduleCase.execute({
       action: "offering",
     });
 

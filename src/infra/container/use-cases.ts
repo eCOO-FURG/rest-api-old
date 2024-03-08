@@ -13,7 +13,7 @@ import { ScheduleCycleUseCase } from "@/domain/use-cases/schedule-cycle";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
-import { ValidateActionDayUseCase } from "@/domain/use-cases/validate-action-day";
+import { ValidateScheduleUseCase } from "@/domain/use-cases/validate-schedule";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -61,19 +61,19 @@ diContainer.register({
     ({ usersRepository, agribusinessesRepository }) =>
       new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
-  validateActionDayUseCase: asFunction(
+  validateScheduleCase: asFunction(
     ({ schedulesRepository }) =>
-      new ValidateActionDayUseCase(schedulesRepository)
+      new ValidateScheduleUseCase(schedulesRepository)
   ),
   offerProductsUseCase: asFunction(
     ({
-      validateActionDayUseCase,
+      validateScheduleCase,
       agribusinessesRepository,
       offersRepository,
       productsRepository,
     }) =>
       new OfferProductsUseCase(
-        validateActionDayUseCase,
+        validateScheduleCase,
         agribusinessesRepository,
         offersRepository,
         productsRepository
@@ -81,13 +81,13 @@ diContainer.register({
   ),
   searchOffersUseCase: asFunction(
     ({
-      validateActionDayUseCase,
+      validateScheduleCase,
       naturalLanguageProcessor,
       productsRepository,
       offersRepository,
     }) =>
       new SearchOffersUseCase(
-        validateActionDayUseCase,
+        validateScheduleCase,
         naturalLanguageProcessor,
         productsRepository,
         offersRepository
@@ -95,14 +95,14 @@ diContainer.register({
   ),
   orderProductsUseCase: asFunction(
     ({
-      validateActionDayUseCase,
+      validateScheduleCase,
       usersRepository,
       productsRepository,
       offersRepository,
       ordersRepository,
     }) =>
       new OrderProductsUseCase(
-        validateActionDayUseCase,
+        validateScheduleCase,
         usersRepository,
         productsRepository,
         offersRepository,

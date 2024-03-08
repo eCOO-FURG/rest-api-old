@@ -7,7 +7,7 @@ import { OffersRepository } from "../repositories/offers-repository";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
@@ -21,7 +21,7 @@ interface OrderProductsUseCaseRequest {
 
 export class OrderProductsUseCase {
   constructor(
-    private validateActionDayUseCase: ValidateActionDayUseCase,
+    private validateScheduleCase: ValidateScheduleUseCase,
     private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository,
@@ -34,7 +34,7 @@ export class OrderProductsUseCase {
     payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
-    const schedule = await this.validateActionDayUseCase.execute({
+    const schedule = await this.validateScheduleCase.execute({
       action: "ordering",
     });
 

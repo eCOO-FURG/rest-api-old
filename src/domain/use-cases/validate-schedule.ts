@@ -2,7 +2,7 @@ import { SchedulesRepository } from "../repositories/schedules-repository";
 import { sameDay } from "../utils/same-day";
 import { InvalidDayForCycleActionError } from "./errors/invalid-day-for-cycle-action-error";
 
-interface CheckActionDayUseCaseRequest {
+interface ValidateScheduleUseCaseRequest {
   action: "offering" | "ordering" | "dispatching";
 }
 
@@ -12,10 +12,10 @@ const mapper = {
   dispatching: "enviar",
 };
 
-export class ValidateActionDayUseCase {
+export class ValidateScheduleUseCase {
   constructor(private schedulesRepository: SchedulesRepository) {}
 
-  async execute({ action }: CheckActionDayUseCaseRequest) {
+  async execute({ action }: ValidateScheduleUseCaseRequest) {
     const schedule = await this.schedulesRepository.findActive();
 
     if (!schedule) {

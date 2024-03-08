@@ -7,12 +7,12 @@ import { Offer } from "../entities/offer";
 import { UUID } from "@/core/entities/uuid";
 import { Record } from "../entities/record";
 import { InMemorySchedulesRepository } from "test/repositories/in-memory-schedules-repository";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 import { Cycle } from "../entities/cycle";
 import { Schedule } from "../entities/schedule";
 
 let inMemorySchedulesRepository: InMemorySchedulesRepository;
-let validateActionDayUseCase: ValidateActionDayUseCase;
+let validateScheduleCase: ValidateScheduleUseCase;
 let fakeNaturalLanguageProcessor: FakeNaturalLanguageProcessor;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -21,14 +21,14 @@ let sut: SearchOffersUseCase;
 describe("search offers", () => {
   beforeEach(() => {
     inMemorySchedulesRepository = new InMemorySchedulesRepository();
-    validateActionDayUseCase = new ValidateActionDayUseCase(
+    validateScheduleCase = new ValidateScheduleUseCase(
       inMemorySchedulesRepository
     );
     fakeNaturalLanguageProcessor = new FakeNaturalLanguageProcessor();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     sut = new SearchOffersUseCase(
-      validateActionDayUseCase,
+      validateScheduleCase,
       fakeNaturalLanguageProcessor,
       inMemoryProductsRepository,
       inMemoryOffersRepository

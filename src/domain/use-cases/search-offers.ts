@@ -1,7 +1,7 @@
 import { ProductsRepository } from "../repositories/products-repository";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { OffersRepository } from "../repositories/offers-repository";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 
 interface SearchOffersUseCaseRequest {
   product: string;
@@ -9,14 +9,14 @@ interface SearchOffersUseCaseRequest {
 
 export class SearchOffersUseCase {
   constructor(
-    private validateActionDayUseCase: ValidateActionDayUseCase,
+    private validateScheduleCase: ValidateScheduleUseCase,
     private naturalLanguageProcessor: NaturalLanguageProcessor,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    const schedule = await this.validateActionDayUseCase.execute({
+    const schedule = await this.validateScheduleCase.execute({
       action: "ordering",
     });
 

@@ -10,12 +10,12 @@ import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { UUID } from "@/core/entities/uuid";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
 import { InMemorySchedulesRepository } from "test/repositories/in-memory-schedules-repository";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 import { Cycle } from "../entities/cycle";
 import { Schedule } from "../entities/schedule";
 
 let inMemorySchedulesRepository: InMemorySchedulesRepository;
-let validateActionDayUseCase: ValidateActionDayUseCase;
+let validateScheduleCase: ValidateScheduleUseCase;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -24,7 +24,7 @@ let sut: OfferProductsUseCase;
 describe("offer product", () => {
   beforeEach(() => {
     inMemorySchedulesRepository = new InMemorySchedulesRepository();
-    validateActionDayUseCase = new ValidateActionDayUseCase(
+    validateScheduleCase = new ValidateScheduleUseCase(
       inMemorySchedulesRepository
     );
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
@@ -32,7 +32,7 @@ describe("offer product", () => {
     inMemoryProductsRepository = new InMemoryProductsRepository();
 
     sut = new OfferProductsUseCase(
-      validateActionDayUseCase,
+      validateScheduleCase,
       inMemoryAgribusinessesRepository,
       inMemoryOffersRepository,
       inMemoryProductsRepository

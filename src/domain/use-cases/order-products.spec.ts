@@ -12,12 +12,12 @@ import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemorySchedulesRepository } from "test/repositories/in-memory-schedules-repository";
-import { ValidateActionDayUseCase } from "./validate-action-day";
+import { ValidateScheduleUseCase } from "./validate-schedule";
 import { Cycle } from "../entities/cycle";
 import { Schedule } from "../entities/schedule";
 
 let inMemorySchedulesRepository: InMemorySchedulesRepository;
-let validateActionDayUseCase: ValidateActionDayUseCase;
+let validateScheduleCase: ValidateScheduleUseCase;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -27,7 +27,7 @@ let sut: OrderProductsUseCase;
 describe("order products", () => {
   beforeEach(() => {
     inMemorySchedulesRepository = new InMemorySchedulesRepository();
-    validateActionDayUseCase = new ValidateActionDayUseCase(
+    validateScheduleCase = new ValidateScheduleUseCase(
       inMemorySchedulesRepository
     );
     inMemoryUsersRepository = new InMemoryUsersRepository();
@@ -37,7 +37,7 @@ describe("order products", () => {
       inMemoryOffersRepository
     );
     sut = new OrderProductsUseCase(
-      validateActionDayUseCase,
+      validateScheduleCase,
       inMemoryUsersRepository,
       inMemoryProductsRepository,
       inMemoryOffersRepository,
