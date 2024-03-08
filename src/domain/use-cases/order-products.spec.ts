@@ -11,7 +11,13 @@ import { Order } from "../entities/order";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InMemorySchedulesRepository } from "test/repositories/in-memory-schedules-repository";
+import { ValidateActionDayUseCase } from "./validate-action-day";
+import { Cycle } from "../entities/cycle";
+import { Schedule } from "../entities/schedule";
 
+let inMemorySchedulesRepository: InMemorySchedulesRepository;
+let validateActionDayUseCase: ValidateActionDayUseCase;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -20,6 +26,10 @@ let sut: OrderProductsUseCase;
 
 describe("order products", () => {
   beforeEach(() => {
+    inMemorySchedulesRepository = new InMemorySchedulesRepository();
+    validateActionDayUseCase = new ValidateActionDayUseCase(
+      inMemorySchedulesRepository
+    );
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
@@ -27,6 +37,7 @@ describe("order products", () => {
       inMemoryOffersRepository
     );
     sut = new OrderProductsUseCase(
+      validateActionDayUseCase,
       inMemoryUsersRepository,
       inMemoryProductsRepository,
       inMemoryOffersRepository,
@@ -35,6 +46,21 @@ describe("order products", () => {
   });
 
   it("should be able to order products", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [1, 2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const product1 = Product.create({
       name: "apple",
       image: "image",
@@ -125,6 +151,21 @@ describe("order products", () => {
   });
 
   it("should not be able to order an unavailable quantity of products", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [1, 2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const product1 = Product.create({
       name: "apple",
       image: "image",
@@ -215,6 +256,21 @@ describe("order products", () => {
   });
 
   it("should not be able to order an unavailable weight of products", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [1, 2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const product1 = Product.create({
       name: "apple",
       image: "image",
@@ -305,6 +361,21 @@ describe("order products", () => {
   });
 
   it("should not be able to order an invalid weight products", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [1, 2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const product1 = Product.create({
       name: "apple",
       image: "image",
@@ -395,6 +466,21 @@ describe("order products", () => {
   });
 
   it("should not be able to order products that do not exist", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [1, 2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const user = User.create({
       email: "johndoe@example.com",
       phone: "51987654321",

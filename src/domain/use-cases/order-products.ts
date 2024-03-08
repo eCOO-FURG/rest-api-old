@@ -7,6 +7,7 @@ import { OffersRepository } from "../repositories/offers-repository";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { UUID } from "@/core/entities/uuid";
+import { ValidateActionDayUseCase } from "./validate-action-day";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
@@ -20,6 +21,7 @@ interface OrderProductsUseCaseRequest {
 
 export class OrderProductsUseCase {
   constructor(
+    private validateActionDayUseCase: ValidateActionDayUseCase,
     private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository,
@@ -32,6 +34,10 @@ export class OrderProductsUseCase {
     payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
+    const schedule = await this.validateActionDayUseCase.execute({
+      action: "ordering",
+    });
+
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
@@ -44,9 +50,21 @@ export class OrderProductsUseCase {
       orderedProductsIds
     );
 
-    const offers = await this.offersRepository.findManyItemsByProductIds(
-      orderedProductsIds
+    const lastOfferingDay = schedule.cycle.offering
+      .sort((a, b) => a - b)
+      .reverse()[0];
+
+    const lastOfferingDate = new Date(
+      schedule.start_at.getTime() + (lastOfferingDay - 1) * 24 * 60 * 60 * 1000
     );
+
+    lastOfferingDate.setHours(23, 59, 59, 999);
+
+    const offers =
+      await this.offersRepository.findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+        orderedProductsIds,
+        lastOfferingDate
+      );
 
     const offersByLowestPrice = offers.sort((a, b) => a.price - b.price);
 
