@@ -194,4 +194,54 @@ model OneTimePassword {
 
   created_at DateTime  @default(now())
   updated_at DateTime?
+
+  @@map("one_time_passwords")
+}
+
+model Cycle {
+  id       String  @id @default(uuid())
+  alias    String  @unique
+  duration Decimal @db.Decimal(10, 2)
+
+  scheduled_at Schedule[]
+  actions      CycleActionDay[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  @@map("cycles")
+}
+
+enum CYCLE_ACTIONS {
+  OFFERING
+  ORDERING
+  DISPATCHING
+}
+
+model CycleActionDay {
+  id     String        @id @default(uuid())
+  day    Decimal       @db.Decimal(10, 2)
+  action CYCLE_ACTIONS
+
+  cycle_id String
+  cycle    Cycle  @relation(fields: [cycle_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  @@map("cycles_actions_days")
+}
+
+model Schedule {
+  id       String   @id @default(uuid())
+  start_at DateTime
+  end_at   DateTime
+
+  cycle_id String
+  cycle    Cycle  @relation(fields: [cycle_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+
+  @@map("schedules")
 }
