@@ -10,7 +10,7 @@ export class PrismaSchedulesRepository implements SchedulesRepository {
     await prisma.$transaction(async (tsx) => {
       const cycle = await tsx.cycle.findUnique({
         where: {
-          id: schedule.cycle_id.value,
+          id: schedule.cycle.id.value,
         },
       });
 
@@ -65,6 +65,13 @@ export class PrismaSchedulesRepository implements SchedulesRepository {
           },
         ],
       },
+      include: {
+        cycle: {
+          include: {
+            actions: true,
+          },
+        },
+      },
     });
 
     if (!data) {
@@ -72,5 +79,9 @@ export class PrismaSchedulesRepository implements SchedulesRepository {
     }
 
     return PrismaScheduleMapper.toDomain(data);
+  }
+
+  findActive(): Promise<Schedule | null> {
+    throw new Error("Method not implemented.");
   }
 }
