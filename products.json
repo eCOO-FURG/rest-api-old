@@ -193,6 +193,11 @@
         "image": "erva_doce.jpg"
       },
       {
+        "name": "Erva-Mate",
+        "pricing": "WEIGHT",
+        "image": "erva_mate.jpg"
+      },
+      {
         "name": "Espinafre",
         "pricing": "UNIT",
         "image": "espinafre.jpg"
@@ -558,6 +563,21 @@
         "image": "arroz_parboilizado.jpg"
       },
       {
+        "name": "Arroz Polido",
+        "pricing": "WEIGHT",
+        "image": "arroz_polido.jpg"
+      },
+      {
+        "name": "Café Torrado e moído",
+        "pricing": "WEIGHT",
+        "image": "cafe_torrado_e_moido.jpg"
+      },
+      {
+        "name": "Chia",
+        "pricing": "WEIGHT",
+        "image": "chia.jpg"
+      },
+      {
         "name": "Ervilha Comum",
         "pricing": "WEIGHT",
         "image": "ervilha_comum.jpg"
@@ -566,6 +586,26 @@
         "name": "Ervilha Torta",
         "pricing": "WEIGHT",
         "image": "ervilha_torta.jpg"
+      },
+      {
+        "name": "Farinha de Centeio",
+        "pricing": "WEIGHT",
+        "image": "farinha_de_centeio.jpg"
+      },
+      {
+        "name": "Farinha de Milho",
+        "pricing": "WEIGHT",
+        "image": "farinha_de_milho.jpg"
+      },
+      {
+        "name": "Farinha de Trigo Branca",
+        "pricing": "WEIGHT",
+        "image": "farinha_de_trigo_branca.jpg"
+      },
+      {
+        "name": "Farinha de Trigo Integral",
+        "pricing": "WEIGHT",
+        "image": "farinha_de_trigo_integral.jpg"
       },
       {
         "name": "Favas",
@@ -603,6 +643,16 @@
         "image": "feijao_vermelho.jpg"
       },
       {
+        "name": "Flocos de Aveia Fino",
+        "pricing": "WEIGHT",
+        "image": "flocos_de_aveia_fino.jpg"
+      },
+      {
+        "name": "Flocos de Aveia Grosso",
+        "pricing": "WEIGHT",
+        "image": "flocos_de_aveia_grosso.jpg"
+      },
+      {
         "name": "Grão de Bico",
         "pricing": "WEIGHT",
         "image": "grao_de_bico.jpg"
@@ -613,9 +663,19 @@
         "image": "lentilha.jpg"
       },
       {
+        "name": "Linhaça Dourada",
+        "pricing": "WEIGHT",
+        "image": "linhaca_dourada.jpg"
+      },
+      {
         "name": "Milho",
         "pricing": "WEIGHT",
         "image": "milho.jpg"
+      },
+      {
+        "name": "Soja",
+        "pricing": "WEIGHT",
+        "image": "soja.jpg"
       }
     ]
   },
@@ -626,6 +686,16 @@
         "name": "Queijo Colonial",
         "pricing": "WEIGHT",
         "image": "queijo_colonial.jpg"
+      },
+      {
+        "name": "Queijo Fatiado Mussarelo",
+        "pricing": "WEIGHT",
+        "image": "queijo_fatiado_mussarelo.jpg"
+      },
+      {
+        "name": "Queijo Gouda",
+        "pricing": "WEIGHT",
+        "image": "queijo_gouda.jpg"
       },
       {
         "name": "Ricota",
@@ -656,6 +726,41 @@
         "name": "Ovo vermelho",
         "pricing": "UNIT",
         "image": "ovo_vermelho.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Não perecíveis",
+    "items": [
+      {
+        "name": "Bala de Banana",
+        "pricing": "UNIT",
+        "image": "bala_de_banana.jpg"
+      },
+      {
+        "name": "Barra de Banana",
+        "pricing": "UNIT",
+        "image": "barra_de_banana.jpg"
+      },
+      {
+        "name": "Extrato de Tomate",
+        "pricing": "UNIT",
+        "image": "extrato_de_tomate.jpg"
+      },
+      {
+        "name": "Molho de Tomate",
+        "pricing": "UNIT",
+        "image": "molho_de_tomate.jpg"
+      },
+      {
+        "name": "Vinagre de Maçã",
+        "pricing": "UNIT",
+        "image": "vinagre_de_maca.jpg"
+      },
+      {
+        "name": "Vinagre de Uva",
+        "pricing": "UNIT",
+        "image": "vinagre_de_uva.jpg"
       }
     ]
   }
