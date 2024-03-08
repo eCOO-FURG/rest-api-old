@@ -6,8 +6,10 @@ import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { RegisterUseCase } from "@/domain/use-cases/register";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribusiness";
+import { RegisterCycleUseCase } from "@/domain/use-cases/register-cycle";
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
 import { RegisterSessionUseCase } from "@/domain/use-cases/register-session";
+import { ScheduleCycleUseCase } from "@/domain/use-cases/schedule-cycle";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
@@ -109,5 +111,12 @@ diContainer.register({
         otpGenerator,
         oneTimePasswordsRepository
       )
+  ),
+  registerCycleUseCase: asFunction(
+    ({ cyclesRepository }) => new RegisterCycleUseCase(cyclesRepository)
+  ),
+  scheduleCycleUseCase: asFunction(
+    ({ cyclesRepository, schedulesRepository }) =>
+      new ScheduleCycleUseCase(cyclesRepository, schedulesRepository)
   ),
 });
