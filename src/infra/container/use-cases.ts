@@ -13,6 +13,7 @@ import { ScheduleCycleUseCase } from "@/domain/use-cases/schedule-cycle";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
+import { ValidateActionDayUseCase } from "@/domain/use-cases/validate-action-day";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -60,17 +61,33 @@ diContainer.register({
     ({ usersRepository, agribusinessesRepository }) =>
       new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
+  validateActionDayUseCase: asFunction(
+    ({ schedulesRepository }) =>
+      new ValidateActionDayUseCase(schedulesRepository)
+  ),
   offerProductsUseCase: asFunction(
-    ({ agribusinessesRepository, offersRepository, productsRepository }) =>
+    ({
+      validateActionDayUseCase,
+      agribusinessesRepository,
+      offersRepository,
+      productsRepository,
+    }) =>
       new OfferProductsUseCase(
+        validateActionDayUseCase,
         agribusinessesRepository,
         offersRepository,
         productsRepository
       )
   ),
   searchOffersUseCase: asFunction(
-    ({ naturalLanguageProcessor, productsRepository, offersRepository }) =>
+    ({
+      validateActionDayUseCase,
+      naturalLanguageProcessor,
+      productsRepository,
+      offersRepository,
+    }) =>
       new SearchOffersUseCase(
+        validateActionDayUseCase,
         naturalLanguageProcessor,
         productsRepository,
         offersRepository
@@ -78,12 +95,14 @@ diContainer.register({
   ),
   orderProductsUseCase: asFunction(
     ({
+      validateActionDayUseCase,
       usersRepository,
       productsRepository,
       offersRepository,
       ordersRepository,
     }) =>
       new OrderProductsUseCase(
+        validateActionDayUseCase,
         usersRepository,
         productsRepository,
         offersRepository,

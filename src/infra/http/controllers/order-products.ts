@@ -5,6 +5,7 @@ import { z } from "zod";
 import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
 import { OrderPresenter } from "../presenters/order-presenter";
+import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
@@ -42,6 +43,9 @@ export async function orderProducts(
 
     return reply.status(201).send(OrderPresenter);
   } catch (err) {
+    if (err instanceof InvalidDayForCycleActionError) {
+      return reply.status(403).send({ message: err.message });
+    }
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
     }
@@ -51,6 +55,7 @@ export async function orderProducts(
     if (err instanceof InvalidWeightError) {
       return reply.status(400).send({ message: err.message });
     }
+
     throw err;
   }
 }

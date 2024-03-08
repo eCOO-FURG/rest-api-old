@@ -81,7 +81,33 @@ export class PrismaSchedulesRepository implements SchedulesRepository {
     return PrismaScheduleMapper.toDomain(data);
   }
 
-  findActive(): Promise<Schedule | null> {
-    throw new Error("Method not implemented.");
+  async findActive(): Promise<Schedule | null> {
+    const now = new Date();
+
+    const schedule = await prisma.schedule.findFirst({
+      where: {
+        AND: {
+          start_at: {
+            lte: now,
+          },
+          end_at: {
+            gte: now,
+          },
+        },
+      },
+      include: {
+        cycle: {
+          include: {
+            actions: true,
+          },
+        },
+      },
+    });
+
+    if (!schedule) {
+      return null;
+    }
+
+    return PrismaScheduleMapper.toDomain(schedule);
   }
 }

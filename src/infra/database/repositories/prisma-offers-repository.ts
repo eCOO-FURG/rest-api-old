@@ -5,16 +5,9 @@ import { prisma } from "../prisma-service";
 import { UUID } from "@/core/entities/uuid";
 
 export class PrismaOffersRepository implements OffersRepository {
-  async save(offer: Offer): Promise<void> {
-    const data = PrismaOfferMapper.toPrisma(offer);
-
-    await prisma.offer.create({
-      data,
-    });
-  }
-
-  async findManyItemsByProductIds(
-    product_ids: string[]
+  async findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+    product_ids: string[],
+    date: Date
   ): Promise<Offer["items"]> {
     const data = await prisma.offerProduct.findMany({
       where: {
@@ -28,6 +21,7 @@ export class PrismaOffersRepository implements OffersRepository {
     });
 
     const mappedOffersProducts: Offer["items"] = data.map((item) => ({
+      id: new UUID(item.id),
       offer_id: new UUID(item.offer_id),
       product_id: new UUID(item.product_id),
       price: item.price.toNumber(),
@@ -37,5 +31,12 @@ export class PrismaOffersRepository implements OffersRepository {
     }));
 
     return mappedOffersProducts;
+  }
+  async save(offer: Offer): Promise<void> {
+    const data = PrismaOfferMapper.toPrisma(offer);
+
+    await prisma.offer.create({
+      data,
+    });
   }
 }
