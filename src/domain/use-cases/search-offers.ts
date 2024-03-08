@@ -16,7 +16,7 @@ export class SearchOffersUseCase {
   ) {}
 
   async execute({ product }: SearchOffersUseCaseRequest) {
-    await this.validateActionDayUseCase.execute({
+    const schedule = await this.validateActionDayUseCase.execute({
       action: "ordering",
     });
 
@@ -30,9 +30,21 @@ export class SearchOffersUseCase {
 
     const productsIds = products.map((product) => product.id.value);
 
-    const offersItems = await this.offersRepository.findManyItemsByProductIds(
-      productsIds
+    const lastOfferingDay = schedule.cycle.offering
+      .sort((a, b) => a - b)
+      .reverse()[0];
+
+    const lastOfferingDate = new Date(
+      schedule.start_at.getTime() + (lastOfferingDay - 1) * 24 * 60 * 60 * 1000
     );
+
+    lastOfferingDate.setHours(23, 59, 59, 999);
+
+    const offersItems =
+      await this.offersRepository.findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+        productsIds,
+        lastOfferingDate
+      );
 
     return {
       offersItems,

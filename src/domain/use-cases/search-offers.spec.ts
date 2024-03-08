@@ -35,7 +35,7 @@ describe("search offers", () => {
     );
   });
 
-  it("should be able to search offers by sematinc similarity", async () => {
+  it("should be able to search offers by sematinc similarity that were offered before the last offering instant of the active cycle", async () => {
     const cycle = Cycle.create({
       alias: "Ciclo 1",
       duration: 3,

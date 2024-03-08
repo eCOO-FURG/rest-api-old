@@ -35,5 +35,7 @@ export class ValidateActionDayUseCase {
     if (!offerDay) {
       throw new InvalidDayForCycleActionError(mapper[action]);
     }
+
+    return schedule;
   }
 }

@@ -8,14 +8,16 @@ export class InMemoryOffersRepository implements OffersRepository {
     this.items.push(offer);
   }
 
-  async findManyItemsByProductIds(
-    product_ids: string[]
+  async findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+    product_ids: string[],
+    date: Date
   ): Promise<Offer["items"]> {
     const items: Offer["items"] = [];
 
     for (const offer of this.items) {
-      const match = offer.items.filter(({ product_id }) =>
-        product_ids.includes(product_id.value)
+      const match = offer.items.filter(
+        ({ product_id, created_at }) =>
+          product_ids.includes(product_id.value) && offer.created_at < date
       );
 
       items.push(...match);
