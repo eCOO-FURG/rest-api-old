@@ -64,15 +64,13 @@ export class PrismaProductsRepository implements ProductsRepository {
     const products = await prisma.product.findMany({
       where: {
         name: {
-          contains: "ovo",
+          contains: name,
           mode: "insensitive",
         },
       },
       skip,
       take: 20,
     });
-
-    console.log(products);
 
     const mappedProducts = products.map((product) =>
       PrismaProductMapper.toDomain(product)
