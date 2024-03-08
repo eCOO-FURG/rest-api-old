@@ -30,22 +30,19 @@ export class ScheduleCycleUseCase {
       throw new ResourceNotFoundError("Ciclo", cycle_id);
     }
 
-    const duration = (cycle.duration - 1) * 24 * 60 * 60 * 1000;
-
-    const end = new Date(start_at.getTime() + duration);
-
-    end.setHours(23, 59, 59, 999);
-
-    const cycleInPeriod = await this.scheduleRepository.check(start_at, end);
-
-    if (cycleInPeriod) {
-      throw new ScheduleConflictError();
-    }
-
     const schedule = Schedule.create({
       start_at,
       cycle,
     });
+
+    const cycleInPeriod = await this.scheduleRepository.check(
+      start_at,
+      schedule.end_at
+    );
+
+    if (cycleInPeriod) {
+      throw new ScheduleConflictError();
+    }
 
     await this.scheduleRepository.save(schedule);
   }

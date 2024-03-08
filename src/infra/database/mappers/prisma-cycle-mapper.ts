@@ -1,5 +1,5 @@
-import { UUID } from "@/core/entities/uuid";
-import { Cycle } from "@/domain/entities/cycle";
+import { UUID } from "../../../core/entities/uuid";
+import { Cycle } from "../../../domain/entities/cycle";
 import {
   CycleActionDay as PrismaCycleActionDay,
   Cycle as PrismaCycle,
