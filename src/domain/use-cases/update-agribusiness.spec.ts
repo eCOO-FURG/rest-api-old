@@ -1,6 +1,5 @@
 import { UpdateAgribusinessUseCase } from "./update-agribusiness";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
-import { Cellphone } from "../entities/value-objects/cellphone";
 import { Agribusiness } from "../entities/agribusiness";
 import { UUID } from "@/core/entities/uuid";
 import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
