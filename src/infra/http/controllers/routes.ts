@@ -17,6 +17,7 @@ import { registerOneTimePassword } from "./register-one-time-password";
 import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
 import { scheduleCycle } from "./schedule-cycle";
 import { registerCycle } from "./register-cycle";
+import { searchProducts } from "./search-products";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -90,5 +91,13 @@ export async function routes(app: FastifyInstance) {
       onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     scheduleCycle
+  );
+
+  app.get(
+    "/products",
+    {
+      onRequest: [ensureAuthenticated, ensureAgribusinessAdmin],
+    },
+    searchProducts
   );
 }

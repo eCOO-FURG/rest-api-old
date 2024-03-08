@@ -11,6 +11,7 @@ import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-
 import { RegisterSessionUseCase } from "@/domain/use-cases/register-session";
 import { ScheduleCycleUseCase } from "@/domain/use-cases/schedule-cycle";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
+import { SearchProductsUseCase } from "@/domain/use-cases/search-products";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
 import { ValidateScheduleUseCase } from "@/domain/use-cases/validate-schedule";
@@ -137,5 +138,8 @@ diContainer.register({
   scheduleCycleUseCase: asFunction(
     ({ cyclesRepository, schedulesRepository }) =>
       new ScheduleCycleUseCase(cyclesRepository, schedulesRepository)
+  ),
+  searchProductsUseCase: asFunction(
+    ({ productsRepository }) => new SearchProductsUseCase(productsRepository)
   ),
 });
