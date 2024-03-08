@@ -32,7 +32,21 @@ export class InMemorySchedulesRepository implements SchedulesRepository {
     return schedule;
   }
 
-  findActive(): Promise<Schedule | null> {
-    throw new Error("Method not implemented.");
+  async findActive(): Promise<Schedule | null> {
+    const now = new Date();
+
+    const schedule = this.items.find((item) => {
+      const duration = item.cycle.duration * 24 * 60 * 60 * 1000;
+
+      const end = new Date(item.start_at.getTime() + duration);
+
+      return item.start_at <= now && now <= end;
+    });
+
+    if (!schedule) {
+      return null;
+    }
+
+    return schedule;
   }
 }
