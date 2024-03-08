@@ -9,7 +9,13 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { UUID } from "@/core/entities/uuid";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
+import { InMemorySchedulesRepository } from "test/repositories/in-memory-schedules-repository";
+import { ValidateActionDayUseCase } from "./validate-action-day";
+import { Cycle } from "../entities/cycle";
+import { Schedule } from "../entities/schedule";
 
+let inMemorySchedulesRepository: InMemorySchedulesRepository;
+let validateActionDayUseCase: ValidateActionDayUseCase;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -17,11 +23,16 @@ let sut: OfferProductsUseCase;
 
 describe("offer product", () => {
   beforeEach(() => {
+    inMemorySchedulesRepository = new InMemorySchedulesRepository();
+    validateActionDayUseCase = new ValidateActionDayUseCase(
+      inMemorySchedulesRepository
+    );
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
 
     sut = new OfferProductsUseCase(
+      validateActionDayUseCase,
       inMemoryAgribusinessesRepository,
       inMemoryOffersRepository,
       inMemoryProductsRepository
@@ -29,6 +40,21 @@ describe("offer product", () => {
   });
 
   it("should be able to offer products", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const agribusiness = Agribusiness.create({
       admin_id: new UUID("fake-id"),
       caf: "123456",
@@ -75,6 +101,21 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer products that do not exist", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const agribusiness = Agribusiness.create({
       admin_id: new UUID("fake-id"),
       caf: "123456",
@@ -110,6 +151,21 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer products from an agribusiness that do not exist", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const agribusiness = Agribusiness.create({
       admin_id: new UUID("fake-id"),
       caf: "123456",
@@ -154,6 +210,21 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer items with an invalid weight", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const agribusiness = Agribusiness.create({
       admin_id: new UUID("fake-id"),
       caf: "123456",
@@ -195,6 +266,21 @@ describe("offer product", () => {
   });
 
   it("should not be able to offer from an inactive agribusiness", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 3,
+      offering: [1],
+      ordering: [2],
+      dispatching: [3],
+    });
+
+    const schedule = Schedule.create({
+      start_at: new Date(),
+      cycle,
+    });
+
+    await inMemorySchedulesRepository.save(schedule);
+
     const agribusiness = Agribusiness.create({
       admin_id: new UUID("fake-id"),
       caf: "123456",
