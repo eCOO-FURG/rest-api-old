@@ -146,3 +146,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ###
+
+# @name single-agribusiness-listing
+GET {{base_url}}/agribusinesses/update/9860be7e-86e1-4e76-8ea8-91348f3e6b59
+Content-Type: application/json
+Authorization: Bearer {{token}}

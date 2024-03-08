@@ -10,6 +10,7 @@ import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribus
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
 import { RegisterSessionUseCase } from "@/domain/use-cases/register-session";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
+import { SingleAgribusinessListingUseCase } from "@/domain/use-cases/single-agribusiness-listing";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
@@ -106,6 +107,13 @@ diContainer.register({
   agribusinessListingUseCase: asFunction(
     ({ agribusinessesRepository }) =>
       new AgribusinessListingUseCase(agribusinessesRepository),
+    {
+      lifetime: Lifetime.SCOPED,
+    }
+  ),
+  singleAgribusinessListingUseCase: asFunction(
+    ({ agribusinessesRepository }) =>
+      new SingleAgribusinessListingUseCase(agribusinessesRepository),
     {
       lifetime: Lifetime.SCOPED,
     }

@@ -45,5 +45,9 @@ export class RegisterAgribusinessUseCase {
     });
 
     await this.agribusinessesRepository.save(agribusiness);
+
+    return {
+      agribusiness,
+    };
   }
 }

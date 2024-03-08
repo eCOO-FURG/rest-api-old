@@ -9,7 +9,7 @@ export class AgribusinessPresenter {
       active: agribusiness.active,
       admin_id: agribusiness.admin_id.value,
       created_at: agribusiness.created_at.toISOString(),
-      updated_at: agribusiness.updated_at!.toISOString(),
+      updated_at: agribusiness.updated_at?.toISOString(),
     }));
   }
 }
