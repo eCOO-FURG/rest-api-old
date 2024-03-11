@@ -15,7 +15,7 @@ export const orderProductsBodySchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        quantity_or_weight: z.coerce.number(),
+        quantity_or_weight: z.number().min(1),
       })
     )
     .refine((products) => products.length > 0, {
@@ -43,7 +43,7 @@ export async function orderProducts(
       payment_method,
     });
 
-    return reply.status(201).send(OrderPresenter);
+    return reply.status(201).send(OrderPresenter.toHttp(order));
   } catch (err) {
     if (err instanceof InvalidDayForCycleActionError) {
       return reply.status(403).send({ message: err.message });

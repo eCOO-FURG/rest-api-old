@@ -14,6 +14,7 @@ export class PrismaOrderMapper {
         payment_method: "PIX",
         shipping_address: raw.shipping_address,
         status: raw.status,
+        price: raw.price.toNumber(),
         items: raw.items?.map((item) => ({
           id: new UUID(item.id),
           offer_id: new UUID(item.offer_id),
@@ -45,6 +46,7 @@ export class PrismaOrderMapper {
 
     return {
       id: order.id.value,
+      price: order.price,
       customer_id: order.customer_id.value,
       payment_method: order.payment_method,
       shipping_address: order.shipping_address,

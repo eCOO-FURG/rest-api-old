@@ -155,6 +155,7 @@ model Order {
   id               String       @id @default(uuid())
   shipping_address String
   payment_method   String
+  price            Decimal
   status           ORDER_STATUS
 
   customer_id String

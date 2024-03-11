@@ -53,6 +53,10 @@ export class Order extends Entity<OrderProps> {
     this.props.price = price;
   }
 
+  tax(percentage: number) {
+    this.props.price = (this.props.price / 100) * (100 + percentage);
+  }
+
   add(item: Item) {
     this.props.items.push(item);
   }

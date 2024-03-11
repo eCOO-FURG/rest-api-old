@@ -86,6 +86,13 @@ export class OrderProductsUseCase {
         offer.product_id.equals(item.id)
       );
 
+      if (offersForItem.length === 0) {
+        throw new InsufficientProductQuantityOrWeightError(
+          product.pricing,
+          product.id.value
+        );
+      }
+
       let acc = 0;
       for (let index = 0; index < offersForItem.length; index++) {
         const current = offersForItem[index];
@@ -122,6 +129,8 @@ export class OrderProductsUseCase {
         order.price += needed * current.price;
       }
     }
+
+    order.tax(20);
 
     await this.ordersRepository.save(order);
 
