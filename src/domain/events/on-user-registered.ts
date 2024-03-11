@@ -52,7 +52,7 @@ export class OnUserRegistered implements EventHandler {
     const email = Email.create({
       from: env.ECOO_EMAIL,
       to: user.email,
-      subject: "Bem-vindo(a) - Verifique sua conta!",
+      subject: "eCOO | Verifique sua conta!",
       view,
     });
 
