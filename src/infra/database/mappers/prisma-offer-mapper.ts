@@ -7,6 +7,7 @@ export class PrismaOfferMapper {
     return Offer.create(
       {
         agribusiness_id: new UUID(raw.agribusiness_id),
+        cycle_id: new UUID(raw.cycle_id),
         items: raw.items?.map((item) => ({
           id: new UUID(item.id),
           offer_id: new UUID(item.offer_id),
@@ -39,6 +40,7 @@ export class PrismaOfferMapper {
 
     return {
       id: offer.id.value,
+      cycle_id: offer.cycle_id.value,
       agribusiness_id: offer.agribusiness_id.value,
       items: items,
       created_at: offer.created_at,

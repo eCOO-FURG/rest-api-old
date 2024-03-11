@@ -1,5 +1,4 @@
 import { PRICING } from "@prisma/client";
-
 import { prisma } from "../../src/infra/database/prisma-service";
 
 import productsCategories from "../../products.json";

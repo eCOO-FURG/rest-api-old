@@ -7,10 +7,12 @@ import { OffersRepository } from "../repositories/offers-repository";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateScheduleUseCase } from "./validate-schedule";
+import { ValidateCycleUseCase } from "./validate-cycle";
+import { farthest } from "./utils/fhartest";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
+  cycle_id: string;
   shipping_address: string;
   payment_method: "PIX" | "ON_DELIVERY";
   products: {
@@ -21,7 +23,7 @@ interface OrderProductsUseCaseRequest {
 
 export class OrderProductsUseCase {
   constructor(
-    private validateScheduleCase: ValidateScheduleUseCase,
+    private validateScheduleCase: ValidateCycleUseCase,
     private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository,
@@ -30,11 +32,13 @@ export class OrderProductsUseCase {
 
   async execute({
     user_id,
+    cycle_id,
     shipping_address,
     payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
-    const schedule = await this.validateScheduleCase.execute({
+    const { cycle } = await this.validateScheduleCase.execute({
+      cycle_id,
       action: "ordering",
     });
 
@@ -50,20 +54,13 @@ export class OrderProductsUseCase {
       orderedProductsIds
     );
 
-    const lastOfferingDay = schedule.cycle.offering
-      .sort((a, b) => a - b)
-      .reverse()[0];
-
-    const lastOfferingDate = new Date(
-      schedule.start_at.getTime() + (lastOfferingDay - 1) * 24 * 60 * 60 * 1000
-    );
-
-    lastOfferingDate.setHours(23, 59, 59, 999);
+    const firstOfferingDay = farthest(cycle.offering);
 
     const offers =
-      await this.offersRepository.findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+      await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
+        cycle.id.value,
         orderedProductsIds,
-        lastOfferingDate
+        firstOfferingDay
       );
 
     const offersByLowestPrice = offers.sort((a, b) => a.price - b.price);

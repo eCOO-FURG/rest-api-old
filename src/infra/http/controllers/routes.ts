@@ -15,7 +15,6 @@ import { updateAgribusinessStatus } from "./update-agribusiness-status";
 import { ensureAdministrator } from "../middlewares/ensure-administrator";
 import { registerOneTimePassword } from "./register-one-time-password";
 import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
-import { scheduleCycle } from "./schedule-cycle";
 import { registerCycle } from "./register-cycle";
 import { searchProducts } from "./search-products";
 
@@ -83,14 +82,6 @@ export async function routes(app: FastifyInstance) {
       onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     registerCycle
-  );
-
-  app.post(
-    "/cycles/schedule",
-    {
-      onRequest: [ensureAuthenticated, ensureAdministrator],
-    },
-    scheduleCycle
   );
 
   app.get(

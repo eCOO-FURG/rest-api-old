@@ -6,17 +6,12 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export const offerProductsBodySchema = z.object({
-  products: z
-    .array(
-      z.object({
-        id: z.string(),
-        quantity_or_weight: z.coerce.number(),
-        price: z.coerce.number(),
-      })
-    )
-    .refine((products) => products.length > 0, {
-      message: "At least one product must be offered",
-    }),
+  cycle_id: z.string(),
+  product: z.object({
+    id: z.string(),
+    quantity_or_weight: z.coerce.number(),
+    price: z.coerce.number(),
+  }),
 });
 
 const offerProductsPayloadSchema = z.object({
@@ -27,7 +22,7 @@ export async function offerProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { products } = offerProductsBodySchema.parse(request.body);
+  const { cycle_id, product } = offerProductsBodySchema.parse(request.body);
 
   const { agribusiness_id } = offerProductsPayloadSchema.parse(request.payload);
 
@@ -38,7 +33,8 @@ export async function offerProducts(
 
     await offerProductsUseCase.execute({
       agribusiness_id,
-      products,
+      cycle_id,
+      product,
     });
 
     return reply.status(201).send();

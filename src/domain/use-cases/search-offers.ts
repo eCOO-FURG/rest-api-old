@@ -1,22 +1,25 @@
 import { ProductsRepository } from "../repositories/products-repository";
 import { NaturalLanguageProcessor } from "../search/natural-language-processor";
 import { OffersRepository } from "../repositories/offers-repository";
-import { ValidateScheduleUseCase } from "./validate-schedule";
+import { ValidateCycleUseCase } from "./validate-cycle";
+import { farthest } from "./utils/fhartest";
 
 interface SearchOffersUseCaseRequest {
+  cycle_id: string;
   product: string;
 }
 
 export class SearchOffersUseCase {
   constructor(
-    private validateScheduleCase: ValidateScheduleUseCase,
+    private validateCycleUseCase: ValidateCycleUseCase,
     private naturalLanguageProcessor: NaturalLanguageProcessor,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository
   ) {}
 
-  async execute({ product }: SearchOffersUseCaseRequest) {
-    const schedule = await this.validateScheduleCase.execute({
+  async execute({ cycle_id, product }: SearchOffersUseCaseRequest) {
+    const { cycle } = await this.validateCycleUseCase.execute({
+      cycle_id: cycle_id,
       action: "ordering",
     });
 
@@ -30,20 +33,13 @@ export class SearchOffersUseCase {
 
     const productsIds = products.map((product) => product.id.value);
 
-    const lastOfferingDay = schedule.cycle.offering
-      .sort((a, b) => a - b)
-      .reverse()[0];
-
-    const lastOfferingDate = new Date(
-      schedule.start_at.getTime() + (lastOfferingDay - 1) * 24 * 60 * 60 * 1000
-    );
-
-    lastOfferingDate.setHours(23, 59, 59, 999);
+    const firstOfferingDay = farthest(cycle.offering);
 
     const offersItems =
-      await this.offersRepository.findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+      await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
+        cycle.id.value,
         productsIds,
-        lastOfferingDate
+        firstOfferingDay
       );
 
     return {

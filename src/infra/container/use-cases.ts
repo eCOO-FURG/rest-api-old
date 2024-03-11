@@ -9,12 +9,11 @@ import { RegisterAgribusinessUseCase } from "@/domain/use-cases/register-agribus
 import { RegisterCycleUseCase } from "@/domain/use-cases/register-cycle";
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
 import { RegisterSessionUseCase } from "@/domain/use-cases/register-session";
-import { ScheduleCycleUseCase } from "@/domain/use-cases/schedule-cycle";
 import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { SearchProductsUseCase } from "@/domain/use-cases/search-products";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
-import { ValidateScheduleUseCase } from "@/domain/use-cases/validate-schedule";
+import { ValidateCycleUseCase } from "@/domain/use-cases/validate-cycle";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -62,19 +61,18 @@ diContainer.register({
     ({ usersRepository, agribusinessesRepository }) =>
       new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
-  validateScheduleCase: asFunction(
-    ({ schedulesRepository }) =>
-      new ValidateScheduleUseCase(schedulesRepository)
+  validateCycleUseCase: asFunction(
+    ({ cyclesRepository }) => new ValidateCycleUseCase(cyclesRepository)
   ),
   offerProductsUseCase: asFunction(
     ({
-      validateScheduleCase,
+      validateCycleUseCase,
       agribusinessesRepository,
       offersRepository,
       productsRepository,
     }) =>
       new OfferProductsUseCase(
-        validateScheduleCase,
+        validateCycleUseCase,
         agribusinessesRepository,
         offersRepository,
         productsRepository
@@ -82,13 +80,13 @@ diContainer.register({
   ),
   searchOffersUseCase: asFunction(
     ({
-      validateScheduleCase,
+      validateCycleUseCase,
       naturalLanguageProcessor,
       productsRepository,
       offersRepository,
     }) =>
       new SearchOffersUseCase(
-        validateScheduleCase,
+        validateCycleUseCase,
         naturalLanguageProcessor,
         productsRepository,
         offersRepository
@@ -96,14 +94,14 @@ diContainer.register({
   ),
   orderProductsUseCase: asFunction(
     ({
-      validateScheduleCase,
+      validateCycleUseCase,
       usersRepository,
       productsRepository,
       offersRepository,
       ordersRepository,
     }) =>
       new OrderProductsUseCase(
-        validateScheduleCase,
+        validateCycleUseCase,
         usersRepository,
         productsRepository,
         offersRepository,
@@ -134,10 +132,6 @@ diContainer.register({
   ),
   registerCycleUseCase: asFunction(
     ({ cyclesRepository }) => new RegisterCycleUseCase(cyclesRepository)
-  ),
-  scheduleCycleUseCase: asFunction(
-    ({ cyclesRepository, schedulesRepository }) =>
-      new ScheduleCycleUseCase(cyclesRepository, schedulesRepository)
   ),
   searchProductsUseCase: asFunction(
     ({ productsRepository }) => new SearchProductsUseCase(productsRepository)

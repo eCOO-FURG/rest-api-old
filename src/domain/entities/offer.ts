@@ -12,6 +12,7 @@ interface Item extends Optional<EntityProps, "created_at"> {
 
 interface OfferProps extends Optional<EntityProps, "created_at"> {
   agribusiness_id: UUID;
+  cycle_id: UUID;
   items: Item[];
 }
 
@@ -20,12 +21,37 @@ export class Offer extends Entity<OfferProps> {
     return this.props.agribusiness_id;
   }
 
+  get cycle_id() {
+    return this.props.cycle_id;
+  }
+
   get items() {
     return this.props.items;
   }
 
+  find(product_id: string) {
+    const found = this.props.items.find((item) =>
+      item.product_id.equals(product_id)
+    );
+
+    if (!found) {
+      return null;
+    }
+
+    return found;
+  }
+
   add(item: Item) {
-    this.props.items.push(item);
+    const found = this.props.items.findIndex((unit) =>
+      unit.product_id.equals(item.product_id)
+    );
+
+    if (found < 0) {
+      this.items.push(item);
+    }
+
+    this.props.items[found] = item;
+    this.touch();
   }
 
   static create(props: Optional<OfferProps, "items">, id?: UUID) {
