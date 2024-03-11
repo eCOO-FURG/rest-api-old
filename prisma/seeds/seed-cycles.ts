@@ -35,13 +35,13 @@ export async function seedCycles() {
   if (env.ENV === "dev" || env.ENV === "homolog") {
     const everyDay = [];
 
-    for (let i = 1; i <= 30; i++) {
+    for (let i = 1; i <= 7; i++) {
       everyDay.push(i);
     }
 
     const cycle = Cycle.create({
-      alias: "Mensal",
-      duration: 30,
+      alias: "Semanal",
+      duration: 7,
       offering: everyDay,
       ordering: everyDay,
       dispatching: everyDay,
