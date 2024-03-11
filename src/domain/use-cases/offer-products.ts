@@ -6,20 +6,22 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidWeightError } from "./errors/invalid-weight-error";
 import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateScheduleUseCase } from "./validate-schedule";
+import { ValidateCycleUseCase } from "./validate-cycle";
+import { farthest } from "./utils/fhartest";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;
-  products: {
+  cycle_id: string;
+  product: {
     id: string;
     quantity_or_weight: number;
     price: number;
-  }[];
+  };
 }
 
 export class OfferProductsUseCase {
   constructor(
-    private validateScheduleCase: ValidateScheduleUseCase,
+    private validateScheduleCase: ValidateCycleUseCase,
     private agribusinessRepository: AgribusinessesRepository,
     private offersRepository: OffersRepository,
     private productsRepository: ProductsRepository
@@ -27,9 +29,11 @@ export class OfferProductsUseCase {
 
   async execute({
     agribusiness_id,
-    products: offeredProducts,
+    cycle_id,
+    product: offeredProduct,
   }: OfferProductsUseCaseRequest) {
-    await this.validateScheduleCase.execute({
+    const { cycle } = await this.validateScheduleCase.execute({
+      cycle_id,
       action: "offering",
     });
 
@@ -45,37 +49,40 @@ export class OfferProductsUseCase {
       throw new AgribusinessNotActiveError();
     }
 
-    const offeredProductsIds = offeredProducts.map((product) => product.id);
+    const product = await this.productsRepository.findById(offeredProduct.id);
 
-    const products = await this.productsRepository.findManyByIds(
-      offeredProductsIds
+    if (!product) {
+      throw new ResourceNotFoundError("Produto", offeredProduct.id);
+    }
+
+    if (product.pricing === "WEIGHT") {
+      if (offeredProduct.quantity_or_weight % 50 !== 0) {
+        throw new InvalidWeightError("ofertado", product.name);
+      }
+    }
+
+    const firstOfferingDay = farthest(cycle.offering);
+
+    const activeOffer = await this.offersRepository.findActive(
+      agribusiness_id,
+      cycle_id,
+      firstOfferingDay
     );
 
-    const offer = Offer.create({
-      agribusiness_id: agribusiness.id,
-    });
-
-    for (const item of offeredProducts) {
-      const product = products.find((product) => product.id.equals(item.id));
-
-      if (!product) {
-        throw new ResourceNotFoundError("Produto", item.id);
-      }
-
-      if (product.pricing === "WEIGHT") {
-        if (item.quantity_or_weight % 50 !== 0) {
-          throw new InvalidWeightError("ofertado", product.name);
-        }
-      }
-
-      offer.add({
-        id: new UUID(),
-        offer_id: offer.id,
-        price: item.price,
-        product_id: product.id,
-        quantity_or_weight: item.quantity_or_weight,
+    const offer =
+      activeOffer ??
+      Offer.create({
+        agribusiness_id: agribusiness.id,
+        cycle_id: cycle.id,
       });
-    }
+
+    offer.add({
+      id: new UUID(),
+      offer_id: offer.id,
+      price: offeredProduct.price,
+      product_id: product.id,
+      quantity_or_weight: offeredProduct.quantity_or_weight,
+    });
 
     await this.offersRepository.save(offer);
   }
