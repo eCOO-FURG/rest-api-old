@@ -1,6 +1,6 @@
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
-import { Optional } from "@prisma/client/runtime/library";
+import { Optional } from "@/core/types/optional";
 
 interface EmailProps extends Optional<EntityProps, "created_at"> {
   to: string;
