@@ -27,4 +27,8 @@ export class InMemoryCyclesRepository implements CyclesRepository {
 
     return cycle;
   }
+
+  async findMany(): Promise<Cycle[]> {
+    return this.items;
+  }
 }

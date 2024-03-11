@@ -12,6 +12,18 @@ export class PrismaCyclesRepository implements CyclesRepository {
     });
   }
 
+  async findMany(): Promise<Cycle[]> {
+    const data = await prisma.cycle.findMany({
+      include: {
+        actions: true,
+      },
+    });
+
+    const cycles = data.map((item) => PrismaCycleMapper.toDomain(item));
+
+    return cycles;
+  }
+
   async findByAlias(alias: string): Promise<Cycle | null> {
     const cycle = await prisma.cycle.findUnique({
       where: {

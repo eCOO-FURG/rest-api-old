@@ -17,6 +17,7 @@ import { registerOneTimePassword } from "./register-one-time-password";
 import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
 import { registerCycle } from "./register-cycle";
 import { searchProducts } from "./search-products";
+import { listCycles } from "./list-cycles";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -91,4 +92,6 @@ export async function routes(app: FastifyInstance) {
     },
     searchProducts
   );
+
+  app.get("/cycles", listCycles);
 }
