@@ -6,7 +6,8 @@ import { seedCycles } from "./seeds/seed-cycles";
 const prisma = new PrismaClient();
 
 async function seed() {
-  await Promise.all([seedUsers(), seedProducts(), seedCycles()]);
+  await Promise.all([seedUsers(), seedProducts()]);
+  await seedCycles();
 }
 
 seed()
