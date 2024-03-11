@@ -7,9 +7,11 @@ export interface OffersRepository {
     cycle_id: string,
     target_date: Date
   ): Promise<Offer | null>;
-  findManyItemsByCycleIdProductsIdsAndCreatedAt(
+  findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],
     date: Date
   ): Promise<Offer["items"]>;
+  updateItem(offer: Offer["items"][0]): Promise<void>;
+  saveItem(offer: Offer["items"][0]): Promise<void>;
 }

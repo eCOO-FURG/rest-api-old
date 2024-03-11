@@ -99,6 +99,7 @@ Authorization: Bearer {{token}}
 
 {
   "shipping_address": "test address",
+  "cycle_id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
   "payment_method": "PIX",
   "products": [
     {
@@ -140,4 +141,8 @@ Authorization: Bearer {{token}}
 
 ###
 
+# @name search-products
+GET{{base_url}}/products?name=Batata&page=1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 

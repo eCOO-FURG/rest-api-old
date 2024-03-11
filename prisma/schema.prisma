@@ -114,6 +114,9 @@ model Offer {
   agribusiness_id String
   agribusiness    Agribusiness @relation(fields: [agribusiness_id], references: [id], onDelete: Cascade)
 
+  cycle_id String
+  cycle    Cycle  @relation(fields: [cycle_id], references: [id], onDelete: Cascade)
+
   created_at DateTime  @default(now())
   updated_at DateTime?
 
@@ -203,11 +206,11 @@ model Cycle {
   alias    String  @unique
   duration Decimal @db.Decimal(10, 2)
 
-  scheduled_at Schedule[]
-  actions      CycleActionDay[]
+  actions CycleActionDay[]
 
   created_at DateTime  @default(now())
   updated_at DateTime?
+  offers     Offer[]
 
   @@map("cycles")
 }
@@ -230,18 +233,4 @@ model CycleActionDay {
   updated_at DateTime?
 
   @@map("cycles_actions_days")
-}
-
-model Schedule {
-  id       String   @id @default(uuid())
-  start_at DateTime
-  end_at   DateTime
-
-  cycle_id String
-  cycle    Cycle  @relation(fields: [cycle_id], references: [id], onDelete: Cascade)
-
-  created_at DateTime  @default(now())
-  updated_at DateTime?
-
-  @@map("schedules")
 }

@@ -36,7 +36,7 @@ export class SearchOffersUseCase {
     const firstOfferingDay = farthest(cycle.offering);
 
     const offersItems =
-      await this.offersRepository.findManyItemsByCycleIdProductsIdsAndCreatedAt(
+      await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
         cycle.id.value,
         productsIds,
         firstOfferingDay

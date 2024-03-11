@@ -76,6 +76,7 @@ describe("search offers", () => {
     const offer = Offer.create({
       cycle_id: cycle.id,
       agribusiness_id: new UUID("fake-id"),
+      created_at: new Date(new Date().getTime() - 4 * 24 * 60 * 60 * 1000),
     });
 
     const offerProduct1 = {

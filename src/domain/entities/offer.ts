@@ -29,17 +29,29 @@ export class Offer extends Entity<OfferProps> {
     return this.props.items;
   }
 
+  find(product_id: string) {
+    const found = this.props.items.find((item) =>
+      item.product_id.equals(product_id)
+    );
+
+    if (!found) {
+      return null;
+    }
+
+    return found;
+  }
+
   add(item: Item) {
     const found = this.props.items.findIndex((unit) =>
       unit.product_id.equals(item.product_id)
     );
 
     if (found < 0) {
-      this.props.items.push(item);
-      return;
+      this.items.push(item);
     }
 
     this.props.items[found] = item;
+    this.touch();
   }
 
   static create(props: Optional<OfferProps, "items">, id?: UUID) {

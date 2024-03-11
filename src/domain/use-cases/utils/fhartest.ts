@@ -7,6 +7,8 @@ export function farthest(days: number[]) {
 
     const date = new Date(today.getTime() - (ago + 1) * 24 * 60 * 60 * 1000);
 
+    date.setUTCHours(0, 0, 0, 0);
+
     return date;
   });
 

@@ -5,7 +5,39 @@ import { prisma } from "../prisma-service";
 import { UUID } from "@/core/entities/uuid";
 
 export class PrismaOffersRepository implements OffersRepository {
-  async findManyItemsByProductIdsAndCreatedAtOlderOrEqualThan(
+  async save(offer: Offer): Promise<void> {
+    const data = PrismaOfferMapper.toPrisma(offer);
+
+    await prisma.offer.create({
+      data,
+    });
+  }
+
+  async updateItem(item: Offer["items"][0]): Promise<void> {
+    await prisma.offerProduct.update({
+      where: {
+        id: item.id.value,
+      },
+      data: {
+        price: item.price,
+        quantity_or_weight: item.quantity_or_weight,
+      },
+    });
+  }
+
+  async saveItem(item: Offer["items"][0]): Promise<void> {
+    await prisma.offerProduct.create({
+      data: {
+        offer_id: item.offer_id.value,
+        price: item.price,
+        quantity_or_weight: item.quantity_or_weight,
+        product_id: item.product_id.value,
+      },
+    });
+  }
+
+  async findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
+    cycle_id: string,
     product_ids: string[],
     date: Date
   ): Promise<Offer["items"]> {
@@ -16,6 +48,12 @@ export class PrismaOffersRepository implements OffersRepository {
         },
         quantity_or_weight: {
           gt: 0,
+        },
+        offer: {
+          cycle_id,
+          created_at: {
+            gte: date,
+          },
         },
       },
     });
@@ -32,11 +70,29 @@ export class PrismaOffersRepository implements OffersRepository {
 
     return mappedOffersProducts;
   }
-  async save(offer: Offer): Promise<void> {
-    const data = PrismaOfferMapper.toPrisma(offer);
 
-    await prisma.offer.create({
-      data,
+  async findActive(
+    agribusiness_id: string,
+    cycle_id: string,
+    target_date: Date
+  ): Promise<Offer | null> {
+    const data = await prisma.offer.findFirst({
+      where: {
+        agribusiness_id,
+        cycle_id,
+        created_at: {
+          gte: target_date,
+        },
+      },
+      include: {
+        items: true,
+      },
     });
+
+    if (!data) {
+      return null;
+    }
+
+    return PrismaOfferMapper.toDomain(data);
   }
 }

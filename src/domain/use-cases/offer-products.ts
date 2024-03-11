@@ -69,12 +69,32 @@ export class OfferProductsUseCase {
       firstOfferingDay
     );
 
-    const offer =
-      activeOffer ??
-      Offer.create({
-        agribusiness_id: agribusiness.id,
-        cycle_id: cycle.id,
-      });
+    if (activeOffer) {
+      const found = activeOffer.find(product.id.value);
+
+      if (found) {
+        found.price = offeredProduct.price;
+        found.quantity_or_weight = offeredProduct.quantity_or_weight;
+        await this.offersRepository.updateItem(found);
+        return;
+      }
+
+      const item: Offer["items"][0] = {
+        id: new UUID(),
+        offer_id: activeOffer.id,
+        price: offeredProduct.price,
+        quantity_or_weight: offeredProduct.quantity_or_weight,
+        product_id: product.id,
+      };
+
+      await this.offersRepository.saveItem(item);
+      return;
+    }
+
+    const offer = Offer.create({
+      agribusiness_id: agribusiness.id,
+      cycle_id: cycle.id,
+    });
 
     offer.add({
       id: new UUID(),

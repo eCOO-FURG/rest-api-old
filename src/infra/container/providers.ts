@@ -18,7 +18,6 @@ import { OtpProvider } from "../cryptography/otp-generator";
 import { PrismaOneTimePasswordsRepository } from "../database/repositories/prisma-one-time-passwords-repository";
 import { PrismaUsersRepository } from "../database/repositories/prisma-users-repository";
 import { PrismaCyclesRepository } from "../database/repositories/prisma-cycles-repository";
-import { PrismaSchedulesRepository } from "../database/repositories/prisma-schedules-repository";
 
 diContainer.register({
   usersRepository: asClass(PrismaUsersRepository, {
@@ -43,9 +42,6 @@ diContainer.register({
     lifetime: Lifetime.SINGLETON,
   }),
   cyclesRepository: asClass(PrismaCyclesRepository, {
-    lifetime: Lifetime.SINGLETON,
-  }),
-  schedulesRepository: asClass(PrismaSchedulesRepository, {
     lifetime: Lifetime.SINGLETON,
   }),
   hasher: asClass(BcrypterHasher),

@@ -9,6 +9,7 @@ import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
+  cycle_id: z.string(),
   payment_method: z.enum(["PIX", "ON_DELIVERY"]),
   products: z
     .array(
@@ -26,7 +27,7 @@ export async function orderProducts(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { shipping_address, payment_method, products } =
+  const { shipping_address, cycle_id, payment_method, products } =
     orderProductsBodySchema.parse(request.body);
 
   try {
@@ -36,6 +37,7 @@ export async function orderProducts(
 
     const { order } = await orderProductsUseCase.execute({
       user_id: request.payload.user_id,
+      cycle_id,
       shipping_address,
       products,
       payment_method,
