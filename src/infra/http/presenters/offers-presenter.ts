@@ -1,43 +1,56 @@
-import { OfferProduct } from "@/domain/entities/offer-product";
+import { Offer } from "@/domain/entities/offer";
 import { Product } from "@/domain/entities/product";
 
 export class OffersPresenter {
-  static toHttp(offerProducts: OfferProduct[], products: Product[]) {
-    const groupedProducts: Map<
-      string,
-      { quantity: number; totalPrice: number }
-    > = offerProducts.reduce((acc, curr) => {
-      const productId = curr.product_id.value;
-      if (!acc.has(productId)) {
-        acc.set(productId, { quantity: 0, totalPrice: 0 });
+  static toHttp(items: Offer["items"], products: Product[]) {
+    const data: {
+      id: string;
+      name: string;
+      weight?: number;
+      units?: number;
+      price: string;
+    }[] = [];
+
+    items.forEach((item) => {
+      const product = products.find((product) =>
+        product.id.equals(item.product_id)
+      );
+
+      if (!product) {
+        return;
       }
-      const group = acc.get(productId);
-      if (group) {
-        group.quantity += curr.quantity_or_weight;
-        group.totalPrice += curr.price * curr.quantity_or_weight;
+
+      const found = data.findIndex(
+        (offer) => offer.id === item.product_id.value
+      );
+
+      const value = {
+        id: item.product_id.value,
+        name: product.name,
+        price: item.price.toString(),
+      };
+
+      if (found > -1) {
+        if ("units" in data[found]) {
+          data[found].units! += item.quantity_or_weight;
+        } else {
+          data[found].weight! += item.quantity_or_weight;
+        }
+        const numberPrice = Number(data[found].price);
+        data[found].price = (numberPrice + item.price / 2).toString();
+      } else {
+        if (product.pricing === "WEIGHT") {
+          Object.assign(value, {
+            weight: item.quantity_or_weight,
+          });
+        } else {
+          Object.assign(value, {
+            units: item.quantity_or_weight,
+          });
+        }
+        data.push(value);
       }
-      return acc;
-    }, new Map<string, { quantity: number; totalPrice: number }>());
-
-    const mergedOffers = Array.from(groupedProducts).map(
-      ([productId, group]) => {
-        const price = group.totalPrice / group.quantity;
-
-        const product = products.find((item) => item.id.equals(productId))!;
-
-        const quantityOrWeight =
-          product.pricing === "WEIGHT" ? "weight" : "quantity";
-
-        return {
-          id: productId,
-          name: product.name,
-          pricing: product.pricing,
-          [quantityOrWeight]: group.quantity.toString(),
-          price: price.toFixed(2),
-        };
-      }
-    );
-
-    return mergedOffers;
+    });
+    return data;
   }
 }

@@ -8,7 +8,7 @@ export class PrismaProductMapper {
       {
         name: raw.name,
         image: raw.image,
-        pricing: "WEIGHT",
+        pricing: raw.pricing,
         type_id: new UUID(raw.type_id),
         created_at: raw.created_at,
         updated_at: raw.updated_at,
