@@ -161,6 +161,9 @@ model Order {
   customer_id String
   customer    Account @relation(fields: [customer_id], references: [id], onDelete: Cascade)
 
+  cycle_id String
+  cycle    Cycle  @relation(fields: [cycle_id], references: [id])
+
   created_at DateTime  @default(now())
   updated_at DateTime?
 
@@ -212,6 +215,7 @@ model Cycle {
   created_at DateTime  @default(now())
   updated_at DateTime?
   offers     Offer[]
+  orders     Order[]
 
   @@map("cycles")
 }

@@ -57,4 +57,23 @@ export class PrismaOrdersRepository implements OrdersRepository {
       await tsx.$executeRawUnsafe(sql);
     });
   }
+
+  async findManyByCycleIdAndPage(
+    cycle_id: string,
+    page: number
+  ): Promise<Order[]> {
+    const skip = (page - 1) * 20;
+
+    const orders = await prisma.order.findMany({
+      where: {
+        cycle_id,
+      },
+      skip,
+      take: 20,
+    });
+
+    const mappedOrders = orders.map((item) => PrismaOrderMapper.toDomain(item));
+
+    return mappedOrders;
+  }
 }

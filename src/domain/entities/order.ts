@@ -12,6 +12,7 @@ interface Item extends Optional<EntityProps, "created_at"> {
 
 export interface OrderProps extends Optional<EntityProps, "created_at"> {
   customer_id: UUID;
+  cycle_id: UUID;
   shipping_address: string;
   price: number;
   payment_method: "PIX" | "ON_DELIVERY";
@@ -22,6 +23,10 @@ export interface OrderProps extends Optional<EntityProps, "created_at"> {
 export class Order extends Entity<OrderProps> {
   get customer_id() {
     return this.props.customer_id;
+  }
+
+  get cycle_id() {
+    return this.props.cycle_id;
   }
 
   get shipping_address() {

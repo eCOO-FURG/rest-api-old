@@ -18,6 +18,7 @@ import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-pa
 import { registerCycle } from "./register-cycle";
 import { searchProducts } from "./search-products";
 import { listCycles } from "./list-cycles";
+import { listOrders } from "./list-orders";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -94,4 +95,12 @@ export async function routes(app: FastifyInstance) {
   );
 
   app.get("/cycles", listCycles);
+
+  app.get(
+    "/orders",
+    {
+      onRequest: [ensureAuthenticated, ensureAdministrator],
+    },
+    listOrders
+  );
 }

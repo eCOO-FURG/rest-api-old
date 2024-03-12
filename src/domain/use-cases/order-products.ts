@@ -67,6 +67,7 @@ export class OrderProductsUseCase {
 
     const order = Order.create({
       customer_id: user.id,
+      cycle_id: cycle.id,
       payment_method,
       shipping_address,
     });
