@@ -15,6 +15,7 @@ import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { SearchProductsUseCase } from "@/domain/use-cases/search-products";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
+import { UpdateOrderStatusUseCase } from "@/domain/use-cases/update-order-status";
 import { ValidateCycleUseCase } from "@/domain/use-cases/validate-cycle";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
@@ -161,5 +162,8 @@ diContainer.register({
         productsRepository,
         agribusinessesRepository
       )
+  ),
+  updateOrderStatusUseCase: asFunction(
+    ({ ordersRepository }) => new UpdateOrderStatusUseCase(ordersRepository)
   ),
 });

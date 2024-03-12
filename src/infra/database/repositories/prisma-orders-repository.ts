@@ -61,6 +61,62 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
   }
 
+  async update(order: Order): Promise<void> {
+    const data = PrismaOrderMapper.toPrisma(order);
+
+    if (order.status === "CANCELED") {
+      await prisma.$transaction(async (tsx) => {
+        await tsx.order.update({
+          where: {
+            id: data.id,
+          },
+          data: {
+            status: data.status,
+          },
+        });
+
+        const productsIds = order.items.map((item) => item.product_id.value);
+        const offersIds = order.items.map((item) => item.offer_id.value);
+
+        const offers = await tsx.offerProduct.findMany({
+          where: {
+            product_id: { in: productsIds },
+            offer_id: { in: offersIds },
+          },
+        });
+
+        for (const item of order.items) {
+          const index = offers.findIndex(
+            (offer) =>
+              item.offer_id.equals(offer.offer_id) &&
+              item.product_id.equals(offer.product_id)
+          );
+
+          const quantity_or_weight = Number(offers[index].quantity_or_weight);
+
+          offers[index].quantity_or_weight = new Decimal(
+            quantity_or_weight + item.quantity_or_weight
+          );
+        }
+
+        const { sql } = updateManyRawQuery(offers, "offers_products");
+
+        await tsx.$executeRawUnsafe(sql);
+
+        return;
+      });
+    }
+
+    await prisma.order.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        status: data.status,
+      },
+    });
+  }
+
   async findManyByCycleIdAndPage(
     cycle_id: string,
     page: number

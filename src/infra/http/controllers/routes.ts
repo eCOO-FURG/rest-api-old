@@ -20,6 +20,7 @@ import { searchProducts } from "./search-products";
 import { listCycles } from "./list-cycles";
 import { listOrders } from "./list-orders";
 import { viewOrder } from "./view-order";
+import { updateOrderStatus } from "./update-order-status";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -111,5 +112,13 @@ export async function routes(app: FastifyInstance) {
       onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     viewOrder
+  );
+
+  app.post(
+    "/orders/:order_id",
+    {
+      onRequest: [ensureAuthenticated, ensureAdministrator],
+    },
+    updateOrderStatus
   );
 }

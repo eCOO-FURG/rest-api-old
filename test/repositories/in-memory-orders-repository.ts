@@ -39,6 +39,10 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     }
   }
 
+  async update(order: Order): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async findById(id: string): Promise<Order | null> {
     const order = this.items.find((item) => item.id.toString() === id);
 
