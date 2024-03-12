@@ -11,6 +11,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
       where: {
         id,
       },
+      include: {
+        items: true,
+      },
     });
 
     if (!order) {

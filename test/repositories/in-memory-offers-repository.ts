@@ -28,6 +28,13 @@ export class InMemoryOffersRepository implements OffersRepository {
     this.items[offerIndex].add(item);
   }
 
+  findManyByOffersIdsAndProductsIds(
+    offers_ids: string[],
+    products_ids: string[]
+  ): Promise<Offer[]> {
+    throw new Error("Method not implemented.");
+  }
+
   async findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],

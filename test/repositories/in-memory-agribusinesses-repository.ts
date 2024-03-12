@@ -14,6 +14,10 @@ export class InMemoryAgribusinessesRepository
     return agribusiness;
   }
 
+  async findManyByIds(ids: string[]): Promise<Agribusiness[]> {
+    throw new Error("Method not implemented.");
+  }
+
   async findByCaf(caf: string): Promise<Agribusiness | null> {
     const agribusiness = this.items.find((item) => item.caf === caf);
 

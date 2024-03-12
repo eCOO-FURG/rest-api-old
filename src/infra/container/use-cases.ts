@@ -17,6 +17,7 @@ import { UpdateAgribusinessUseCase } from "@/domain/use-cases/update-agribusines
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
 import { ValidateCycleUseCase } from "@/domain/use-cases/validate-cycle";
 import { VerifyUseCase } from "@/domain/use-cases/verify";
+import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
 
@@ -144,5 +145,21 @@ diContainer.register({
   listOrdersUseCase: asFunction(
     ({ cyclesRepository, ordersRepository }) =>
       new ListOrdersUseCase(cyclesRepository, ordersRepository)
+  ),
+  viewOrderUseCase: asFunction(
+    ({
+      ordersRepository,
+      usersRepository,
+      offersRepository,
+      productsRepository,
+      agribusinessesRepository,
+    }) =>
+      new ViewOrderUseCase(
+        ordersRepository,
+        usersRepository,
+        offersRepository,
+        productsRepository,
+        agribusinessesRepository
+      )
   ),
 });

@@ -19,6 +19,7 @@ import { registerCycle } from "./register-cycle";
 import { searchProducts } from "./search-products";
 import { listCycles } from "./list-cycles";
 import { listOrders } from "./list-orders";
+import { viewOrder } from "./view-order";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
@@ -102,5 +103,13 @@ export async function routes(app: FastifyInstance) {
       onRequest: [ensureAuthenticated, ensureAdministrator],
     },
     listOrders
+  );
+
+  app.get(
+    "/orders/:order_id",
+    {
+      onRequest: [ensureAuthenticated, ensureAdministrator],
+    },
+    viewOrder
   );
 }

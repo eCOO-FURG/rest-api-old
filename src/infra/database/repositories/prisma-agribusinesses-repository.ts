@@ -20,6 +20,18 @@ export class PrismaAgribusinessesRepository
     return PrismaAgribusinessMapper.toDomain(agribusiness);
   }
 
+  async findManyByIds(ids: string[]): Promise<Agribusiness[]> {
+    const data = await prisma.agribusiness.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+
+    return data.map((item) => PrismaAgribusinessMapper.toDomain(item));
+  }
+
   async findById(id: string): Promise<Agribusiness | null> {
     const agribusiness = await prisma.agribusiness.findUnique({
       where: {

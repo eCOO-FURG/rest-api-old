@@ -25,6 +25,33 @@ export class PrismaOffersRepository implements OffersRepository {
     });
   }
 
+  async findManyByOffersIdsAndProductsIds(
+    offers_ids: string[],
+    products_ids: string[]
+  ): Promise<Offer[]> {
+    const data = await prisma.offer.findMany({
+      where: {
+        items: {
+          some: {
+            AND: {
+              offer_id: {
+                in: offers_ids,
+              },
+              product_id: {
+                in: products_ids,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    return data.map((item) => PrismaOfferMapper.toDomain(item));
+  }
+
   async saveItem(item: Offer["items"][0]): Promise<void> {
     await prisma.offerProduct.create({
       data: {

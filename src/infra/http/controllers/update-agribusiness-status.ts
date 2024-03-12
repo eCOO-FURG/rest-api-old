@@ -3,7 +3,7 @@ import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agrib
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-const updateAgribusinessStatusQuerySchema = z.object({
+const updateAgribusinessStatusParamsSchema = z.object({
   agribusiness_id: z.string(),
 });
 
@@ -11,7 +11,7 @@ export async function updateAgribusinessStatus(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { agribusiness_id } = updateAgribusinessStatusQuerySchema.parse(
+  const { agribusiness_id } = updateAgribusinessStatusParamsSchema.parse(
     request.params
   );
 

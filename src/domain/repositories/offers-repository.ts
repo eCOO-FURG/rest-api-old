@@ -7,6 +7,10 @@ export interface OffersRepository {
     cycle_id: string,
     target_date: Date
   ): Promise<Offer | null>;
+  findManyByOffersIdsAndProductsIds(
+    offers_ids: string[],
+    products_ids: string[]
+  ): Promise<Offer[]>;
   findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],
