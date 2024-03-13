@@ -4,7 +4,9 @@ import { z } from "zod";
 const deployValidationSchema = z.object({
   ENV: z.enum(["dev", "test", "homolog", "prod"]),
   SERVER_URL: z.string().min(1),
-  PORT: z.coerce.number().default(3333),
+  SERVER_PORT: z.coerce.number().default(3333),
+  SERVER_REDIRECT_PORT: z.coerce.number(),
+  FRONT_URL: z.string().min(1),
   POSTGRES_URL: z.string().min(1),
   QDRANT_URL: z.string().min(1),
   NLP_URL: z.string().min(1),
@@ -14,10 +16,11 @@ const deployValidationSchema = z.object({
   ECOO_EMAIL: z.string().min(1),
   ECOO_EMAIL_PASSWORD: z.string().min(1),
   SESSION_DURATION_IN_DAYS: z.coerce.number().min(1),
-  EXPECTED_SIMILARITY_SCORE: z.coerce.number(),
+  EXPECTED_SIMILARITY_SCORE: z.coerce.number().min(0.1),
 });
 
 const devValidationSchema = deployValidationSchema.omit({
+  SERVER_REDIRECT_PORT: true,
   ECOO_EMAIL_PASSWORD: true,
 });
 

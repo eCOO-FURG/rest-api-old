@@ -27,14 +27,14 @@ export async function seedCycles() {
 
     const prismaCycles = cycles.map((item) => PrismaCycleMapper.toPrisma(item));
 
-    for( let prismaCycle of prismaCycles){
+    for (let prismaCycle of prismaCycles) {
       await prisma.cycle.create({
         data: prismaCycle,
       });
     }
   }
 
-  if (env.ENV === "dev" || env.ENV === "homolog") {
+  if (env.ENV === "dev") {
     const everyDay = [];
 
     for (let i = 1; i <= 7; i++) {

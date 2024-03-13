@@ -22,7 +22,7 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
       code,
     });
 
-    return reply.redirect(301, `${env.SERVER_URL}:3000/cadastrar`).send({});
+    return reply.redirect(301, `${env.FRONT_URL}/login`).send({});
   } catch (err) {
     if (err instanceof InvalidValidationCodeError) {
       return reply.status(401).send({ message: err.message });
