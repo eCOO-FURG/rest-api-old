@@ -27,9 +27,11 @@ export async function seedCycles() {
 
     const prismaCycles = cycles.map((item) => PrismaCycleMapper.toPrisma(item));
 
-    await prisma.cycle.createMany({
-      data: prismaCycles,
-    });
+    for( let prismaCycle of prismaCycles){
+      await prisma.cycle.create({
+        data: prismaCycle,
+      });
+    }
   }
 
   if (env.ENV === "dev" || env.ENV === "homolog") {
