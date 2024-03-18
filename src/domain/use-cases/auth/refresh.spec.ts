@@ -1,11 +1,11 @@
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { RefreshUseCase } from "./refresh";
-import { Session } from "../entities/session";
-import { SessionExpiredError } from "./errors/session-expired-error";
-import { Cellphone } from "../entities/value-objects/cellphone";
+import { Session } from "../../entities/session";
+import { SessionExpiredError } from "../errors/session-expired-error";
+import { Cellphone } from "../../entities/value-objects/cellphone";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 import { UUID } from "@/core/entities/uuid";
 import { env } from "@/infra/env";
 

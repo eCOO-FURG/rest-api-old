@@ -1,7 +1,7 @@
-import { Encrypter } from "../cryptography/encrypter";
-import { SessionsRepository } from "../repositories/sessions-repository";
-import { UsersRepository } from "../repositories/users-repository";
-import { SessionExpiredError } from "./errors/session-expired-error";
+import { Encrypter } from "../../cryptography/encrypter";
+import { SessionsRepository } from "../../repositories/sessions-repository";
+import { UsersRepository } from "../../repositories/users-repository";
+import { SessionExpiredError } from "../errors/session-expired-error";
 
 interface RefreshRequest {
   access_token: string;

@@ -1,7 +1,7 @@
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
 import { RegisterSessionUseCase } from "./register-session";
-import { Session } from "../entities/session";
+import { Session } from "../../entities/session";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;

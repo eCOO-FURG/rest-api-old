@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { VerifyUseCase } from "@/domain/use-cases/auth/verify";
 import { InvalidValidationCodeError } from "@/domain/use-cases/errors/invalid-validation-code-error";
-import { VerifyUseCase } from "@/domain/use-cases/verify";
 import { env } from "@/infra/env";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";

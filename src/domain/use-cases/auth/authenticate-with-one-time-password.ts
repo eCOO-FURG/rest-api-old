@@ -1,7 +1,7 @@
-import { OneTimePasswordsRepository } from "../repositories/one-time-passwords-repository";
-import { UsersRepository } from "../repositories/users-repository";
-import { UserNotVerifiedError } from "./errors/user-not-verified-error";
-import { WrongCredentialsError } from "./errors/wrong-credentials-error";
+import { OneTimePasswordsRepository } from "../../repositories/one-time-passwords-repository";
+import { UsersRepository } from "../../repositories/users-repository";
+import { UserNotVerifiedError } from "../errors/user-not-verified-error";
+import { WrongCredentialsError } from "../errors/wrong-credentials-error";
 import { RegisterSessionUseCase } from "./register-session";
 
 interface AuthenticateWithOneTimePasswordRequest {

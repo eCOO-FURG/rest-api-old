@@ -1,8 +1,8 @@
-import { WrongCredentialsError } from "./errors/wrong-credentials-error";
-import { Hasher } from "../cryptography/hasher";
+import { WrongCredentialsError } from "../errors/wrong-credentials-error";
+import { Hasher } from "../../cryptography/hasher";
 import { RegisterSessionUseCase } from "./register-session";
-import { UsersRepository } from "../repositories/users-repository";
-import { UserNotVerifiedError } from "./errors/user-not-verified-error";
+import { UsersRepository } from "../../repositories/users-repository";
+import { UserNotVerifiedError } from "../errors/user-not-verified-error";
 
 interface AuthenticateRequest {
   email: string;

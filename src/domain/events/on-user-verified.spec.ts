@@ -1,6 +1,6 @@
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
 import { OnUserVerified } from "./on-user-verified";
-import { VerifyUseCase } from "../use-cases/verify";
+import { VerifyUseCase } from "../use-cases/auth/verify";
 import { waitFor } from "test/utils/wait-for";
 import { SpyInstance } from "vitest";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";

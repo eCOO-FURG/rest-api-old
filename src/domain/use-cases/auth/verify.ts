@@ -1,7 +1,7 @@
 import { DomainEvents } from "@/core/events/domain-events";
-import { Encrypter } from "../cryptography/encrypter";
-import { InvalidValidationCodeError } from "./errors/invalid-validation-code-error";
-import { UsersRepository } from "../repositories/users-repository";
+import { Encrypter } from "../../cryptography/encrypter";
+import { InvalidValidationCodeError } from "../errors/invalid-validation-code-error";
+import { UsersRepository } from "../../repositories/users-repository";
 
 interface VerifyUseCaseRequest {
   code: string;

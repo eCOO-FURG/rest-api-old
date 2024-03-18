@@ -1,8 +1,8 @@
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/authenticate-with-password";
 import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
+import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),

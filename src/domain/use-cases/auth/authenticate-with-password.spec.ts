@@ -1,13 +1,13 @@
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
-import { WrongCredentialsError } from "./errors/wrong-credentials-error";
+import { WrongCredentialsError } from "../errors/wrong-credentials-error";
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
-import { Session } from "../entities/session";
+import { Session } from "../../entities/session";
 import { AuthenticateWithPasswordUseCase } from "./authenticate-with-password";
 import { RegisterSessionUseCase } from "./register-session";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
-import { UserNotVerifiedError } from "./errors/user-not-verified-error";
+import { User } from "../../entities/user";
+import { UserNotVerifiedError } from "../errors/user-not-verified-error";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;

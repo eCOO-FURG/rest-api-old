@@ -3,11 +3,11 @@ import { AuthenticateWithOneTimePasswordUseCase } from "./authenticate-with-one-
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { RegisterSessionUseCase } from "./register-session";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
-import { OneTimePassword } from "../entities/one-time-password";
-import { WrongCredentialsError } from "./errors/wrong-credentials-error";
+import { OneTimePassword } from "../../entities/one-time-password";
+import { WrongCredentialsError } from "../errors/wrong-credentials-error";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
-import { UserNotVerifiedError } from "./errors/user-not-verified-error";
+import { User } from "../../entities/user";
+import { UserNotVerifiedError } from "../errors/user-not-verified-error";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;

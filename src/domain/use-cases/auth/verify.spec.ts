@@ -1,7 +1,7 @@
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { VerifyUseCase } from "./verify";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeEncrypter: FakeEncrypter;

@@ -1,6 +1,6 @@
-import { Session } from "../entities/session";
-import { SessionsRepository } from "../repositories/sessions-repository";
-import { Encrypter } from "../cryptography/encrypter";
+import { Session } from "../../entities/session";
+import { SessionsRepository } from "../../repositories/sessions-repository";
+import { Encrypter } from "../../cryptography/encrypter";
 import { UUID } from "@/core/entities/uuid";
 
 interface RegisterSessionUseCaseRequest {
