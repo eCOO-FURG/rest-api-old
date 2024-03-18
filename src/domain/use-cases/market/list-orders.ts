@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { CyclesRepository } from "../repositories/cycles-repository";
-import { OrdersRepository } from "../repositories/orders-repository";
+import { CyclesRepository } from "../../repositories/cycles-repository";
+import { OrdersRepository } from "../../repositories/orders-repository";
 
 interface ListCyclesUseCaseRequest {
   cycle_id: string;

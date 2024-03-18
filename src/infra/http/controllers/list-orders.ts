@@ -1,8 +1,8 @@
-import { ListOrdersUseCase } from "@/domain/use-cases/list-orders";
 import { OrderPresenter } from "../presenters/order-presenter";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { ListOrdersUseCase } from "@/domain/use-cases/market/list-orders";
 
 export const listOrdersQuerySchema = z.object({
   cycle_id: z.string().min(1),

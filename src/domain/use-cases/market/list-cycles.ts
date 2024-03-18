@@ -1,4 +1,4 @@
-import { CyclesRepository } from "../repositories/cycles-repository";
+import { CyclesRepository } from "../../repositories/cycles-repository";
 
 export class ListCycleUseCase {
   constructor(private cyclesRepository: CyclesRepository) {}
