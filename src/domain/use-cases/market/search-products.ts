@@ -1,4 +1,4 @@
-import { ProductsRepository } from "../repositories/products-repository";
+import { ProductsRepository } from "../../repositories/products-repository";
 
 interface SearchProductsUseCaseRequest {
   name: string;

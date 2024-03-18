@@ -1,7 +1,7 @@
-import { SearchProductsUseCase } from "@/domain/use-cases/search-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ProductPresenter } from "../presenters/product-presenter";
+import { SearchProductsUseCase } from "@/domain/use-cases/market/search-products";
 
 export const searchProductsQuerySchema = z.object({
   name: z.string(),
