@@ -1,5 +1,5 @@
+import { RefreshUseCase } from "@/domain/use-cases/auth/refresh";
 import { SessionExpiredError } from "@/domain/use-cases/errors/session-expired-error";
-import { RefreshUseCase } from "@/domain/use-cases/refresh";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 

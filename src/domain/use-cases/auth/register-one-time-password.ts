@@ -1,8 +1,8 @@
 import { DomainEvents } from "@/core/events/domain-events";
-import { OtpGenerator } from "../cryptography/otp-generator";
-import { OneTimePassword } from "../entities/one-time-password";
-import { OneTimePasswordsRepository } from "../repositories/one-time-passwords-repository";
-import { UsersRepository } from "../repositories/users-repository";
+import { OtpGenerator } from "../../cryptography/otp-generator";
+import { OneTimePassword } from "../../entities/one-time-password";
+import { OneTimePasswordsRepository } from "../../repositories/one-time-passwords-repository";
+import { UsersRepository } from "../../repositories/users-repository";
 
 interface RegisterOneTimePasswordRequest {
   email: string;

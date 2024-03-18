@@ -1,19 +1,19 @@
 import { InMemoryOrdersRepository } from "test/repositories/in-memory-orders-repository";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { OrderProductsUseCase } from "./order-products";
-import { Product } from "../entities/product";
+import { Product } from "../../entities/product";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { UUID } from "@/core/entities/uuid";
-import { User } from "../entities/user";
-import { Offer } from "../entities/offer";
-import { Order } from "../entities/order";
-import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
-import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { User } from "../../entities/user";
+import { Offer } from "../../entities/offer";
+import { Order } from "../../entities/order";
+import { InsufficientProductQuantityOrWeightError } from "../errors/insufficient-product-quantity-or-weight-error";
+import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { Cycle } from "../entities/cycle";
+import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "./validate-cycle";
+import { ValidateCycleUseCase } from "../validate-cycle";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;

@@ -1,5 +1,5 @@
 import { OnUserRegistered } from "./on-user-registered";
-import { RegisterUseCase } from "../use-cases/register";
+import { RegisterUseCase } from "../use-cases/user/register";
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { SpyInstance } from "vitest";
 import { FakeMailer } from "test/mail/fake-mailer";

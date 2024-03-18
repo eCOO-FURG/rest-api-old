@@ -1,4 +1,4 @@
-import { RegisterOneTimePasswordUseCase } from "../use-cases/register-one-time-password";
+import { RegisterOneTimePasswordUseCase } from "../use-cases/auth/register-one-time-password";
 import { FakeOtpGenerator } from "test/cryptography/fake-otp-generator";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
 import { OnOneTimePasswordRegistered } from "./on-one-time-password-registered";

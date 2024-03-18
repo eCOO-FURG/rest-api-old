@@ -1,5 +1,5 @@
 import { GetUserProfileUseCase } from "./get-user-profile";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 

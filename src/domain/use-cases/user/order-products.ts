@@ -1,14 +1,14 @@
-import { ProductsRepository } from "../repositories/products-repository";
-import { OrdersRepository } from "../repositories/orders-repository";
-import { Order } from "../entities/order";
-import { UsersRepository } from "../repositories/users-repository";
+import { ProductsRepository } from "../../repositories/products-repository";
+import { OrdersRepository } from "../../repositories/orders-repository";
+import { Order } from "../../entities/order";
+import { UsersRepository } from "../../repositories/users-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { OffersRepository } from "../repositories/offers-repository";
-import { InvalidWeightError } from "./errors/invalid-weight-error";
-import { InsufficientProductQuantityOrWeightError } from "./errors/insufficient-product-quantity-or-weight-error";
+import { OffersRepository } from "../../repositories/offers-repository";
+import { InvalidWeightError } from "../errors/invalid-weight-error";
+import { InsufficientProductQuantityOrWeightError } from "../errors/insufficient-product-quantity-or-weight-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateCycleUseCase } from "./validate-cycle";
-import { farthest } from "./utils/fhartest";
+import { ValidateCycleUseCase } from "../validate-cycle";
+import { farthest } from "../utils/fhartest";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;

@@ -1,4 +1,4 @@
-import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/register-one-time-password";
+import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/auth/register-one-time-password";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 

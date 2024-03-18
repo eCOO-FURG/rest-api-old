@@ -1,9 +1,9 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { SearchOffersUseCase } from "@/domain/use-cases/search-offers";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { OffersPresenter } from "../presenters/offers-presenter";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
+import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
 
 export const searchOffersQuerySchema = z.object({
   cycle_id: z.string(),

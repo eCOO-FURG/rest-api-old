@@ -1,11 +1,11 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { OrderProductsUseCase } from "@/domain/use-cases/order-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
 import { OrderPresenter } from "../presenters/order-presenter";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
+import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),

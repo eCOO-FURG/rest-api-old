@@ -1,8 +1,8 @@
 import { RegisterUseCase } from "./register";
 import { FakeHasher } from "test/cryptography/fake-hasher";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;

@@ -2,13 +2,13 @@ import { SearchOffersUseCase } from "./search-offers";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { FakeNaturalLanguageProcessor } from "test/search/fake-natural-language-processor";
-import { Product } from "../entities/product";
-import { Offer } from "../entities/offer";
+import { Product } from "../../entities/product";
+import { Offer } from "../../entities/offer";
 import { UUID } from "@/core/entities/uuid";
-import { Record } from "../entities/record";
-import { Cycle } from "../entities/cycle";
+import { Record } from "../../entities/record";
+import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "./validate-cycle";
+import { ValidateCycleUseCase } from "../validate-cycle";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;

@@ -1,5 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { UsersRepository } from "../repositories/users-repository";
+import { UsersRepository } from "../../repositories/users-repository";
 
 interface GetUserProfileUseCaserRequest {
   user_id: string;

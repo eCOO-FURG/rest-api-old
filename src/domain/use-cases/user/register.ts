@@ -1,8 +1,8 @@
 import { DomainEvents } from "@/core/events/domain-events";
-import { Hasher } from "../cryptography/hasher";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
-import { User } from "../entities/user";
-import { UsersRepository } from "../repositories/users-repository";
+import { Hasher } from "../../cryptography/hasher";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
+import { User } from "../../entities/user";
+import { UsersRepository } from "../../repositories/users-repository";
 
 interface RegisterUseCaseRequest {
   first_name: string;

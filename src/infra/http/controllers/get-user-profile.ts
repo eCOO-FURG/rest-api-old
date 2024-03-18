@@ -1,7 +1,7 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { GetUserProfileUseCase } from "@/domain/use-cases/get-user-profile";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UserPresenter } from "../presenters/user-presenter";
+import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
 
 export async function getUserProfile(
   request: FastifyRequest,

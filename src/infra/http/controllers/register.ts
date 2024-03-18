@@ -1,7 +1,7 @@
 import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
 import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
 import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
-import { RegisterUseCase } from "@/domain/use-cases/register";
+import { RegisterUseCase } from "@/domain/use-cases/user/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 

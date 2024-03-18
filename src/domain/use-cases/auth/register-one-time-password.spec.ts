@@ -1,10 +1,9 @@
-import { Cellphone } from "../entities/value-objects/cellphone";
 import { RegisterOneTimePasswordUseCase } from "./register-one-time-password";
 import { FakeOtpGenerator } from "test/cryptography/fake-otp-generator";
 import { InMemoryOneTimePasswordsRepository } from "test/repositories/in-memory-one-time-passwords-repository";
-import { OneTimePassword } from "../entities/one-time-password";
+import { OneTimePassword } from "../../entities/one-time-password";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeOtpGenerator: FakeOtpGenerator;
