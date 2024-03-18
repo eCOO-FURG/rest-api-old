@@ -1,13 +1,13 @@
-import { OffersRepository } from "../repositories/offers-repository";
-import { ProductsRepository } from "../repositories/products-repository";
-import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
-import { Offer } from "../entities/offer";
+import { OffersRepository } from "../../repositories/offers-repository";
+import { ProductsRepository } from "../../repositories/products-repository";
+import { AgribusinessesRepository } from "../../repositories/agribusinesses-repository";
+import { Offer } from "../../entities/offer";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InvalidWeightError } from "./errors/invalid-weight-error";
-import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
+import { InvalidWeightError } from "../errors/invalid-weight-error";
+import { AgribusinessNotActiveError } from "../errors/agribusiness-not-active-error";
 import { UUID } from "@/core/entities/uuid";
 import { ValidateCycleUseCase } from "./validate-cycle";
-import { farthest } from "./utils/fhartest";
+import { farthest } from "../utils/fhartest";
 
 interface OfferProductsUseCaseRequest {
   agribusiness_id: string;

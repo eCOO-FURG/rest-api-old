@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { CyclesRepository } from "../repositories/cycles-repository";
-import { InvalidDayForCycleActionError } from "./errors/invalid-day-for-cycle-action-error";
+import { CyclesRepository } from "../../repositories/cycles-repository";
+import { InvalidDayForCycleActionError } from "../errors/invalid-day-for-cycle-action-error";
 
 interface ValidateScheduleUseCaseRequest {
   cycle_id: string;

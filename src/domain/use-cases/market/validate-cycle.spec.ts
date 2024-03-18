@@ -1,5 +1,5 @@
-import { Cycle } from "../entities/cycle";
-import { InvalidDayForCycleActionError } from "./errors/invalid-day-for-cycle-action-error";
+import { Cycle } from "../../entities/cycle";
+import { InvalidDayForCycleActionError } from "../errors/invalid-day-for-cycle-action-error";
 import { ValidateCycleUseCase } from "./validate-cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 

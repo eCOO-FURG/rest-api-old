@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { AgribusinessesRepository } from "../../repositories/agribusinesses-repository";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 interface UpdateAgribusinessUseCaseRequest {
   agribusiness_id: string;

@@ -1,7 +1,7 @@
-import { Cycle } from "../entities/cycle";
-import { CyclesRepository } from "../repositories/cycles-repository";
-import { InvalidCycleError } from "./errors/invalid-cycle-error";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { Cycle } from "../../entities/cycle";
+import { CyclesRepository } from "../../repositories/cycles-repository";
+import { InvalidCycleError } from "../errors/invalid-cycle-error";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 interface RegisterCycleUseCaseRequest {
   alias: string;

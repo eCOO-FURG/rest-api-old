@@ -7,7 +7,7 @@ import { OffersRepository } from "../../repositories/offers-repository";
 import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "../errors/insufficient-product-quantity-or-weight-error";
 import { UUID } from "@/core/entities/uuid";
-import { ValidateCycleUseCase } from "../validate-cycle";
+import { ValidateCycleUseCase } from "../market/validate-cycle";
 import { farthest } from "../utils/fhartest";
 
 interface OrderProductsUseCaseRequest {

@@ -1,8 +1,8 @@
 import { UpdateAgribusinessUseCase } from "./update-agribusiness";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
-import { Agribusiness } from "../entities/agribusiness";
+import { Agribusiness } from "../../entities/agribusiness";
 import { UUID } from "@/core/entities/uuid";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let sut: UpdateAgribusinessUseCase;

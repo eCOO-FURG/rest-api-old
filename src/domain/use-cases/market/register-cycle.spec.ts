@@ -1,8 +1,8 @@
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { RegisterCycleUseCase } from "./register-cycle";
-import { Cycle } from "../entities/cycle";
-import { InvalidCycleError } from "./errors/invalid-cycle-error";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { Cycle } from "../../entities/cycle";
+import { InvalidCycleError } from "../errors/invalid-cycle-error";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let sut: RegisterCycleUseCase;

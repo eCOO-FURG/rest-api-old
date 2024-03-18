@@ -1,6 +1,6 @@
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { UpdateAgribusinessStatusUseCase } from "./update-agribusiness-status";
-import { Agribusiness } from "../entities/agribusiness";
+import { Agribusiness } from "../../entities/agribusiness";
 import { UUID } from "@/core/entities/uuid";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 

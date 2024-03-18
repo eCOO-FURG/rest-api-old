@@ -1,7 +1,7 @@
 import { ProductsRepository } from "../../repositories/products-repository";
 import { NaturalLanguageProcessor } from "../../search/natural-language-processor";
 import { OffersRepository } from "../../repositories/offers-repository";
-import { ValidateCycleUseCase } from "../validate-cycle";
+import { ValidateCycleUseCase } from "../market/validate-cycle";
 import { farthest } from "../utils/fhartest";
 
 interface SearchOffersUseCaseRequest {

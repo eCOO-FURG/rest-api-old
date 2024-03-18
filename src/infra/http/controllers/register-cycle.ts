@@ -1,6 +1,6 @@
 import { InvalidCycleError } from "@/domain/use-cases/errors/invalid-cycle-error";
 import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
-import { RegisterCycleUseCase } from "@/domain/use-cases/register-cycle";
+import { RegisterCycleUseCase } from "@/domain/use-cases/market/register-cycle";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 

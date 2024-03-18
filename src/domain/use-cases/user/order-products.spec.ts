@@ -13,7 +13,7 @@ import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "../validate-cycle";
+import { ValidateCycleUseCase } from "../market/validate-cycle";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;

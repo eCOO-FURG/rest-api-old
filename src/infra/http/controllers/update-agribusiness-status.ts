@@ -1,5 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/update-agribusiness-status";
+import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/market/update-agribusiness-status";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 

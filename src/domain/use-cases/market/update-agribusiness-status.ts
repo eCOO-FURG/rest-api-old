@@ -1,5 +1,5 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
+import { AgribusinessesRepository } from "../../repositories/agribusinesses-repository";
 
 interface UpdateAgribusinessStatusUseCaseRequest {
   agribusiness_id: string;

@@ -1,7 +1,7 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
 import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
-import { OfferProductsUseCase } from "@/domain/use-cases/offer-products";
+import { OfferProductsUseCase } from "@/domain/use-cases/market/offer-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 

@@ -1,15 +1,15 @@
 import { OfferProductsUseCase } from "./offer-products";
-import { Agribusiness } from "../entities/agribusiness";
+import { Agribusiness } from "../../entities/agribusiness";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
-import { Offer } from "../entities/offer";
-import { Product } from "../entities/product";
+import { Offer } from "../../entities/offer";
+import { Product } from "../../entities/product";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InvalidWeightError } from "./errors/invalid-weight-error";
+import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { UUID } from "@/core/entities/uuid";
-import { AgribusinessNotActiveError } from "./errors/agribusiness-not-active-error";
-import { Cycle } from "../entities/cycle";
+import { AgribusinessNotActiveError } from "../errors/agribusiness-not-active-error";
+import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { ValidateCycleUseCase } from "./validate-cycle";
 

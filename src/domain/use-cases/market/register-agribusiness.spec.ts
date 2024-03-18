@@ -1,10 +1,10 @@
 import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
 import { RegisterAgribusinessUseCase } from "./register-agribusiness";
-import { Agribusiness } from "../entities/agribusiness";
-import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
+import { Agribusiness } from "../../entities/agribusiness";
+import { AlreadyAgribusinessAdminError } from "../errors/already-agribusiness-admin-error";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../entities/user";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { User } from "../../entities/user";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;

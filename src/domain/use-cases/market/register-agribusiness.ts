@@ -1,9 +1,9 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { Agribusiness } from "../entities/agribusiness";
-import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
-import { AlreadyAgribusinessAdminError } from "./errors/already-agribusiness-admin-error";
-import { UsersRepository } from "../repositories/users-repository";
-import { ResourceAlreadyExistsError } from "./errors/resource-already-exists-error";
+import { Agribusiness } from "../../entities/agribusiness";
+import { AgribusinessesRepository } from "../../repositories/agribusinesses-repository";
+import { AlreadyAgribusinessAdminError } from "../errors/already-agribusiness-admin-error";
+import { UsersRepository } from "../../repositories/users-repository";
+import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 
 interface RegisterAgribusinessUseCaseRequest {
   user_id: string;
