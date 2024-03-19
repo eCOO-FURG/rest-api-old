@@ -6,6 +6,7 @@ import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-err
 import { OrderPresenter } from "../presenters/order-presenter";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
+import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
@@ -15,7 +16,7 @@ export const orderProductsBodySchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        quantity_or_weight: z.number().min(1),
+        amount: z.number().min(1),
       })
     )
     .refine((products) => products.length > 0, {
@@ -45,6 +46,9 @@ export async function orderProducts(
 
     return reply.status(201).send(OrderPresenter.toHttp(order));
   } catch (err) {
+    if (err instanceof ResourceAlreadyExistsError) {
+      return reply.status(409).send({ message: err.message });
+    }
     if (err instanceof InvalidDayForCycleActionError) {
       return reply.status(403).send({ message: err.message });
     }
