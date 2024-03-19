@@ -13,7 +13,7 @@ const mapper = {
   dispatching: "enviar",
 };
 
-export class ValidateCycleUseCase {
+export class ValidadeCycleActionUseCase {
   constructor(private cyclesRepository: CyclesRepository) {}
 
   async execute({ cycle_id, action }: ValidateScheduleUseCaseRequest) {

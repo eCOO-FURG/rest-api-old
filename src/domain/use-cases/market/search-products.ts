@@ -9,10 +9,7 @@ export class SearchProductsUseCase {
   constructor(private productsRepository: ProductsRepository) {}
 
   async execute({ name, page }: SearchProductsUseCaseRequest) {
-    const products = await this.productsRepository.findManyByNameAndPage(
-      name,
-      page
-    );
+    const products = await this.productsRepository.searchManyByName(name, page);
 
     return {
       products,

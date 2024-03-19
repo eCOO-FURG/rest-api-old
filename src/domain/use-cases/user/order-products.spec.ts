@@ -13,10 +13,10 @@ import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "../market/validate-cycle";
+import { ValidadeCycleActionUseCase } from "../market/validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
-let validateCycleUseCase: ValidateCycleUseCase;
+let validadeCycleActionUseCase: ValidadeCycleActionUseCase;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -26,7 +26,9 @@ let sut: OrderProductsUseCase;
 describe("order products", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    validateCycleUseCase = new ValidateCycleUseCase(inMemoryCyclesRepository);
+    validadeCycleActionUseCase = new ValidadeCycleActionUseCase(
+      inMemoryCyclesRepository
+    );
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
@@ -34,7 +36,7 @@ describe("order products", () => {
       inMemoryOffersRepository
     );
     sut = new OrderProductsUseCase(
-      validateCycleUseCase,
+      validadeCycleActionUseCase,
       inMemoryUsersRepository,
       inMemoryProductsRepository,
       inMemoryOffersRepository,
@@ -88,24 +90,17 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product1,
+      amount: 20,
       price: 10.0,
-      product_id: product1.id,
-      quantity_or_weight: 20,
-    };
+    });
 
-    const offerProduct2 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product2,
       price: 9.0,
-      product_id: product2.id,
-      quantity_or_weight: 120,
-    };
-
-    offer.add(offerProduct1);
-    offer.add(offerProduct2);
+      amount: 120,
+    });
 
     await inMemoryOffersRepository.save(offer);
 
@@ -117,9 +112,9 @@ describe("order products", () => {
       products: [
         {
           id: product1.id.value,
-          quantity_or_weight: 18,
+          amount: 18,
         },
-        { id: product2.id.value, quantity_or_weight: 100 },
+        { id: product2.id.value, amount: 100 },
       ],
     });
 
@@ -172,42 +167,17 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product1,
       price: 10.0,
-      product_id: product1.id,
-      quantity_or_weight: 10,
-    };
+      amount: 19,
+    });
 
-    const offerProduct2 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product2,
       price: 9.0,
-      product_id: product1.id,
-      quantity_or_weight: 10,
-    };
-
-    const offerProduct3 = {
-      id: new UUID(),
-      offer_id: offer.id,
-      price: 10.0,
-      product_id: product2.id,
-      quantity_or_weight: 50,
-    };
-
-    const offerProduct4 = {
-      id: new UUID(),
-      offer_id: offer.id,
-      price: 9.0,
-      product_id: product2.id,
-      quantity_or_weight: 100,
-    };
-
-    offer.add(offerProduct1);
-    offer.add(offerProduct2);
-    offer.add(offerProduct3);
-    offer.add(offerProduct4);
+      amount: 50,
+    });
 
     await inMemoryOffersRepository.save(offer);
 
@@ -220,9 +190,9 @@ describe("order products", () => {
         products: [
           {
             id: product1.id.value,
-            quantity_or_weight: 21,
+            amount: 21,
           },
-          { id: product2.id.value, quantity_or_weight: 50 },
+          { id: product2.id.value, amount: 50 },
         ],
       })
     ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
@@ -274,42 +244,17 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product1,
       price: 10.0,
-      product_id: product1.id,
-      quantity_or_weight: 10,
-    };
+      amount: 10,
+    });
 
-    const offerProduct2 = {
-      id: new UUID(),
-      offer_id: offer.id,
-      price: 9.0,
-      product_id: product1.id,
-      quantity_or_weight: 10,
-    };
-
-    const offerProduct3 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product2,
       price: 10.0,
-      product_id: product2.id,
-      quantity_or_weight: 50,
-    };
-
-    const offerProduct4 = {
-      id: new UUID(),
-      offer_id: offer.id,
-      price: 9.0,
-      product_id: product2.id,
-      quantity_or_weight: 100,
-    };
-
-    offer.add(offerProduct1);
-    offer.add(offerProduct2);
-    offer.add(offerProduct3);
-    offer.add(offerProduct4);
+      amount: 50,
+    });
 
     await inMemoryOffersRepository.save(offer);
 
@@ -322,9 +267,9 @@ describe("order products", () => {
         products: [
           {
             id: product1.id.value,
-            quantity_or_weight: 18,
+            amount: 5,
           },
-          { id: product2.id.value, quantity_or_weight: 200 },
+          { id: product2.id.value, amount: 55 },
         ],
       })
     ).rejects.toBeInstanceOf(InsufficientProductQuantityOrWeightError);
@@ -376,24 +321,17 @@ describe("order products", () => {
       agribusiness_id: new UUID("fake-id"),
     });
 
-    const offerProduct1 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product1,
       price: 10.0,
-      product_id: product1.id,
-      quantity_or_weight: 20,
-    };
+      amount: 20,
+    });
 
-    const offerProduct2 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product2,
       price: 9.0,
-      product_id: product2.id,
-      quantity_or_weight: 100,
-    };
-
-    offer.add(offerProduct1);
-    offer.add(offerProduct2);
+      amount: 100,
+    });
 
     await inMemoryOffersRepository.save(offer);
 
@@ -406,9 +344,9 @@ describe("order products", () => {
         products: [
           {
             id: product1.id.value,
-            quantity_or_weight: 18,
+            amount: 18,
           },
-          { id: product2.id.value, quantity_or_weight: 90 },
+          { id: product2.id.value, amount: 90 },
         ],
       })
     ).rejects.toBeInstanceOf(InvalidWeightError);
@@ -446,7 +384,7 @@ describe("order products", () => {
         products: [
           {
             id: "fake-id",
-            quantity_or_weight: 18,
+            amount: 18,
           },
         ],
       })

@@ -7,18 +7,6 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
   constructor(private offersRepository: InMemoryOffersRepository) {}
 
-  async findManyByCycleIdAndPage(
-    cycle_id: string,
-    page: number
-  ): Promise<Order[]> {
-    const results = this.items.filter((item) => item.cycle_id.equals(cycle_id));
-
-    const start = (page - 1) * 20;
-    const end = start + 20;
-
-    return results.slice(start, end);
-  }
-
   async save(order: Order): Promise<void> {
     this.items.push(order);
   }
@@ -53,11 +41,6 @@ export class InMemoryOrdersRepository implements OrdersRepository {
         this.offersRepository.items[offerIndex].items[offerItemIndex] =
           offerItem;
       }
-      const offers = this.offersRepository.items;
-
-      for (const item of order.items) {
-        const offerItem = offers.flatMap((offer) => offer);
-      }
     }
   }
 
@@ -69,5 +52,17 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     }
 
     return order;
+  }
+
+  async findManyByCycleIdAndPage(
+    cycle_id: string,
+    page: number
+  ): Promise<Order[]> {
+    const results = this.items.filter((item) => item.cycle_id.equals(cycle_id));
+
+    const start = (page - 1) * 20;
+    const end = start + 20;
+
+    return results.slice(start, end);
   }
 }

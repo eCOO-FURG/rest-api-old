@@ -7,7 +7,7 @@ import { UUID } from "@/core/entities/uuid";
 import { Record } from "../../entities/record";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "../market/validate-cycle";
+import { ValidateCycleUseCase } from "../market/validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;

@@ -1,7 +1,7 @@
 import { ProductsRepository } from "../../repositories/products-repository";
 import { OffersRepository } from "../../repositories/offers-repository";
-import { ValidateCycleUseCase } from "../market/validate-cycle";
-import { farthest } from "../utils/fhartest";
+import { ValidateCycleUseCase } from "../market/validate-cycle-action";
+import { farthest } from "../utils/fhartest-day-between";
 
 interface SearchOffersUseCaseRequest {
   cycle_id: string;

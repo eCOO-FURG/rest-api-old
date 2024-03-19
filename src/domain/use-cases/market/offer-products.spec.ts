@@ -11,7 +11,7 @@ import { UUID } from "@/core/entities/uuid";
 import { AgribusinessNotActiveError } from "../errors/agribusiness-not-active-error";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "./validate-cycle";
+import { ValidateCycleUseCase } from "./validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;

@@ -4,11 +4,9 @@ import { Order } from "../../entities/order";
 import { UsersRepository } from "../../repositories/users-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OffersRepository } from "../../repositories/offers-repository";
-import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { InsufficientProductQuantityOrWeightError } from "../errors/insufficient-product-quantity-or-weight-error";
-import { UUID } from "@/core/entities/uuid";
-import { ValidateCycleUseCase } from "../market/validate-cycle";
-import { farthest } from "../utils/fhartest";
+import { farthestDayBetween } from "../utils/fhartest-day-between";
+import { ValidadeCycleActionUseCase } from "../market/validate-cycle-action";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
@@ -17,13 +15,13 @@ interface OrderProductsUseCaseRequest {
   payment_method: "PIX" | "ON_DELIVERY";
   products: {
     id: string;
-    quantity_or_weight: number;
+    amount: number;
   }[];
 }
 
 export class OrderProductsUseCase {
   constructor(
-    private validateScheduleCase: ValidateCycleUseCase,
+    private validadeCycleActionUseCase: ValidadeCycleActionUseCase,
     private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository,
@@ -37,7 +35,7 @@ export class OrderProductsUseCase {
     payment_method,
     products: orderedProducts,
   }: OrderProductsUseCaseRequest) {
-    const { cycle } = await this.validateScheduleCase.execute({
+    const { cycle } = await this.validadeCycleActionUseCase.execute({
       cycle_id,
       action: "ordering",
     });
@@ -54,7 +52,7 @@ export class OrderProductsUseCase {
       orderedProductsIds
     );
 
-    const firstOfferingDay = farthest(cycle.offering);
+    const firstOfferingDay = farthestDayBetween(cycle.offering);
 
     const offers =
       await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
@@ -79,12 +77,8 @@ export class OrderProductsUseCase {
         throw new ResourceNotFoundError("Produto", item.id);
       }
 
-      if (product.pricing === "WEIGHT" && item.quantity_or_weight % 50 !== 0) {
-        throw new InvalidWeightError("solicitado", item.id);
-      }
-
       const offersForItem = offersByLowestPrice.filter((offer) =>
-        offer.product_id.equals(item.id)
+        offer.product.id.equals(item.id)
       );
 
       if (offersForItem.length === 0) {
@@ -95,36 +89,29 @@ export class OrderProductsUseCase {
       }
 
       let acc = 0;
+
       for (let index = 0; index < offersForItem.length; index++) {
         const current = offersForItem[index];
-        const needed = Math.min(
-          item.quantity_or_weight - acc,
-          current.quantity_or_weight
-        );
+        const needed = Math.min(item.amount - acc, current.amount);
 
         if (!needed) {
           break;
         }
 
-        if (
-          index === offersForItem.length - 1 &&
-          item.quantity_or_weight > needed + acc
-        ) {
+        if (index === offersForItem.length - 1 && item.amount > needed + acc) {
           throw new InsufficientProductQuantityOrWeightError(
             product.pricing,
             product.id.value
           );
         }
 
-        current.quantity_or_weight -= needed;
+        current.amount -= needed;
         acc += needed;
 
         order.add({
-          id: new UUID(),
+          product,
           offer_id: current.offer_id,
-          product_id: product.id,
-          order_id: order.id,
-          quantity_or_weight: needed,
+          amount: needed,
         });
 
         order.price += needed * current.price;
