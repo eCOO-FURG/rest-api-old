@@ -13,10 +13,10 @@ import { InvalidWeightError } from "../errors/invalid-weight-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidadeCycleActionUseCase } from "../market/validate-cycle-action";
+import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
-let validadeCycleActionUseCase: ValidadeCycleActionUseCase;
+let validadeCycleActionUseCase: ValidateCycleActionUseCase;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -26,7 +26,7 @@ let sut: OrderProductsUseCase;
 describe("order products", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    validadeCycleActionUseCase = new ValidadeCycleActionUseCase(
+    validadeCycleActionUseCase = new ValidateCycleActionUseCase(
       inMemoryCyclesRepository
     );
     inMemoryUsersRepository = new InMemoryUsersRepository();
@@ -99,7 +99,7 @@ describe("order products", () => {
     offer.add({
       product: product2,
       price: 9.0,
-      amount: 120,
+      amount: 150,
     });
 
     await inMemoryOffersRepository.save(offer);

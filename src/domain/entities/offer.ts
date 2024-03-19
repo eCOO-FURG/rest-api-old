@@ -3,6 +3,7 @@ import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Product } from "./product";
 import { ResourceAlreadyExistsError } from "../use-cases/errors/resource-already-exists-error";
+import { InvalidWeightError } from "../use-cases/errors/invalid-weight-error";
 
 interface Item extends Optional<EntityProps, "created_at"> {
   offer_id: UUID;
@@ -37,12 +38,26 @@ export class Offer extends Entity<OfferProps> {
       throw new ResourceAlreadyExistsError("Oferta de", found.product.name);
     }
 
+    if (item.product.pricing === "WEIGHT" && item.amount % 50 !== 0) {
+      throw new InvalidWeightError("ofertado", item.product.name);
+    }
+
     this.items.push({
       offer_id: this.id,
       ...item,
     });
 
     return;
+  }
+
+  find(product: Product) {
+    const found = this.props.items.find((item) => item.product.equals(product));
+
+    if (!found) {
+      return null;
+    }
+
+    return found;
   }
 
   static create(props: Optional<OfferProps, "items">, id?: UUID) {

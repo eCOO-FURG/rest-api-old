@@ -7,10 +7,10 @@ import { UUID } from "@/core/entities/uuid";
 import { Record } from "../../entities/record";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "../market/validate-cycle-action";
+import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
-let validateCycleUseCase: ValidateCycleUseCase;
+let validateCycleUseCase: ValidateCycleActionUseCase;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let sut: SearchOffersUseCase;
@@ -18,7 +18,9 @@ let sut: SearchOffersUseCase;
 describe("search offers", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    validateCycleUseCase = new ValidateCycleUseCase(inMemoryCyclesRepository);
+    validateCycleUseCase = new ValidateCycleActionUseCase(
+      inMemoryCyclesRepository
+    );
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     sut = new SearchOffersUseCase(
@@ -63,7 +65,7 @@ describe("search offers", () => {
 
     offer.add({
       product: product1,
-      amount: 10,
+      amount: 50,
       price: 10.0,
     });
 

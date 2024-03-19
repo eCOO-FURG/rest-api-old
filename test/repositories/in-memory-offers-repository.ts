@@ -8,24 +8,10 @@ export class InMemoryOffersRepository implements OffersRepository {
     this.items.push(offer);
   }
 
-  async updateItem(item: Offer["items"][0]): Promise<void> {
-    const offerIndex = this.items.findIndex((offer) =>
-      item.offer_id.equals(offer.id)
-    );
+  async update(offer: Offer): Promise<void> {
+    const index = this.items.findIndex((item) => item.id.equals(offer.id));
 
-    const itemIndex = this.items[offerIndex].items.findIndex((item) =>
-      item.product.equals(item.product)
-    );
-
-    this.items[offerIndex].items[itemIndex] = item;
-  }
-
-  async saveItem(item: Offer["items"][0]): Promise<void> {
-    const offerIndex = this.items.findIndex((offer) =>
-      item.offer_id.equals(offer.id)
-    );
-
-    this.items[offerIndex].add(item);
+    this.items[index] = offer;
   }
 
   findManyByOffersIdsAndProductsIds(

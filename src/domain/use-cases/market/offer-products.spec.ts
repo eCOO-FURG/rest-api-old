@@ -11,10 +11,10 @@ import { UUID } from "@/core/entities/uuid";
 import { AgribusinessNotActiveError } from "../errors/agribusiness-not-active-error";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
-import { ValidateCycleUseCase } from "./validate-cycle-action";
+import { ValidateCycleActionUseCase } from "./validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
-let validateCycleUseCase: ValidateCycleUseCase;
+let validateCycleUseCase: ValidateCycleActionUseCase;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let inMemoryProductsRepository: InMemoryProductsRepository;
@@ -23,7 +23,9 @@ let sut: OfferProductsUseCase;
 describe("offer product", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    validateCycleUseCase = new ValidateCycleUseCase(inMemoryCyclesRepository);
+    validateCycleUseCase = new ValidateCycleActionUseCase(
+      inMemoryCyclesRepository
+    );
     inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
@@ -70,7 +72,7 @@ describe("offer product", () => {
       product: {
         id: product1.id.value,
         price: 10.0,
-        quantity_or_weight: 100,
+        amount: 100,
       },
     });
 
@@ -108,7 +110,7 @@ describe("offer product", () => {
         product: {
           id: product1.id.value,
           price: 10.0,
-          quantity_or_weight: 100,
+          amount: 100,
         },
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
@@ -147,7 +149,7 @@ describe("offer product", () => {
         product: {
           id: product1.id.value,
           price: 10.0,
-          quantity_or_weight: 100,
+          amount: 100,
         },
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
@@ -188,7 +190,7 @@ describe("offer product", () => {
         product: {
           id: product1.id.value,
           price: 10.0,
-          quantity_or_weight: 30,
+          amount: 30,
         },
       })
     ).rejects.toBeInstanceOf(InvalidWeightError);
@@ -239,7 +241,7 @@ describe("offer product", () => {
         product: {
           id: product1.id.value,
           price: 10.0,
-          quantity_or_weight: 30,
+          amount: 30,
         },
       })
     ).rejects.toBeInstanceOf(AgribusinessNotActiveError);

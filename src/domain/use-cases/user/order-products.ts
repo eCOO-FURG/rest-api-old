@@ -6,7 +6,7 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OffersRepository } from "../../repositories/offers-repository";
 import { InsufficientProductQuantityOrWeightError } from "../errors/insufficient-product-quantity-or-weight-error";
 import { farthestDayBetween } from "../utils/fhartest-day-between";
-import { ValidadeCycleActionUseCase } from "../market/validate-cycle-action";
+import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 
 interface OrderProductsUseCaseRequest {
   user_id: string;
@@ -21,7 +21,7 @@ interface OrderProductsUseCaseRequest {
 
 export class OrderProductsUseCase {
   constructor(
-    private validadeCycleActionUseCase: ValidadeCycleActionUseCase,
+    private validadeCycleActionUseCase: ValidateCycleActionUseCase,
     private usersRepository: UsersRepository,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository,

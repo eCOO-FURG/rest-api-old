@@ -1,15 +1,15 @@
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { Cycle } from "../../entities/cycle";
 import { InvalidDayForCycleActionError } from "../errors/invalid-day-for-cycle-action-error";
-import { ValidadeCycleActionUseCase } from "./validate-cycle-action";
+import { ValidateCycleActionUseCase } from "./validate-cycle-action";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
-let sut: ValidadeCycleActionUseCase;
+let sut: ValidateCycleActionUseCase;
 
 describe("validat action day", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
-    sut = new ValidadeCycleActionUseCase(inMemoryCyclesRepository);
+    sut = new ValidateCycleActionUseCase(inMemoryCyclesRepository);
   });
 
   it("should be able to validate if an cycle action is allowed on the current day", async () => {

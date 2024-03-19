@@ -2,6 +2,7 @@ import { Offer } from "../entities/offer";
 
 export interface OffersRepository {
   save(offer: Offer): Promise<void>;
+  update(offer: Offer): Promise<void>;
   findActive(
     agribusiness_id: string,
     cycle_id: string,
@@ -16,6 +17,4 @@ export interface OffersRepository {
     product_ids: string[],
     date: Date
   ): Promise<Offer["items"]>;
-  updateItem(offer: Offer["items"][0]): Promise<void>;
-  saveItem(offer: Offer["items"][0]): Promise<void>;
 }

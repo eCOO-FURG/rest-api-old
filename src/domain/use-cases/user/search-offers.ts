@@ -1,7 +1,7 @@
 import { ProductsRepository } from "../../repositories/products-repository";
 import { OffersRepository } from "../../repositories/offers-repository";
-import { ValidateCycleUseCase } from "../market/validate-cycle-action";
-import { farthest } from "../utils/fhartest-day-between";
+import { farthestDayBetween } from "../utils/fhartest-day-between";
+import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 
 interface SearchOffersUseCaseRequest {
   cycle_id: string;
@@ -10,7 +10,7 @@ interface SearchOffersUseCaseRequest {
 
 export class SearchOffersUseCase {
   constructor(
-    private validateCycleUseCase: ValidateCycleUseCase,
+    private validateCycleUseCase: ValidateCycleActionUseCase,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository
   ) {}
@@ -25,7 +25,7 @@ export class SearchOffersUseCase {
 
     const productsIds = products.map((product) => product.id.value);
 
-    const firstOfferingDay = farthest(cycle.offering);
+    const firstOfferingDay = farthestDayBetween(cycle.offering);
 
     const items =
       await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
