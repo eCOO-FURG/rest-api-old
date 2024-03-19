@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { UpdateOrderStatusUseCase } from "@/domain/use-cases/update-order-status";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidOrderStatusError } from "@/domain/use-cases/errors/invalid-order-status-error";
+import { UpdateOrderStatusUseCase } from "@/domain/use-cases/market/update-order-status";
 
 export const updateOrderStatusParamsSchema = z.object({
   order_id: z.string(),

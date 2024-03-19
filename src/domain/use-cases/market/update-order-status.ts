@@ -1,7 +1,7 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { OrdersRepository } from "../repositories/orders-repository";
-import { InvalidOrderStatusError } from "./errors/invalid-order-status-error";
-import { Order } from "../entities/order";
+import { OrdersRepository } from "../../repositories/orders-repository";
+import { InvalidOrderStatusError } from "../errors/invalid-order-status-error";
+import { Order } from "../../entities/order";
 
 interface UpdateOrderStatusUseCaseRequest {
   order_id: string;

@@ -1,11 +1,11 @@
 import { UUID } from "@/core/entities/uuid";
-import { Order } from "../entities/order";
+import { Order } from "../../entities/order";
 import { InMemoryOrdersRepository } from "test/repositories/in-memory-orders-repository";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
 import { UpdateOrderStatusUseCase } from "./update-order-status";
-import { Offer } from "../entities/offer";
-import { Product } from "../entities/product";
-import { InvalidOrderStatusError } from "./errors/invalid-order-status-error";
+import { Offer } from "../../entities/offer";
+import { Product } from "../../entities/product";
+import { InvalidOrderStatusError } from "../errors/invalid-order-status-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 
 let inMemoryOffersRepository: InMemoryOffersRepository;
