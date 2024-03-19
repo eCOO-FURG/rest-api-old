@@ -10,11 +10,11 @@ export class InMemoryOffersRepository implements OffersRepository {
 
   async updateItem(item: Offer["items"][0]): Promise<void> {
     const offerIndex = this.items.findIndex((offer) =>
-      item.id.equals(offer.id)
+      item.offer_id.equals(offer.id)
     );
 
     const itemIndex = this.items[offerIndex].items.findIndex((item) =>
-      item.product_id.equals(item.product_id)
+      item.product.equals(item.product)
     );
 
     this.items[offerIndex].items[itemIndex] = item;
@@ -22,7 +22,7 @@ export class InMemoryOffersRepository implements OffersRepository {
 
   async saveItem(item: Offer["items"][0]): Promise<void> {
     const offerIndex = this.items.findIndex((offer) =>
-      item.id.equals(offer.id)
+      item.offer_id.equals(offer.id)
     );
 
     this.items[offerIndex].add(item);
@@ -43,9 +43,9 @@ export class InMemoryOffersRepository implements OffersRepository {
     const items: Offer["items"] = [];
 
     for (const offer of this.items) {
-      const match = offer.items.filter(({ product_id }) => {
+      const match = offer.items.filter(({ product }) => {
         return (
-          product_ids.includes(product_id.value) &&
+          product_ids.includes(product.id.value) &&
           offer.created_at >= date &&
           offer.cycle_id.equals(cycle_id)
         );

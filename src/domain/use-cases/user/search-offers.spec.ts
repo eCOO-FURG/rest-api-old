@@ -1,7 +1,6 @@
 import { SearchOffersUseCase } from "./search-offers";
 import { InMemoryProductsRepository } from "test/repositories/in-memory-products-repository";
 import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-repository";
-import { FakeNaturalLanguageProcessor } from "test/search/fake-natural-language-processor";
 import { Product } from "../../entities/product";
 import { Offer } from "../../entities/offer";
 import { UUID } from "@/core/entities/uuid";
@@ -12,7 +11,6 @@ import { ValidateCycleUseCase } from "../market/validate-cycle";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleUseCase;
-let fakeNaturalLanguageProcessor: FakeNaturalLanguageProcessor;
 let inMemoryProductsRepository: InMemoryProductsRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let sut: SearchOffersUseCase;
@@ -21,12 +19,10 @@ describe("search offers", () => {
   beforeEach(() => {
     inMemoryCyclesRepository = new InMemoryCyclesRepository();
     validateCycleUseCase = new ValidateCycleUseCase(inMemoryCyclesRepository);
-    fakeNaturalLanguageProcessor = new FakeNaturalLanguageProcessor();
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryOffersRepository = new InMemoryOffersRepository();
     sut = new SearchOffersUseCase(
       validateCycleUseCase,
-      fakeNaturalLanguageProcessor,
       inMemoryProductsRepository,
       inMemoryOffersRepository
     );
@@ -59,44 +55,23 @@ describe("search offers", () => {
       type_id: new UUID("fake-id"),
     });
 
-    await inMemoryProductsRepository.save(product2);
-
-    const record1 = Record.create({
-      name: product1.name,
-    });
-
-    await fakeNaturalLanguageProcessor.save(record1);
-
-    const record2 = Record.create({
-      name: product2.name,
-    });
-
-    await fakeNaturalLanguageProcessor.save(record2);
-
     const offer = Offer.create({
       cycle_id: cycle.id,
       agribusiness_id: new UUID("fake-id"),
       created_at: new Date(new Date().getTime() - 4 * 24 * 60 * 60 * 1000),
     });
 
-    const offerProduct1 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product1,
+      amount: 10,
       price: 10.0,
-      product_id: product1.id,
-      quantity_or_weight: 10,
-    };
+    });
 
-    const offerProduct2 = {
-      id: new UUID(),
-      offer_id: offer.id,
+    offer.add({
+      product: product2,
+      amount: 10,
       price: 10.0,
-      product_id: product2.id,
-      quantity_or_weight: 10,
-    };
-
-    offer.add(offerProduct1);
-    offer.add(offerProduct2);
+    });
 
     await inMemoryOffersRepository.save(offer);
 
@@ -105,6 +80,6 @@ describe("search offers", () => {
       product: "banana",
     });
 
-    expect(result.offersItems).toHaveLength(1);
+    expect(result.items).toHaveLength(1);
   });
 });

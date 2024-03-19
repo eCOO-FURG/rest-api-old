@@ -1,5 +1,4 @@
 import { ProductsRepository } from "../../repositories/products-repository";
-import { NaturalLanguageProcessor } from "../../search/natural-language-processor";
 import { OffersRepository } from "../../repositories/offers-repository";
 import { ValidateCycleUseCase } from "../market/validate-cycle";
 import { farthest } from "../utils/fhartest";
@@ -12,7 +11,6 @@ interface SearchOffersUseCaseRequest {
 export class SearchOffersUseCase {
   constructor(
     private validateCycleUseCase: ValidateCycleUseCase,
-    private naturalLanguageProcessor: NaturalLanguageProcessor,
     private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository
   ) {}
@@ -23,19 +21,13 @@ export class SearchOffersUseCase {
       action: "ordering",
     });
 
-    const similarProducts = await this.naturalLanguageProcessor.infer(product);
-
-    const productsNames = similarProducts.map((item) => item.name);
-
-    const products = await this.productsRepository.findManyByNames(
-      productsNames
-    );
+    const products = await this.productsRepository.searchManyByName(product);
 
     const productsIds = products.map((product) => product.id.value);
 
     const firstOfferingDay = farthest(cycle.offering);
 
-    const offersItems =
+    const items =
       await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
         cycle.id.value,
         productsIds,
@@ -43,8 +35,7 @@ export class SearchOffersUseCase {
       );
 
     return {
-      offersItems,
-      products,
+      items,
     };
   }
 }

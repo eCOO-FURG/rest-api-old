@@ -21,30 +21,48 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
   async save(order: Order): Promise<void> {
     this.items.push(order);
-
-    for (const item of order.items) {
-      const offer = this.offersRepository.items.find((offer) =>
-        offer.id.equals(item.id.value)
-      );
-
-      if (!offer) {
-        return;
-      }
-
-      const index = offer.items.findIndex((offerItem) =>
-        offerItem.product_id.equals(item.id.value)
-      );
-
-      offer.items[index].quantity_or_weight -= item.quantity_or_weight;
-    }
   }
 
   async update(order: Order): Promise<void> {
-    throw new Error("Method not implemented.");
+    const index = this.items.findIndex((item) => item.id.equals(order.id));
+
+    this.items[index] = order;
+
+    if (order.status === "CANCELED") {
+      const offersItems = this.offersRepository.items.flatMap(
+        (offer) => offer.items
+      );
+
+      for (const item of order.items) {
+        const index = offersItems.findIndex((e) =>
+          e.product.equals(item.product)
+        );
+
+        offersItems[index].amount += item.amount;
+      }
+
+      for (const offerItem of offersItems) {
+        const offerIndex = this.offersRepository.items.findIndex((e) =>
+          e.id.equals(offerItem.offer_id)
+        );
+
+        const offerItemIndex = this.offersRepository.items[
+          offerIndex
+        ].items.findIndex((e) => e.product.equals(offerItem.product));
+
+        this.offersRepository.items[offerIndex].items[offerItemIndex] =
+          offerItem;
+      }
+      const offers = this.offersRepository.items;
+
+      for (const item of order.items) {
+        const offerItem = offers.flatMap((offer) => offer);
+      }
+    }
   }
 
   async findById(id: string): Promise<Order | null> {
-    const order = this.items.find((item) => item.id.toString() === id);
+    const order = this.items.find((item) => item.id.equals(id));
 
     if (!order) {
       return null;

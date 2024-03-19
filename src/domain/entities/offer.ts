@@ -1,13 +1,13 @@
 import { Optional } from "@/core/types/optional";
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
+import { Product } from "./product";
 
 interface Item extends Optional<EntityProps, "created_at"> {
-  id: UUID;
   offer_id: UUID;
-  product_id: UUID;
+  product: Product;
   price: number;
-  quantity_or_weight: number;
+  amount: number;
 }
 
 interface OfferProps extends Optional<EntityProps, "created_at"> {
@@ -29,29 +29,19 @@ export class Offer extends Entity<OfferProps> {
     return this.props.items;
   }
 
-  find(product_id: string) {
-    const found = this.props.items.find((item) =>
-      item.product_id.equals(product_id)
-    );
-
-    if (!found) {
-      return null;
-    }
-
-    return found;
-  }
-
-  add(item: Item) {
-    const found = this.props.items.findIndex((unit) =>
-      unit.product_id.equals(item.product_id)
+  add(item: Optional<Item, "offer_id">) {
+    const found = this.props.items.findIndex((e) =>
+      e.product.id.equals(item.product.id)
     );
 
     if (found < 0) {
-      this.items.push(item);
+      this.items.push({
+        offer_id: this.id,
+        ...item,
+      });
     }
 
-    this.props.items[found] = item;
-    this.touch();
+    // throw exeception
   }
 
   static create(props: Optional<OfferProps, "items">, id?: UUID) {
