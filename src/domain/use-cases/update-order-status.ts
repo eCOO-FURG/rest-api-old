@@ -5,7 +5,7 @@ import { Order } from "../entities/order";
 
 interface UpdateOrderStatusUseCaseRequest {
   order_id: string;
-  status: string;
+  status: Order["status"];
 }
 
 export class UpdateOrderStatusUseCase {
@@ -26,7 +26,7 @@ export class UpdateOrderStatusUseCase {
       throw new InvalidOrderStatusError();
     }
 
-    order.status = status as Order["status"];
+    order.status = status;
 
     await this.ordersRepository.update(order);
   }
