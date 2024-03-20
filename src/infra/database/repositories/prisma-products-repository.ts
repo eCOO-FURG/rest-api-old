@@ -58,7 +58,7 @@ export class PrismaProductsRepository implements ProductsRepository {
     return mappedProducts;
   }
 
-  async findManyByNameAndPage(name: string, page: number): Promise<Product[]> {
+  async searchManyByName(name: string, page = 1): Promise<Product[]> {
     const skip = (page - 1) * 20;
 
     const products = await prisma.product.findMany({

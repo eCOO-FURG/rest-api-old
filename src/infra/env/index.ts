@@ -8,15 +8,12 @@ const deployValidationSchema = z.object({
   SERVER_REDIRECT_PORT: z.coerce.number(),
   FRONT_URL: z.string().min(1),
   POSTGRES_URL: z.string().min(1),
-  QDRANT_URL: z.string().min(1),
-  NLP_URL: z.string().min(1),
   JWT_SECRET: z.string().min(1),
   SMTP_HOST: z.string().min(1),
   SMTP_PORT: z.coerce.number().min(1),
   ECOO_EMAIL: z.string().min(1),
   ECOO_EMAIL_PASSWORD: z.string().min(1),
   SESSION_DURATION_IN_DAYS: z.coerce.number().min(1),
-  EXPECTED_SIMILARITY_SCORE: z.coerce.number().min(0.1),
 });
 
 const devValidationSchema = deployValidationSchema.omit({

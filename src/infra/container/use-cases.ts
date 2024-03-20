@@ -13,7 +13,7 @@ import { SearchProductsUseCase } from "@/domain/use-cases/market/search-products
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/market/update-agribusiness";
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/market/update-agribusiness-status";
 import { UpdateOrderStatusUseCase } from "@/domain/use-cases/market/update-order-status";
-import { ValidateCycleUseCase } from "@/domain/use-cases/market/validate-cycle";
+import { ValidateCycleActionUseCase } from "@/domain/use-cases/market/validate-cycle-action";
 import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 import { RegisterUseCase } from "@/domain/use-cases/user/register";
@@ -65,47 +65,41 @@ diContainer.register({
     ({ usersRepository, agribusinessesRepository }) =>
       new RegisterAgribusinessUseCase(usersRepository, agribusinessesRepository)
   ),
-  validateCycleUseCase: asFunction(
-    ({ cyclesRepository }) => new ValidateCycleUseCase(cyclesRepository)
+  validateCycleActionUseCase: asFunction(
+    ({ cyclesRepository }) => new ValidateCycleActionUseCase(cyclesRepository)
   ),
   offerProductsUseCase: asFunction(
     ({
-      validateCycleUseCase,
+      validateCycleActionUseCase,
       agribusinessesRepository,
       offersRepository,
       productsRepository,
     }) =>
       new OfferProductsUseCase(
-        validateCycleUseCase,
+        validateCycleActionUseCase,
         agribusinessesRepository,
         offersRepository,
         productsRepository
       )
   ),
   searchOffersUseCase: asFunction(
-    ({
-      validateCycleUseCase,
-      naturalLanguageProcessor,
-      productsRepository,
-      offersRepository,
-    }) =>
+    ({ validateCycleActionUseCase, productsRepository, offersRepository }) =>
       new SearchOffersUseCase(
-        validateCycleUseCase,
-        naturalLanguageProcessor,
+        validateCycleActionUseCase,
         productsRepository,
         offersRepository
       )
   ),
   orderProductsUseCase: asFunction(
     ({
-      validateCycleUseCase,
+      validateCycleActionUseCase,
       usersRepository,
       productsRepository,
       offersRepository,
       ordersRepository,
     }) =>
       new OrderProductsUseCase(
-        validateCycleUseCase,
+        validateCycleActionUseCase,
         usersRepository,
         productsRepository,
         offersRepository,

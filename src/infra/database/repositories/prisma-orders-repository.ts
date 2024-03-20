@@ -12,7 +12,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
         id,
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
 
@@ -31,7 +35,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         data,
       });
 
-      const productsIds = order.items.map((item) => item.product_id.value);
+      const productsIds = order.items.map((item) => item.product.id.value);
       const offersIds = order.items.map((item) => item.offer_id.value);
 
       const offers = await tsx.offerProduct.findMany({
@@ -45,14 +49,12 @@ export class PrismaOrdersRepository implements OrdersRepository {
         const index = offers.findIndex(
           (offer) =>
             item.offer_id.equals(offer.offer_id) &&
-            item.product_id.equals(offer.product_id)
+            item.product.id.equals(offer.product_id)
         );
 
-        const quantity_or_weight = Number(offers[index].quantity_or_weight);
+        const amount = Number(offers[index].amount);
 
-        offers[index].quantity_or_weight = new Decimal(
-          quantity_or_weight - item.quantity_or_weight
-        );
+        offers[index].amount = amount - item.amount;
       }
 
       const { sql } = updateManyRawQuery(offers, "offers_products");
@@ -64,18 +66,18 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async update(order: Order): Promise<void> {
     const data = PrismaOrderMapper.toPrisma(order);
 
-    if (order.status === "CANCELED") {
-      await prisma.$transaction(async (tsx) => {
-        await tsx.order.update({
-          where: {
-            id: data.id,
-          },
-          data: {
-            status: data.status,
-          },
-        });
+    await prisma.$transaction(async (tsx) => {
+      await tsx.order.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          status: data.status,
+        },
+      });
 
-        const productsIds = order.items.map((item) => item.product_id.value);
+      if (order.status === "CANCELED") {
+        const productsIds = order.items.map((item) => item.product.id.value);
         const offersIds = order.items.map((item) => item.offer_id.value);
 
         const offers = await tsx.offerProduct.findMany({
@@ -89,31 +91,16 @@ export class PrismaOrdersRepository implements OrdersRepository {
           const index = offers.findIndex(
             (offer) =>
               item.offer_id.equals(offer.offer_id) &&
-              item.product_id.equals(offer.product_id)
+              item.product.id.equals(offer.product_id)
           );
 
-          const quantity_or_weight = Number(offers[index].quantity_or_weight);
-
-          offers[index].quantity_or_weight = new Decimal(
-            quantity_or_weight + item.quantity_or_weight
-          );
+          offers[index].amount += item.amount;
         }
 
         const { sql } = updateManyRawQuery(offers, "offers_products");
 
         await tsx.$executeRawUnsafe(sql);
-
-        return;
-      });
-    }
-
-    await prisma.order.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        status: data.status,
-      },
+      }
     });
   }
 

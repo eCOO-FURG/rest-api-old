@@ -3,6 +3,9 @@ import { OffersRepository } from "@/domain/repositories/offers-repository";
 import { PrismaOfferMapper } from "../mappers/prisma-offer-mapper";
 import { prisma } from "../prisma-service";
 import { UUID } from "@/core/entities/uuid";
+import { PrismaProductMapper } from "../mappers/prisma-product-mapper";
+import { updateManyRawQuery } from "../utils/update-many-raw-query";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
@@ -13,15 +16,50 @@ export class PrismaOffersRepository implements OffersRepository {
     });
   }
 
-  async updateItem(item: Offer["items"][0]): Promise<void> {
-    await prisma.offerProduct.update({
-      where: {
-        id: item.id.value,
-      },
-      data: {
-        price: item.price,
-        quantity_or_weight: item.quantity_or_weight,
-      },
+  async update(offer: Offer): Promise<void> {
+    await prisma.$transaction(async (tsx) => {
+      await tsx.offerProduct.deleteMany({
+        where: {
+          offer_id: offer.id.value,
+          product_id: {
+            notIn: offer.items.map((item) => item.product.id.value),
+          },
+        },
+      });
+
+      const remainings = await tsx.offerProduct.findMany({
+        where: {
+          offer_id: offer.id.value,
+        },
+      });
+
+      for (const remaining of remainings) {
+        const index = offer.items.findIndex((item) =>
+          item.product.id.equals(remaining.product_id)
+        );
+
+        remaining.amount = offer.items[index].amount;
+        remaining.price = new Decimal(offer.items[index].price);
+      }
+
+      const { sql } = updateManyRawQuery(remainings, "offers_products");
+
+      await tsx.$executeRawUnsafe(sql);
+
+      const remainingsProductsIds = remainings.map((item) => item.product_id);
+
+      const rest = offer.items.filter(
+        (item) => !remainingsProductsIds.includes(item.product.id.value)
+      );
+
+      await tsx.offerProduct.createMany({
+        data: rest.map((item) => ({
+          offer_id: item.offer_id.value,
+          product_id: item.product.id.value,
+          amount: item.amount,
+          price: new Decimal(item.price),
+        })),
+      });
     });
   }
 
@@ -45,22 +83,15 @@ export class PrismaOffersRepository implements OffersRepository {
         },
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
 
     return data.map((item) => PrismaOfferMapper.toDomain(item));
-  }
-
-  async saveItem(item: Offer["items"][0]): Promise<void> {
-    await prisma.offerProduct.create({
-      data: {
-        offer_id: item.offer_id.value,
-        price: item.price,
-        quantity_or_weight: item.quantity_or_weight,
-        product_id: item.product_id.value,
-      },
-    });
   }
 
   async findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
@@ -73,7 +104,7 @@ export class PrismaOffersRepository implements OffersRepository {
         product_id: {
           in: product_ids,
         },
-        quantity_or_weight: {
+        amount: {
           gt: 0,
         },
         offer: {
@@ -83,19 +114,21 @@ export class PrismaOffersRepository implements OffersRepository {
           },
         },
       },
+      include: {
+        product: true,
+      },
     });
 
-    const mappedOffersProducts: Offer["items"] = data.map((item) => ({
-      id: new UUID(item.id),
+    const items: Offer["items"] = data.map((item) => ({
       offer_id: new UUID(item.offer_id),
-      product_id: new UUID(item.product_id),
+      product: PrismaProductMapper.toDomain(item.product),
       price: item.price.toNumber(),
-      quantity_or_weight: item.quantity_or_weight.toNumber(),
+      amount: item.amount,
       created_at: item.created_at,
       updated_at: item.updated_at,
     }));
 
-    return mappedOffersProducts;
+    return items;
   }
 
   async findActive(
@@ -112,7 +145,11 @@ export class PrismaOffersRepository implements OffersRepository {
         },
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
 

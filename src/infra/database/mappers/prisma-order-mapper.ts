@@ -2,12 +2,20 @@ import { UUID } from "@/core/entities/uuid";
 import { Order } from "@/domain/entities/order";
 import {
   Order as PrismaOrder,
-  OrderOfferProduct,
+  OrderOfferProduct as PrismaOrderOfferProduct,
+  Product as PrismaProduct,
   Prisma,
 } from "@prisma/client";
+import { PrismaProductMapper } from "./prisma-product-mapper";
 
 export class PrismaOrderMapper {
-  static toDomain(raw: PrismaOrder & { items?: OrderOfferProduct[] }) {
+  static toDomain(
+    raw: PrismaOrder & {
+      items?: (Omit<PrismaOrderOfferProduct, "product_id"> & {
+        product: PrismaProduct;
+      })[];
+    }
+  ) {
     return Order.create(
       {
         customer_id: new UUID(raw.customer_id),
@@ -20,8 +28,8 @@ export class PrismaOrderMapper {
           id: new UUID(item.id),
           offer_id: new UUID(item.offer_id),
           order_id: new UUID(item.order_id),
-          product_id: new UUID(item.product_id),
-          quantity_or_weight: item.quantity_or_weight.toNumber(),
+          product: PrismaProductMapper.toDomain(item.product),
+          amount: item.amount,
           created_at: item.created_at,
           updated_at: item.updated_at,
         })),
@@ -37,8 +45,8 @@ export class PrismaOrderMapper {
       createMany: {
         data: order.items.map((item) => ({
           offer_id: item.offer_id.value,
-          product_id: item.product_id.value,
-          quantity_or_weight: item.quantity_or_weight,
+          product_id: item.product.id.value,
+          amount: item.amount,
           created_at: item.created_at,
           updated_at: item.updated_at,
         })),

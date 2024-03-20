@@ -15,15 +15,18 @@ export async function seedCycles() {
       dispatching: [5, 6],
     });
 
-    const everyThursday = Cycle.create({
-      alias: "Quintas-feiras",
-      duration: 1,
-      offering: [5],
-      ordering: [5],
-      dispatching: [5],
-    });
+    // const everyThursday = Cycle.create({
+    //   alias: "Quintas-feiras",
+    //   duration: 1,
+    //   offering: [5],
+    //   ordering: [5],
+    //   dispatching: [5],
+    // });
 
-    const cycles = [weekly, everyThursday];
+    const cycles = [
+      weekly,
+      // everyThursday
+    ];
 
     const prismaCycles = cycles.map((item) => PrismaCycleMapper.toPrisma(item));
 
@@ -75,7 +78,7 @@ export async function seedCycles() {
               create: products.map((product) => ({
                 product_id: product.id,
                 price: "10",
-                quantity_or_weight:
+                amount:
                   product.pricing === "UNIT"
                     ? Math.floor(Math.random() * 20 + 1)
                     : Math.floor(Math.random() * 20 + 1) * 50,

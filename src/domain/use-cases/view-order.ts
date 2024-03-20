@@ -32,7 +32,7 @@ export class ViewOrderUseCase {
     }
 
     const offersIds = order.items.map((item) => item.offer_id.value);
-    const productsIds = order.items.map((item) => item.product_id.value);
+    const productsIds = order.items.map((item) => item.product.id.value);
 
     const offers =
       await this.offersRepository.findManyByOffersIdsAndProductsIds(
