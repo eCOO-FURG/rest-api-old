@@ -7,8 +7,7 @@
     "start:dev": "tsx watch src/infra/server.ts",
     "test": "vitest run --dir src/domain/",
     "test:watch": "vitest --dir src/domain/",
-    "test:coverage": "vitest run --coverage",
-    "qdrant:seed": "docker exec ecoo-nlp python seed.py"
+    "test:coverage": "vitest run --coverage"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
