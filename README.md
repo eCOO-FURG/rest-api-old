@@ -23,16 +23,14 @@ Built based on Clean Architecture & Domain-Driven Design principles.
 3. Run using docker-compose:
 
 ```bash
-  docker-compose up
+  docker-compose --profile dev up
 ```
 
 4. Ensure you have [ts-node](https://www.npmjs.com/package/ts-node) installed and run the seeds:
 
 ```bash
-  npx prisma migrate dev && npx prisma db seed && npm run qdrant:seed
+  npx prisma migrate dev && npx prisma db seed
 ```
-
-
 
 ### 🧪 Testing
 
@@ -42,7 +40,7 @@ Check all unit tests:
   npm run test
 ```
 
-### 📌 Notes 
+### 📌 Notes
 
 A SMTP server will be created on [local network](http://localhost:3010/). It shall retrieve all application sent emails when on development environment.
 

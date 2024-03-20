@@ -9,27 +9,7 @@ services:
       POSTGRES_DB: ecoo_db
     ports:
       - "5432:5432"
-
-  qdrant:
-    container_name: ecoo-qdrant
-    image: qdrant/qdrant:latest
-    ports:
-      - "6333:6333"
-
-  nlp:
-    container_name: ecoo-nlp
-    build:
-      context: ./nlp/
-      dockerfile: ./Dockerfile
-      args:
-        - REQUIREMENTS_TXT_PATH=./requirements.txt
-    volumes:
-      - ./nlp/src/:/app/
-      - ./products.json:/app/products.json
-    ports:
-      - "5000:5000"
-    depends_on:
-      - qdrant
+    profiles: ["dev", "deploy"]
 
   smtp4dev:
     container_name: ecoo-smtp
@@ -37,9 +17,10 @@ services:
     ports:
       - "3010:80"
       - "2525:25"
+    profiles: ["dev"]
 
-  server:
-    container_name: ecoo-server
+  server: &server
+    container_name: ecoo-deploy-server
     build:
       context: .
       dockerfile: Dockerfile
@@ -47,9 +28,15 @@ services:
       - ./src:/app/src
       - ./test:/app/test
       - ./prisma:/app/prisma
-    depends_on:
-      - postgres
-      - smtp4dev
-      - qdrant
     network_mode: "host"
     restart: always
+    depends_on:
+      - postgres
+    profiles: ["deploy"]
+
+  dev-server:
+    <<: *server
+    container_name: ecoo-dev-server
+    depends_on:
+      - smtp4dev
+    profiles: ["dev"]
