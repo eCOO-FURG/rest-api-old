@@ -1,7 +1,7 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { OffersPresenter } from "../presenters/offers-presenter";
+import { OffersItemsPresenter } from "../presenters/offers-items-presenter";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
 import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
 
@@ -21,14 +21,12 @@ export async function searchOffers(
       "searchOffersUseCase"
     );
 
-    const { offersItems, products } = await searchOffersUseCase.execute({
+    const { items } = await searchOffersUseCase.execute({
       cycle_id,
       product,
     });
 
-    return reply
-      .status(200)
-      .send(OffersPresenter.toHttp(offersItems, products));
+    return reply.status(200).send(OffersItemsPresenter.toHttp(items));
   } catch (err) {
     if (err instanceof InvalidDayForCycleActionError) {
       return reply.status(403).send({ message: err.message });
