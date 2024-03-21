@@ -142,18 +142,10 @@ diContainer.register({
       new ListOrdersUseCase(cyclesRepository, ordersRepository)
   ),
   viewOrderUseCase: asFunction(
-    ({
-      ordersRepository,
-      usersRepository,
-      offersRepository,
-      productsRepository,
-      agribusinessesRepository,
-    }) =>
+    ({ ordersRepository, offersRepository, agribusinessesRepository }) =>
       new ViewOrderUseCase(
         ordersRepository,
-        usersRepository,
         offersRepository,
-        productsRepository,
         agribusinessesRepository
       )
   ),

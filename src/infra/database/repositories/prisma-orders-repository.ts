@@ -2,7 +2,6 @@ import { Order } from "@/domain/entities/order";
 import { OrdersRepository } from "@/domain/repositories/orders-repository";
 import { prisma } from "../prisma-service";
 import { PrismaOrderMapper } from "../mappers/prisma-order-mapper";
-import { Decimal } from "@prisma/client/runtime/library";
 import { updateManyRawQuery } from "../utils/update-many-raw-query";
 
 export class PrismaOrdersRepository implements OrdersRepository {
@@ -17,6 +16,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
             product: true,
           },
         },
+        customer: {
+          include: {
+            person: true,
+          },
+        },
       },
     });
 
@@ -24,7 +28,13 @@ export class PrismaOrdersRepository implements OrdersRepository {
       return null;
     }
 
-    return PrismaOrderMapper.toDomain(order);
+    return PrismaOrderMapper.toDomain({
+      ...order,
+      customer: {
+        ...order.customer,
+        person: order.customer.person!,
+      },
+    });
   }
 
   async save(order: Order): Promise<void> {
@@ -114,10 +124,23 @@ export class PrismaOrdersRepository implements OrdersRepository {
       },
       skip,
       take: 20,
+      include: {
+        customer: {
+          include: {
+            person: true,
+          },
+        },
+      },
     });
 
-    const mappedOrders = orders.map((item) => PrismaOrderMapper.toDomain(item));
-
-    return mappedOrders;
+    return orders.map((order) =>
+      PrismaOrderMapper.toDomain({
+        ...order,
+        customer: {
+          ...order.customer,
+          person: order.customer.person!,
+        },
+      })
+    );
   }
 }

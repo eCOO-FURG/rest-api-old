@@ -1,6 +1,6 @@
-import { ListCycleUseCase } from "@/domain/use-cases/list-cycles";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { CyclesPresenter } from "../presenters/cycles-presenter";
+import { CyclePresenter } from "../presenters/cycle-presenter";
+import { ListCycleUseCase } from "@/domain/use-cases/market/list-cycles";
 
 export async function listCycles(request: FastifyRequest, reply: FastifyReply) {
   try {
@@ -9,7 +9,9 @@ export async function listCycles(request: FastifyRequest, reply: FastifyReply) {
 
     const { cycles } = await listCyclesUseCase.execute();
 
-    return reply.status(200).send(CyclesPresenter.toHttp(cycles));
+    return reply
+      .status(200)
+      .send(cycles.map((cycle) => CyclePresenter.toHttp(cycle)));
   } catch (err) {
     throw err;
   }

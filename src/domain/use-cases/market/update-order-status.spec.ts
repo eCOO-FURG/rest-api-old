@@ -7,6 +7,7 @@ import { Offer } from "../../entities/offer";
 import { Product } from "../../entities/product";
 import { InvalidOrderStatusError } from "../errors/invalid-order-status-error";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { makeUser } from "test/factories/make-user";
 
 let inMemoryOffersRepository: InMemoryOffersRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
@@ -22,8 +23,10 @@ describe("update order status", () => {
   });
 
   it("should be able to update the status of an order", async () => {
+    const customer = makeUser();
+
     const order = Order.create({
-      customer_id: new UUID("fake-id"),
+      customer,
       cycle_id: new UUID("fake-id"),
       payment_method: "ON_DELIVERY",
       shipping_address: "fake-id",
@@ -41,8 +44,10 @@ describe("update order status", () => {
   });
 
   it("should not be able to update the status of and canceled order", async () => {
+    const customer = makeUser();
+
     const order = Order.create({
-      customer_id: new UUID("fake-id"),
+      customer,
       cycle_id: new UUID("fake-id"),
       payment_method: "ON_DELIVERY",
       shipping_address: "fake-id",
@@ -89,8 +94,10 @@ describe("update order status", () => {
 
     await inMemoryOffersRepository.save(offer);
 
+    const customer = makeUser();
+
     const order = Order.create({
-      customer_id: new UUID("fake-id"),
+      customer,
       cycle_id: new UUID("fake-id"),
       payment_method: "ON_DELIVERY",
       shipping_address: "fake-id",

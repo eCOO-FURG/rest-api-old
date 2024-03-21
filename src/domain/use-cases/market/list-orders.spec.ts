@@ -5,6 +5,7 @@ import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-rep
 import { Cycle } from "../../entities/cycle";
 import { Order } from "../../entities/order";
 import { UUID } from "@/core/entities/uuid";
+import { makeUser } from "test/factories/make-user";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let inMemoryOrdersRepository: InMemoryOrdersRepository;
@@ -35,8 +36,10 @@ describe("list orders", () => {
 
     await inMemoryCyclesRepository.save(cycle);
 
+    const customer = makeUser();
+
     const order = Order.create({
-      customer_id: new UUID("fake-id"),
+      customer,
       cycle_id: cycle.id,
       payment_method: "ON_DELIVERY",
       shipping_address: "fake-address",

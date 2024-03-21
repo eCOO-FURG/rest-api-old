@@ -4,13 +4,18 @@ import {
   Order as PrismaOrder,
   OrderOfferProduct as PrismaOrderOfferProduct,
   Product as PrismaProduct,
+  Account as PrismaAccount,
+  Person as PrismaPerson,
   Prisma,
 } from "@prisma/client";
 import { PrismaProductMapper } from "./prisma-product-mapper";
+import { PrismaUserMapper } from "./prisma-user-mapper";
 
 export class PrismaOrderMapper {
   static toDomain(
     raw: PrismaOrder & {
+      customer: PrismaAccount & { person: PrismaPerson };
+    } & {
       items?: (Omit<PrismaOrderOfferProduct, "product_id"> & {
         product: PrismaProduct;
       })[];
@@ -18,7 +23,7 @@ export class PrismaOrderMapper {
   ) {
     return Order.create(
       {
-        customer_id: new UUID(raw.customer_id),
+        customer: PrismaUserMapper.toDomain(raw.customer),
         payment_method: "PIX",
         shipping_address: raw.shipping_address,
         status: raw.status,
@@ -57,7 +62,7 @@ export class PrismaOrderMapper {
       id: order.id.value,
       price: order.price,
       cycle_id: order.cycle_id.value,
-      customer_id: order.customer_id.value,
+      customer_id: order.customer.id.value,
       payment_method: order.payment_method,
       shipping_address: order.shipping_address,
       status: order.status,

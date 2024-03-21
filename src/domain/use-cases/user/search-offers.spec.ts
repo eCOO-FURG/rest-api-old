@@ -4,7 +4,6 @@ import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-rep
 import { Product } from "../../entities/product";
 import { Offer } from "../../entities/offer";
 import { UUID } from "@/core/entities/uuid";
-import { Record } from "../../entities/record";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";

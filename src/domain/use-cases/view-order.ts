@@ -1,8 +1,6 @@
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { OrdersRepository } from "../repositories/orders-repository";
-import { UsersRepository } from "../repositories/users-repository";
 import { OffersRepository } from "../repositories/offers-repository";
-import { ProductsRepository } from "../repositories/products-repository";
 import { AgribusinessesRepository } from "../repositories/agribusinesses-repository";
 
 interface ViewOrderUseCaseRequest {
@@ -12,9 +10,7 @@ interface ViewOrderUseCaseRequest {
 export class ViewOrderUseCase {
   constructor(
     private ordersRepository: OrdersRepository,
-    private usersRepository: UsersRepository,
     private offersRepository: OffersRepository,
-    private productsRepository: ProductsRepository,
     private agribusinessRepository: AgribusinessesRepository
   ) {}
 
@@ -23,12 +19,6 @@ export class ViewOrderUseCase {
 
     if (!order) {
       throw new ResourceNotFoundError("Pedido", order_id);
-    }
-
-    const user = await this.usersRepository.findById(order.customer_id.value);
-
-    if (!user) {
-      throw new ResourceNotFoundError("Cliente", order.customer_id.value);
     }
 
     const offersIds = order.items.map((item) => item.offer_id.value);
@@ -40,8 +30,6 @@ export class ViewOrderUseCase {
         productsIds
       );
 
-    const products = await this.productsRepository.findManyByIds(productsIds);
-
     const agribusinessIds = offers.map((item) => item.agribusiness_id.value);
 
     const agribusinesses = await this.agribusinessRepository.findManyByIds(
@@ -49,10 +37,8 @@ export class ViewOrderUseCase {
     );
 
     return {
-      user,
       order,
       offers,
-      products,
       agribusinesses,
     };
   }

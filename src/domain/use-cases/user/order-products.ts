@@ -64,7 +64,7 @@ export class OrderProductsUseCase {
     const offersByLowestPrice = offers.sort((a, b) => a.price - b.price);
 
     const order = Order.create({
-      customer_id: user.id,
+      customer: user,
       cycle_id: cycle.id,
       payment_method,
       shipping_address,

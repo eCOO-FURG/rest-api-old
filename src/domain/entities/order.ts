@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 import { Product } from "./product";
 import { ResourceAlreadyExistsError } from "../use-cases/errors/resource-already-exists-error";
 import { InvalidWeightError } from "../use-cases/errors/invalid-weight-error";
+import { User } from "./user";
 
 interface Item extends Optional<EntityProps, "created_at"> {
   offer_id: UUID;
@@ -12,8 +13,8 @@ interface Item extends Optional<EntityProps, "created_at"> {
 }
 
 export interface OrderProps extends Optional<EntityProps, "created_at"> {
-  customer_id: UUID;
   cycle_id: UUID;
+  customer: User;
   shipping_address: string;
   price: number;
   payment_method: "PIX" | "ON_DELIVERY";
@@ -22,8 +23,8 @@ export interface OrderProps extends Optional<EntityProps, "created_at"> {
 }
 
 export class Order extends Entity<OrderProps> {
-  get customer_id() {
-    return this.props.customer_id;
+  get customer() {
+    return this.props.customer;
   }
 
   get cycle_id() {
