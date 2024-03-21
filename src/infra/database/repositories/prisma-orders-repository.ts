@@ -52,9 +52,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
             item.product.id.equals(offer.product_id)
         );
 
-        const amount = Number(offers[index].amount);
-
-        offers[index].amount = amount - item.amount;
+        offers[index].amount -= item.amount;
       }
 
       const { sql } = updateManyRawQuery(offers, "offers_products");
