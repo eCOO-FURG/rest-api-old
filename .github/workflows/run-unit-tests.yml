@@ -21,3 +21,4 @@ jobs:
           PORT: 3333
           SESSION_DURATION_IN_DAYS: 30
           ECOO_EMAIL: suporte@ecoo.com.br
+          FRONT_URL: https://produtor.ecoo.org.br
