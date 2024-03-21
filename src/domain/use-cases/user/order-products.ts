@@ -114,7 +114,11 @@ export class OrderProductsUseCase {
           amount: needed,
         });
 
-        order.price += needed * current.price;
+        if (current.product.pricing === "UNIT") {
+          order.price += needed * current.price;
+        } else {
+          order.price += (needed / 50) * current.price;
+        }
       }
     }
 
