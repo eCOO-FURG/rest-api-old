@@ -18,12 +18,12 @@ export class UpdateOrderStatusUseCase {
       throw new ResourceNotFoundError("Pedido", order_id);
     }
 
-    if (status === order.status) {
-      return;
-    }
-
     if (order.status === "CANCELED") {
       throw new InvalidOrderStatusError();
+    }
+
+    if (status === order.status) {
+      return;
     }
 
     order.status = status;
