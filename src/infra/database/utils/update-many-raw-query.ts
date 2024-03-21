@@ -28,6 +28,9 @@ export function updateManyRawQuery(entries: Entry[], table: string) {
         if (value instanceof Decimal) {
           return value.toNumber();
         }
+        if (typeof value === "number") {
+          return value;
+        }
         return `'${value}'`;
       });
       return `('${entry.id}', ${values.join(", ")})`;

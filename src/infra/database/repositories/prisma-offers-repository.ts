@@ -6,6 +6,7 @@ import { UUID } from "@/core/entities/uuid";
 import { PrismaProductMapper } from "../mappers/prisma-product-mapper";
 import { updateManyRawQuery } from "../utils/update-many-raw-query";
 import { Decimal } from "@prisma/client/runtime/library";
+import { skip } from "node:test";
 
 export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
@@ -33,18 +34,28 @@ export class PrismaOffersRepository implements OffersRepository {
         },
       });
 
-      for (const remaining of remainings) {
+      const differents = remainings.filter((remaining) => {
         const index = offer.items.findIndex((item) =>
           item.product.id.equals(remaining.product_id)
         );
 
-        remaining.amount = offer.items[index].amount;
-        remaining.price = new Decimal(offer.items[index].price);
+        const diff =
+          remaining.amount !== offer.items[index].amount ||
+          remaining.price.toNumber() !==
+            new Decimal(offer.items[index].price).toNumber();
+
+        if (diff) {
+          remaining.amount = offer.items[index].amount;
+          remaining.price = new Decimal(offer.items[index].price);
+          return remaining;
+        }
+      });
+
+      if (differents.length) {
+        const { sql } = updateManyRawQuery(differents, "offers_products");
+
+        await tsx.$executeRawUnsafe(sql);
       }
-
-      const { sql } = updateManyRawQuery(remainings, "offers_products");
-
-      await tsx.$executeRawUnsafe(sql);
 
       const remainingsProductsIds = remainings.map((item) => item.product_id);
 
