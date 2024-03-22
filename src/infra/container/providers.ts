@@ -13,7 +13,6 @@ import { Nodemailer } from "../mail/nodemailer";
 import * as JwtService from "jsonwebtoken";
 import { PrismaOrdersRepository } from "../database/repositories/prisma-orders-repository";
 import { FakePaymentsProcessor } from "test/payments/fake-payment-processor";
-import { NlpService } from "../search/nlp-service";
 import { OtpProvider } from "../cryptography/otp-generator";
 import { PrismaOneTimePasswordsRepository } from "../database/repositories/prisma-one-time-passwords-repository";
 import { PrismaUsersRepository } from "../database/repositories/prisma-users-repository";
@@ -66,9 +65,6 @@ diContainer.register({
     return new Nodemailer(transporter);
   }),
   viewLoader: asFunction(() => new EjsLoader()),
-  naturalLanguageProcessor: asClass(NlpService, {
-    lifetime: "SINGLETON",
-  }),
   paymentsProcessor: asFunction(() => {
     return new FakePaymentsProcessor();
   }),
