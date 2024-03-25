@@ -3,7 +3,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { InsufficientProductQuantityOrWeightError } from "@/domain/use-cases/errors/insufficient-product-quantity-or-weight-error";
 import { InvalidWeightError } from "@/domain/use-cases/errors/invalid-weight-error";
-import { OrderPresenter } from "../presenters/orders-presenter";
+import { OrdersPresenter } from "../presenters/orders-presenter";
 import { InvalidDayForCycleActionError } from "@/domain/use-cases/errors/invalid-day-for-cycle-action-error";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
@@ -44,7 +44,7 @@ export async function orderProducts(
       payment_method,
     });
 
-    return reply.status(201).send(OrderPresenter.toHttp(order));
+    return reply.status(201).send(OrdersPresenter.toHttp([order]));
   } catch (err) {
     if (err instanceof ResourceAlreadyExistsError) {
       return reply.status(409).send({ message: err.message });
