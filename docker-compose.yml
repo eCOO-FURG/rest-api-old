@@ -28,6 +28,7 @@ services:
       - ./src:/app/src
       - ./test:/app/test
       - ./prisma:/app/prisma
+      - ./.env:/app/.env
     network_mode: "host"
     restart: always
     depends_on:
