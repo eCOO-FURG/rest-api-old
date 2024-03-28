@@ -2,7 +2,7 @@ version: "3"
 services:
   postgres:
     container_name: ecoo-postgres
-    image: postgis/postgis
+    image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
