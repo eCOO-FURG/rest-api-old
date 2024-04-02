@@ -44,7 +44,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     }
   }
 
-  async findById(id: string): Promise<Order | null> {
+  async findByIdWithItems(id: string): Promise<Order | null> {
     const order = this.items.find((item) => item.id.equals(id));
 
     if (!order) {

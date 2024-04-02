@@ -5,7 +5,7 @@ import { PrismaOrderMapper } from "../mappers/prisma-order-mapper";
 import { updateManyRawQuery } from "../utils/update-many-raw-query";
 
 export class PrismaOrdersRepository implements OrdersRepository {
-  async findById(id: string): Promise<Order | null> {
+  async findByIdWithItems(id: string): Promise<Order | null> {
     const order = await prisma.order.findUnique({
       where: {
         id,
