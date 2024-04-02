@@ -12,7 +12,7 @@ export class UpdateOrderStatusUseCase {
   constructor(private ordersRepository: OrdersRepository) {}
 
   async execute({ order_id, status }: UpdateOrderStatusUseCaseRequest) {
-    const order = await this.ordersRepository.findById(order_id);
+    const order = await this.ordersRepository.findByIdWithItems(order_id);
 
     if (!order) {
       throw new ResourceNotFoundError("Pedido", order_id);

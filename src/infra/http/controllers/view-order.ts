@@ -2,7 +2,7 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
 import { z } from "zod";
-import { OrderPresenter } from "../presenters/order-presenter";
+import { OrderWithItemsPresenter } from "../presenters/order-with-items-presenter";
 
 export const viewOrderParamsSchema = z.object({
   order_id: z.string().min(1),
@@ -21,7 +21,7 @@ export async function viewOrder(request: FastifyRequest, reply: FastifyReply) {
 
     return reply
       .status(200)
-      .send(OrderPresenter.toHttp(order, offers, agribusinesses));
+      .send(OrderWithItemsPresenter.toHttp(order, offers, agribusinesses));
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });

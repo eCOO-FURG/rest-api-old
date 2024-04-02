@@ -1,4 +1,4 @@
-import { OrdersPresenter } from "../presenters/orders-presenter";
+import { OrderPresenter } from "../presenters/order-presenter";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
@@ -21,7 +21,9 @@ export async function listOrders(request: FastifyRequest, reply: FastifyReply) {
       page,
     });
 
-    return reply.status(200).send(OrdersPresenter.toHttp(orders));
+    return reply
+      .status(200)
+      .send(orders.map((order) => OrderPresenter.toHttp(order)));
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });
