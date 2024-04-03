@@ -56,6 +56,7 @@ export class OrderWithItemsPresenter {
       payment_method: order.payment_method,
       shipping_address: order.shipping_address,
       price: order.price,
+      status: order.status,
       customer: {
         first_name: order.customer.first_name,
         last_name: order.customer.last_name,
