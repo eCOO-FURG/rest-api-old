@@ -6,7 +6,6 @@ import { UUID } from "@/core/entities/uuid";
 import { PrismaProductMapper } from "../mappers/prisma-product-mapper";
 import { updateManyRawQuery } from "../utils/update-many-raw-query";
 import { Decimal } from "@prisma/client/runtime/library";
-import { skip } from "node:test";
 
 export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
