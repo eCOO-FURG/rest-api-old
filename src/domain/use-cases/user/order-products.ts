@@ -12,7 +12,7 @@ interface OrderProductsUseCaseRequest {
   user_id: string;
   cycle_id: string;
   shipping_address: string;
-  payment_method: "PIX" | "ON_DELIVERY";
+  payment_method: Order["payment_method"];
   products: {
     id: string;
     amount: number;

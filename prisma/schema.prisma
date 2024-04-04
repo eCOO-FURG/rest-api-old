@@ -151,10 +151,14 @@ enum ORDER_STATUS {
   CANCELED
 }
 
+enum PAYMENT_METHOD {
+  ON_DELIVERY
+}
+
 model Order {
-  id               String       @id @default(uuid())
-  shipping_address String
-  payment_method   String
+  id               String         @id @default(uuid())
+  shipping_address String?
+  payment_method   PAYMENT_METHOD
   price            Decimal
   status           ORDER_STATUS
 

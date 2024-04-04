@@ -100,11 +100,11 @@ Authorization: Bearer {{token}}
 {
   "shipping_address": "test address",
   "cycle_id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
-  "payment_method": "PIX",
+  "payment_method": "ON_DELIVERY",
   "products": [
     {
       "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
-      "quantity_or_weight": 50
+      "amount": 50
     }
   ]
 }

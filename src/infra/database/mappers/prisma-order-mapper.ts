@@ -24,7 +24,7 @@ export class PrismaOrderMapper {
     return Order.create(
       {
         customer: PrismaUserMapper.toDomain(raw.customer),
-        payment_method: "PIX",
+        payment_method: raw.payment_method,
         shipping_address: raw.shipping_address,
         status: raw.status,
         cycle_id: new UUID(raw.cycle_id),

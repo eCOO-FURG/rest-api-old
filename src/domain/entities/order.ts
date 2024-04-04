@@ -15,9 +15,9 @@ interface Item extends Optional<EntityProps, "created_at"> {
 export interface OrderProps extends Optional<EntityProps, "created_at"> {
   cycle_id: UUID;
   customer: User;
-  shipping_address: string;
+  shipping_address: string | null;
   price: number;
-  payment_method: "PIX" | "ON_DELIVERY";
+  payment_method: "ON_DELIVERY";
   status: "READY" | "PENDING" | "DISPATCHED" | "CANCELED" | "PAID";
   items: Item[];
 }
@@ -79,12 +79,16 @@ export class Order extends Entity<OrderProps> {
   }
 
   static create(
-    props: Optional<OrderProps, "status" | "price" | "items">,
+    props: Optional<
+      OrderProps,
+      "status" | "price" | "items" | "shipping_address"
+    >,
     id?: UUID
   ) {
     const order = new Order(
       {
         ...props,
+        shipping_address: props.shipping_address ?? null,
         status: props.status ?? "PENDING",
         items: props.items ?? [],
         price: props.price ?? 0,

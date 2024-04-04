@@ -11,7 +11,7 @@ import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-a
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string(),
   cycle_id: z.string(),
-  payment_method: z.enum(["PIX", "ON_DELIVERY"]),
+  payment_method: z.enum(["ON_DELIVERY"]),
   products: z
     .array(
       z.object({
