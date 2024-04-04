@@ -11,7 +11,7 @@ import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 interface OrderProductsUseCaseRequest {
   user_id: string;
   cycle_id: string;
-  shipping_address: string;
+  shipping_address: string | null;
   payment_method: Order["payment_method"];
   products: {
     id: string;

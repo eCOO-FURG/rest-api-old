@@ -9,7 +9,7 @@ import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
 
 export const orderProductsBodySchema = z.object({
-  shipping_address: z.string(),
+  shipping_address: z.string().nullable(),
   cycle_id: z.string(),
   payment_method: z.enum(["ON_DELIVERY"]),
   products: z
