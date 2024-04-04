@@ -17,7 +17,9 @@ export class DomainEvents {
   }
 
   private static dispatchEntityEvents(entity: Entity<any>) {
-    entity.events.forEach((event: DomainEvent) => this.dispatch(event));
+    entity.events.forEach((event: DomainEvent) => {
+      this.dispatch(event);
+    });
   }
 
   private static removeEntityFromMarkedDispatchList(entity: Entity<any>) {
@@ -53,8 +55,12 @@ export class DomainEvents {
     this.handlersMap[eventClassName].push(callback);
   }
 
-  public static clearHandlers() {
-    this.handlersMap = {};
+  public static clearHandlers(eventClassName: string) {
+    const eventRegistered = eventClassName in this.handlersMap;
+
+    if (eventRegistered) {
+      this.handlersMap[eventClassName] = [];
+    }
   }
 
   public static clearMarkedEntities() {
@@ -72,6 +78,8 @@ export class DomainEvents {
       for (const handler of handlers) {
         handler(event);
       }
+
+      this.clearHandlers(eventClassName);
     }
   }
 }
