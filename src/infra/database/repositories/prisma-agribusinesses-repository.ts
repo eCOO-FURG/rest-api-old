@@ -63,8 +63,29 @@ export class PrismaAgribusinessesRepository
   async save(agribusiness: Agribusiness): Promise<void> {
     const data = PrismaAgribusinessMapper.toPrisma(agribusiness);
 
-    await prisma.agribusiness.create({
-      data,
+    await prisma.$transaction(async (tsx) => {
+      await tsx.agribusiness.create({
+        data,
+      });
+
+      const admin = await tsx.account.findUnique({
+        where: {
+          id: data.admin_id,
+        },
+      });
+
+      if (!admin) {
+        throw new Error();
+      }
+
+      await tsx.account.update({
+        where: {
+          id: data.admin_id,
+        },
+        data: {
+          roles: [...admin.roles, "PRODUCER"],
+        },
+      });
     });
   }
 
