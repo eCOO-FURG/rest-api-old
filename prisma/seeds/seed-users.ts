@@ -15,6 +15,7 @@ export async function seedUsers() {
         ? await hash(env.ECOO_EMAIL_PASSWORD, 8)
         : await hash("12345678", 8),
       verified_at: new Date(),
+      roles: ["USER", "ADMIN"],
       person: {
         create: {
           first_name: "Administador",

@@ -4,7 +4,6 @@ import { InMemoryOffersRepository } from "test/repositories/in-memory-offers-rep
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { Cycle } from "../../entities/cycle";
 import { Order } from "../../entities/order";
-import { UUID } from "@/core/entities/uuid";
 import { makeUser } from "test/factories/make-user";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;

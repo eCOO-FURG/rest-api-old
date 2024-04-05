@@ -8,12 +8,19 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
+enum ROLE {
+  ADMIN
+  PRODUCER
+  USER
+}
+
 model Account {
   id          String    @id @default(uuid())
   email       String    @unique
   cellphone   String    @unique
   password    String
   verified_at DateTime?
+  roles       ROLE[]    @default([USER])
 
   created_at DateTime  @default(now())
   updated_at DateTime?

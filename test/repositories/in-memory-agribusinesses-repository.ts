@@ -1,10 +1,13 @@
 import { Agribusiness } from "@/domain/entities/agribusiness";
 import { AgribusinessesRepository } from "@/domain/repositories/agribusinesses-repository";
+import { InMemoryUsersRepository } from "./in-memory-users-repository";
 
 export class InMemoryAgribusinessesRepository
   implements AgribusinessesRepository
 {
   items: Agribusiness[] = [];
+
+  constructor(private inMemoryUsersRepository: InMemoryUsersRepository) {}
 
   async findById(id: string): Promise<Agribusiness | null> {
     const agribusiness = this.items.find((item) => item.id.equals(id));
@@ -38,6 +41,18 @@ export class InMemoryAgribusinessesRepository
 
   async save(agribusiness: Agribusiness): Promise<void> {
     this.items.push(agribusiness);
+
+    const user = await this.inMemoryUsersRepository.findById(
+      agribusiness.admin_id.value
+    );
+
+    if (!user) {
+      return;
+    }
+
+    user.roles.push("PRODUCER");
+
+    await this.inMemoryUsersRepository.update(user);
   }
 
   async update(agribusiness: Agribusiness): Promise<void> {

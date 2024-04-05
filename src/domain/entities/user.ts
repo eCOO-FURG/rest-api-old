@@ -4,6 +4,8 @@ import { Optional } from "@/core/types/optional";
 import { UserVerifiedEvent } from "../events/on-user-verified";
 import { UserRegisteredEvent } from "../events/on-user-registered";
 
+type Role = "USER" | "PRODUCER" | "ADMIN";
+
 interface UserProps extends Optional<EntityProps, "created_at"> {
   first_name: string;
   last_name: string;
@@ -11,6 +13,7 @@ interface UserProps extends Optional<EntityProps, "created_at"> {
   password: string;
   cpf: string;
   phone: string;
+  roles: Role[];
   verified_at?: Date;
 }
 
@@ -73,8 +76,22 @@ export class User extends Entity<UserProps> {
     this.touch();
   }
 
-  static create(props: UserProps, id?: UUID) {
-    const user = new User(props, id);
+  get roles() {
+    return this.props.roles;
+  }
+
+  set roles(roles: Role[]) {
+    this.props.roles = roles;
+  }
+
+  static create(props: Optional<UserProps, "roles">, id?: UUID) {
+    const user = new User(
+      {
+        ...props,
+        roles: props.roles ?? ["USER"],
+      },
+      id
+    );
 
     if (!id) {
       user.registerEvent(new UserRegisteredEvent(user));

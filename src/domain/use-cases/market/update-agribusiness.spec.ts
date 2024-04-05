@@ -3,13 +3,18 @@ import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-ag
 import { Agribusiness } from "../../entities/agribusiness";
 import { UUID } from "@/core/entities/uuid";
 import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let sut: UpdateAgribusinessUseCase;
 
 describe("update", () => {
   beforeEach(() => {
-    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository(
+      inMemoryUsersRepository
+    );
     sut = new UpdateAgribusinessUseCase(inMemoryAgribusinessesRepository);
   });
 

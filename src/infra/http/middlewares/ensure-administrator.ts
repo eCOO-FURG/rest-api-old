@@ -14,7 +14,7 @@ export async function ensureAdministrator(
       },
     });
 
-    if (account.email !== "suporte@ecoo.org.br") {
+    if (!account.roles.includes("ADMIN")) {
       throw new Error();
     }
   } catch (err) {
