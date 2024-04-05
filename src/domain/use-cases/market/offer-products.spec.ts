@@ -12,7 +12,9 @@ import { AgribusinessNotActiveError } from "../errors/agribusiness-not-active-er
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { ValidateCycleActionUseCase } from "./validate-cycle-action";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleActionUseCase;
 let inMemoryOffersRepository: InMemoryOffersRepository;
@@ -26,7 +28,10 @@ describe("offer product", () => {
     validateCycleUseCase = new ValidateCycleActionUseCase(
       inMemoryCyclesRepository
     );
-    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository(
+      inMemoryUsersRepository
+    );
     inMemoryOffersRepository = new InMemoryOffersRepository();
     inMemoryProductsRepository = new InMemoryProductsRepository();
 

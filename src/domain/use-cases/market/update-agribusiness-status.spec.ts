@@ -3,13 +3,18 @@ import { UpdateAgribusinessStatusUseCase } from "./update-agribusiness-status";
 import { Agribusiness } from "../../entities/agribusiness";
 import { UUID } from "@/core/entities/uuid";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryAgribusinessesRepository: InMemoryAgribusinessesRepository;
 let sut: UpdateAgribusinessStatusUseCase;
 
 describe("update", () => {
   beforeEach(() => {
-    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository(
+      inMemoryUsersRepository
+    );
     sut = new UpdateAgribusinessStatusUseCase(inMemoryAgribusinessesRepository);
   });
   it("should be able to update the status of an existing agribusiness", async () => {

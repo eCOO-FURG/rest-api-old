@@ -13,7 +13,9 @@ let sut: RegisterAgribusinessUseCase;
 describe("create agribusiness", () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository();
+    inMemoryAgribusinessesRepository = new InMemoryAgribusinessesRepository(
+      inMemoryUsersRepository
+    );
     sut = new RegisterAgribusinessUseCase(
       inMemoryUsersRepository,
       inMemoryAgribusinessesRepository
@@ -116,5 +118,27 @@ describe("create agribusiness", () => {
         name: "second agribusiness but with same admin",
       })
     ).rejects.toBeInstanceOf(AlreadyAgribusinessAdminError);
+  });
+
+  it("should set the admin user as a producer", async () => {
+    const user = User.create({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      password: "12345678",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    await sut.execute({
+      user_id: user.id.value,
+      caf: "123456",
+      name: "fake-agribusiness",
+    });
+
+    expect(inMemoryUsersRepository.items[0].roles).toContain("PRODUCER");
   });
 });
