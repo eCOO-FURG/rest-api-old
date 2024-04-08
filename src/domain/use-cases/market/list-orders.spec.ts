@@ -24,7 +24,7 @@ describe("list orders", () => {
     );
   });
 
-  it("should be able to list orders", async () => {
+  it("should be able to list orders by status", async () => {
     const cycle = Cycle.create({
       alias: "Ciclo 1",
       duration: 7,
@@ -49,6 +49,7 @@ describe("list orders", () => {
     const result = await sut.execute({
       cycle_id: cycle.id.value,
       page: 1,
+      status: "PENDING",
     });
 
     expect(result.orders).toHaveLength(1);
