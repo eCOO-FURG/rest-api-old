@@ -3,7 +3,7 @@
     "name": "Hortaliças, legumes e verduras",
     "items": [
       {
-        "name": "Abóbora Japonesa",
+        "name": "Abóbora Cabotiá",
         "pricing": "UNIT",
         "image": "abobora_cabotia.jpg"
       },
@@ -84,7 +84,7 @@
       },
       {
         "name": "Alho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "alho.jpg"
       },
       {
@@ -113,6 +113,11 @@
         "image": "batata_doce_amarela.jpg"
       },
       {
+        "name": "Batata Doce Branca",
+        "pricing": "WEIGHT",
+        "image": "batata_doce_branca.jpg"
+      },
+      {
         "name": "Batata Doce Rosada",
         "pricing": "WEIGHT",
         "image": "batata_doce_rosada.jpg"
@@ -129,7 +134,7 @@
       },
       {
         "name": "Berinjela Japonesa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "berinjela_japonesa.jpg"
       },
       {
@@ -174,7 +179,7 @@
       },
       {
         "name": "Cogumelo",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "cogumelo.jpg"
       },
       {
@@ -194,7 +199,7 @@
       },
       {
         "name": "Couve Bruxelas",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "couve_bruxelas.jpg"
       },
       {
@@ -214,7 +219,7 @@
       },
       {
         "name": "Gengibre",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "gengibre.jpg"
       },
       {
@@ -241,6 +246,11 @@
         "name": "Microverdes",
         "pricing": "UNIT",
         "image": "microverdes.jpg"
+      },
+      {
+        "name": "Microverdes Amaranto",
+        "pricing": "UNIT",
+        "image": "microverde_amaranto.jpg"
       },
       {
         "name": "Microverdes Beterraba",
@@ -274,7 +284,7 @@
       },
       {
         "name": "Nabo",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "nabo.jpg"
       },
       {
@@ -293,6 +303,11 @@
         "image": "pimenta_cambuci.jpg"
       },
       {
+        "name": "Pimenta Dedo-de-moça",
+        "pricing": "WEIGHT",
+        "image": "pimenta_dedo_de_moca.jpg"
+      },
+      {
         "name": "Pimenta Malagueta",
         "pricing": "WEIGHT",
         "image": "pimenta_malagueta.jpg"
@@ -304,24 +319,20 @@
       },
       {
         "name": "Pimentão Amarelo",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "pimentao_amarelo.jpg"
       },
       {
         "name": "Pimentão Verde",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "pimentao_verde.jpg"
       },
       {
         "name": "Pimentão Vermelho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "pimentao_vermelho.jpg"
       },
-      {
-        "name": "Pimenta Dedo-de-moça",
-        "pricing": "WEIGHT",
-        "image": "pimenta_dedo_de_moca.jpg"
-      },
+
       {
         "name": "Quiabo",
         "pricing": "WEIGHT",
@@ -334,7 +345,7 @@
       },
       {
         "name": "Repolho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "repolho.jpg"
       },
       {
@@ -529,12 +540,12 @@
       },
       {
         "name": "Mamão Formosa",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "mamao_formosa.jpg"
       },
       {
         "name": "Mamão Papaya",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "mamao_papaya.jpg"
       },
       {
@@ -554,17 +565,17 @@
       },
       {
         "name": "Melancia",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "melancia.jpg"
       },
       {
         "name": "Melão Amarelo",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "melao_amarelo.jpg"
       },
       {
         "name": "Melão Casca de Carvalho",
-        "pricing": "WEIGHT",
+        "pricing": "UNIT",
         "image": "melao_casca_de_carvalho.jpg"
       },
       {
@@ -616,11 +627,6 @@
         "name": "Arroz Polido",
         "pricing": "WEIGHT",
         "image": "arroz_polido.jpg"
-      },
-      {
-        "name": "Café Torrado e moído",
-        "pricing": "WEIGHT",
-        "image": "cafe_torrado_e_moido.jpg"
       },
       {
         "name": "Chia",
@@ -793,6 +799,11 @@
         "image": "ovo_vermelho.jpg"
       },
       {
+        "name": "Porco",
+        "pricing": "WEIGHT",
+        "image": "porco.jpg"
+      },
+      {
         "name": "Queijo Colonial",
         "pricing": "UNIT",
         "image": "queijo_colonial.jpg"
@@ -934,17 +945,17 @@
       },
       {
         "name": "Jurupiga Especial",
-        "pricing": "UNIT",
+        "pricing": "WEIGHT",
         "image": "jurupiga_especial.jpg"
       },
       {
         "name": "Jurupiga Tradicional",
-        "pricing": "UNIT",
+        "pricing": "WEIGHT",
         "image": "jurupiga_tradicional.jpg"
       },
       {
         "name": "Molho de Tomate",
-        "pricing": "UNIT",
+        "pricing": "WEIGHT",
         "image": "molho_de_tomate.jpg"
       },
       {
@@ -974,12 +985,12 @@
       },
       {
         "name": "Vinagre de Maçã",
-        "pricing": "UNIT",
+        "pricing": "WEIGHT",
         "image": "vinagre_de_maca.jpg"
       },
       {
         "name": "Vinagre de Uva",
-        "pricing": "UNIT",
+        "pricing": "WEIGHT",
         "image": "vinagre_de_uva.jpg"
       }
     ]
