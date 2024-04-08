@@ -54,11 +54,14 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     return order;
   }
 
-  async findManyByCycleIdAndPage(
+  async findManyByCycleIdPageAndStatus(
     cycle_id: string,
-    page: number
+    page: number,
+    status: Order["status"]
   ): Promise<Order[]> {
-    const results = this.items.filter((item) => item.cycle_id.equals(cycle_id));
+    const results = this.items.filter(
+      (item) => item.cycle_id.equals(cycle_id) && item.status === status
+    );
 
     const start = (page - 1) * 20;
     const end = start + 20;

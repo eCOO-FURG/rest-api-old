@@ -7,10 +7,11 @@ import { ListOrdersUseCase } from "@/domain/use-cases/market/list-orders";
 export const listOrdersQuerySchema = z.object({
   cycle_id: z.string().min(1),
   page: z.coerce.number().min(1),
+  status: z.enum(["READY", "PENDING", "DISPATCHED", "CANCELED", "PAID"]),
 });
 
 export async function listOrders(request: FastifyRequest, reply: FastifyReply) {
-  const { cycle_id, page } = listOrdersQuerySchema.parse(request.query);
+  const { cycle_id, page, status } = listOrdersQuerySchema.parse(request.query);
 
   try {
     const listOrdersUseCase =
@@ -19,6 +20,7 @@ export async function listOrders(request: FastifyRequest, reply: FastifyReply) {
     const { orders } = await listOrdersUseCase.execute({
       cycle_id,
       page,
+      status,
     });
 
     return reply
