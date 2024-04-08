@@ -112,15 +112,17 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
   }
 
-  async findManyByCycleIdAndPage(
+  async findManyByCycleIdPageAndStatus(
     cycle_id: string,
-    page: number
+    page: number,
+    status: Order["status"]
   ): Promise<Order[]> {
     const skip = (page - 1) * 20;
 
     const orders = await prisma.order.findMany({
       where: {
         cycle_id,
+        status,
       },
       skip,
       take: 20,
