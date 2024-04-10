@@ -8,7 +8,7 @@ interface RegisterUseCaseRequest {
   first_name: string;
   last_name: string;
   email: string;
-  password: string;
+  password?: string;
   cpf: string;
   phone: string;
 }
@@ -45,16 +45,18 @@ export class RegisterUseCase {
       throw new ResourceAlreadyExistsError("CPF", cpf);
     }
 
-    const hashedPassword = await this.hasher.hash(password);
-
     const user = User.create({
       first_name,
       last_name,
       cpf: cpf,
       email,
       phone,
-      password: hashedPassword,
     });
+
+    if (password) {
+      const hashedPassword = await this.hasher.hash(password);
+      user.protect(hashedPassword);
+    }
 
     await this.usersRepository.save(user);
 

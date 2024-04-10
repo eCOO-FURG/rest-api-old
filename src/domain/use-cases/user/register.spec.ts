@@ -28,6 +28,19 @@ describe("register", () => {
     expect(inMemoryUsersRepository.items[0]).toBeInstanceOf(User);
   });
 
+  it("should be able to able to register with an empty password", async () => {
+    await sut.execute({
+      email: "johndoe@example.com",
+      phone: "51987654321",
+      first_name: "John",
+      last_name: "Doe",
+      cpf: "523.065.281-01",
+    });
+
+    expect(inMemoryUsersRepository.items[0]).toBeInstanceOf(User);
+    expect(inMemoryUsersRepository.items[0].password).toBeNull();
+  });
+
   it("should not be able to register with the same email twice", async () => {
     const email = "johndoe@example.com";
 
