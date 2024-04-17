@@ -10,7 +10,7 @@ interface UserProps extends Optional<EntityProps, "created_at"> {
   first_name: string;
   last_name: string;
   email: string;
-  password: string | null;
+  password?: string;
   cpf: string;
   phone: string;
   roles: Role[];
@@ -89,7 +89,7 @@ export class User extends Entity<UserProps> {
       {
         ...props,
         roles: props.roles ?? ["USER"],
-        password: props.password ?? null,
+        password: props.password,
       },
       id
     );
