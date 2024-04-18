@@ -8,6 +8,8 @@ import { RegisterSessionUseCase } from "./register-session";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { User } from "../../entities/user";
 import { UserNotVerifiedError } from "../errors/user-not-verified-error";
+import { makeUser } from "test/factories/make-user";
+import { PasswordNotSettedError } from "../errors/password-not-setted";
 
 let inMemorySessionsRepository: InMemorySessionsRepository;
 let fakeEncrypter: FakeEncrypter;
@@ -92,5 +94,22 @@ describe("authenticate with password", () => {
         user_agent: "mozila-firefox 5.0",
       })
     ).rejects.toBeInstanceOf(UserNotVerifiedError);
+  });
+
+  it("should not be able to authenticate an account that does not have an password setted", async () => {
+    const user = makeUser({
+      verified_at: new Date(),
+    });
+
+    await inMemoryUsersRepository.save(user);
+
+    await expect(() =>
+      sut.execute({
+        email: user.email,
+        password: "password",
+        ip_address: "ip_address",
+        user_agent: "mozila-firefox 5.0",
+      })
+    ).rejects.toBeInstanceOf(PasswordNotSettedError);
   });
 });
