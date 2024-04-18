@@ -38,7 +38,7 @@ describe("register", () => {
     });
 
     expect(inMemoryUsersRepository.items[0]).toBeInstanceOf(User);
-    expect(inMemoryUsersRepository.items[0].password).toBeNull();
+    expect(inMemoryUsersRepository.items[0].password).toBeUndefined();
   });
 
   it("should not be able to register with the same email twice", async () => {
