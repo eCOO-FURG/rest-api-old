@@ -17,6 +17,7 @@ import { ValidateCycleActionUseCase } from "@/domain/use-cases/market/validate-c
 import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 import { RegisterUseCase } from "@/domain/use-cases/user/register";
+import { RequestPasswordUpdateUseCase } from "@/domain/use-cases/user/request-password-update";
 import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
 import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
 import { diContainer } from "@fastify/awilix";
@@ -151,5 +152,14 @@ diContainer.register({
   ),
   updateOrderStatusUseCase: asFunction(
     ({ ordersRepository }) => new UpdateOrderStatusUseCase(ordersRepository)
+  ),
+  requestPasswordUpdateUseCase: asFunction(
+    ({ usersRepository, mailer, encrypter, viewLoader }) =>
+      new RequestPasswordUpdateUseCase(
+        usersRepository,
+        mailer,
+        encrypter,
+        viewLoader
+      )
   ),
 });
