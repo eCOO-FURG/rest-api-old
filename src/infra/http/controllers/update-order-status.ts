@@ -30,6 +30,8 @@ export async function updateOrderStatus(
       order_id,
       status,
     });
+
+    return reply.status(200).send();
   } catch (err) {
     if (err instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: err.message });

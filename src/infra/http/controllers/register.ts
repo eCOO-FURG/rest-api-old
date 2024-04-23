@@ -8,7 +8,7 @@ import { z } from "zod";
 export const registerBodySchema = z.object({
   email: z.string().email(),
   cellphone: z.string(),
-  password: z.string().min(8),
+  password: z.string().min(8).optional(),
   first_name: z.string(),
   last_name: z.string(),
   cpf: z.string().max(14),

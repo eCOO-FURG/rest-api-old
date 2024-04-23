@@ -13,7 +13,7 @@ export class PrismaUserMapper {
         first_name: raw.person.first_name,
         last_name: raw.person.last_name,
         email: raw.email,
-        password: raw.password,
+        password: raw.password ? raw.password : undefined,
         cpf: raw.person.cpf,
         phone: raw.cellphone,
         verified_at: raw.verified_at ?? undefined,

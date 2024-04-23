@@ -1,7 +1,12 @@
 import { User } from "@/domain/entities/user";
 import { faker } from "@faker-js/faker";
 
-export function makeUser(verified_at?: Date) {
+interface MakeUserRequest {
+  verified_at?: Date;
+  password?: string;
+}
+
+export function makeUser({ verified_at, password }: MakeUserRequest = {}) {
   return User.create({
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
@@ -12,7 +17,7 @@ export function makeUser(verified_at?: Date) {
         max: 11,
       })
       .toString(),
-    password: faker.internet.password(),
+    password: password ?? undefined,
     phone: faker.phone.number(),
     verified_at: verified_at,
   });

@@ -3,6 +3,7 @@ import { Hasher } from "../../cryptography/hasher";
 import { RegisterSessionUseCase } from "./register-session";
 import { UsersRepository } from "../../repositories/users-repository";
 import { UserNotVerifiedError } from "../errors/user-not-verified-error";
+import { PasswordNotSettedError } from "../errors/password-not-setted";
 
 interface AuthenticateRequest {
   email: string;
@@ -28,6 +29,10 @@ export class AuthenticateWithPasswordUseCase {
 
     if (!user) {
       throw new WrongCredentialsError();
+    }
+
+    if (!user.password) {
+      throw new PasswordNotSettedError();
     }
 
     const isPasswordValid = await this.hasher.compare(password, user.password);
