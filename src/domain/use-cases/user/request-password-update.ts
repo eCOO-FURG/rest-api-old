@@ -8,6 +8,7 @@ import { env } from "@/infra/env";
 
 interface RequestPasswordUpdateUseCaseRequest {
   email: string;
+  path: string;
 }
 
 export class RequestPasswordUpdateUseCase {
@@ -18,7 +19,7 @@ export class RequestPasswordUpdateUseCase {
     private viewLoader: ViewLoader
   ) {}
 
-  async execute({ email }: RequestPasswordUpdateUseCaseRequest) {
+  async execute({ email, path }: RequestPasswordUpdateUseCaseRequest) {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
@@ -31,7 +32,7 @@ export class RequestPasswordUpdateUseCase {
 
     const view = await this.viewLoader.load("updatePassword", {
       first_name: user.first_name,
-      url: `${env.FRONT_URL}/trocar-senha?code=${code}`,
+      url: `${env.FRONT_URL}/${path}?code=${code}`,
     });
 
     const emailMessage = Email.create({

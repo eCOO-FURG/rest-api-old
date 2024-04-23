@@ -39,6 +39,7 @@ describe("request password update", () => {
 
     await sut.execute({
       email: user.email,
+      path: "update-password",
     });
 
     await waitFor(() => {
@@ -50,6 +51,7 @@ describe("request password update", () => {
     await expect(() =>
       sut.execute({
         email: "fake@fake.com",
+        path: "update-password",
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
