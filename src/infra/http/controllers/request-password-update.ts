@@ -21,6 +21,7 @@ export async function requestPasswordUpdate(
 
     await requestPasswordUpdateUseCase.execute({
       email,
+      path: "trocar-senha",
     });
 
     return reply.status(204).send();

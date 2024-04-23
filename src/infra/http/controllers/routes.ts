@@ -21,11 +21,13 @@ import { listCycles } from "./list-cycles";
 import { listOrders } from "./list-orders";
 import { viewOrder } from "./view-order";
 import { updateOrderStatus } from "./update-order-status";
+import { requestPasswordUpdate } from "./request-password-update";
 
 export async function routes(app: FastifyInstance) {
   app.post("/users", register);
   app.get("/users/verify", verify);
   app.post("/users/otp", registerOneTimePassword);
+  app.get("/users/password", requestPasswordUpdate);
 
   app.post("/auth", authenticateWithPassword);
   app.post("/auth/otp", authenticateWithOneTimePassword);
