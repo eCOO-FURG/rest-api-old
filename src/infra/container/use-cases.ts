@@ -19,6 +19,7 @@ import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
 import { RegisterUseCase } from "@/domain/use-cases/user/register";
 import { RequestPasswordUpdateUseCase } from "@/domain/use-cases/user/request-password-update";
 import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
+import { UpdatePasswordUseCase } from "@/domain/use-cases/user/update-password";
 import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
 import { diContainer } from "@fastify/awilix";
 import { asFunction, Lifetime } from "awilix";
@@ -161,5 +162,9 @@ diContainer.register({
         encrypter,
         viewLoader
       )
+  ),
+  updatePasswordUseCase: asFunction(
+    ({ usersRepository, hasher }) =>
+      new UpdatePasswordUseCase(usersRepository, hasher)
   ),
 });
