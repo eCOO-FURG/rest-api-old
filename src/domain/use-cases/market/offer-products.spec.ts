@@ -13,6 +13,7 @@ import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { ValidateCycleActionUseCase } from "./validate-cycle-action";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { InvalidDescriptionError } from "../errors/invalid-description-length.error";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
@@ -250,5 +251,49 @@ describe("offer product", () => {
         },
       })
     ).rejects.toBeInstanceOf(AgribusinessNotActiveError);
+  });
+
+  it("should not be able to offer a product with a description length bigger than 200 characters", async () => {
+    const cycle = Cycle.create({
+      alias: "Ciclo 1",
+      duration: 7,
+      offering: [1, 2, 3, 4, 5, 6, 7],
+      ordering: [1, 2, 3, 4, 5, 6, 7],
+      dispatching: [1, 2, 3, 4, 5, 6, 7],
+    });
+
+    await inMemoryCyclesRepository.save(cycle);
+
+    const agribusiness = Agribusiness.create({
+      admin_id: new UUID("fake-id"),
+      caf: "123456",
+      name: "fake-name",
+    });
+
+    await inMemoryAgribusinessesRepository.save(agribusiness);
+
+    const product1 = Product.create({
+      image: "image",
+      name: "banana",
+      pricing: "WEIGHT",
+      type_id: new UUID("fake-id"),
+    });
+
+    await inMemoryProductsRepository.save(product1);
+
+    const twoHundredOneCharsString = "a".repeat(201);
+
+    await expect(() =>
+      sut.execute({
+        agribusiness_id: agribusiness.id.value,
+        cycle_id: cycle.id.value,
+        product: {
+          id: product1.id.value,
+          price: 10.0,
+          amount: 50,
+          description: twoHundredOneCharsString,
+        },
+      })
+    ).rejects.toBeInstanceOf(InvalidDescriptionError);
   });
 });

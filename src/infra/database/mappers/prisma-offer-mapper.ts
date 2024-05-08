@@ -25,6 +25,7 @@ export class PrismaOfferMapper {
           offer_id: new UUID(item.offer_id),
           product: PrismaProductMapper.toDomain(item.product),
           price: item.price.toNumber(),
+          description: item.description,
           amount: item.amount,
           created_at: item.created_at,
           updated_at: item.updated_at,
@@ -46,6 +47,7 @@ export class PrismaOfferMapper {
           data: offer.items.map((item) => ({
             price: item.price,
             product_id: item.product.id.value,
+            description: item.description,
             amount: item.amount,
             created_at: item.created_at,
             updated_at: item.updated_at,

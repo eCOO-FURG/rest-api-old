@@ -13,28 +13,38 @@ export class OrderWithItemsPresenter {
           id: string;
           image: string;
           amount: number;
+          description?: string | null;
         }[];
       };
     }[] = [];
 
     for (let i = 0; i < order.items.length; i++) {
-      const offer = offers.findIndex((item) =>
+      const offerIndex = offers.findIndex((item) =>
         item.id.equals(order.items[i].offer_id)
       );
 
       const agribusiness = agribusinesses.findIndex((item) =>
-        item.id.equals(offers[offer].agribusiness_id)
+        item.id.equals(offers[offerIndex].agribusiness_id)
       );
 
       const found = items.findIndex((item) =>
         agribusinesses[agribusiness].id.equals(item.agribusiness.id)
       );
 
+      const offer = offers[offerIndex];
+
+      const offerItem = offer.find(order.items[i].product);
+
+      if (!offerItem) {
+        continue;
+      }
+
       const product = {
         id: order.items[i].product.id.value,
         name: order.items[i].product.name,
         image: order.items[i].product.image,
         amount: order.items[i].amount,
+        description: offerItem.description,
       };
 
       if (found > -1) {

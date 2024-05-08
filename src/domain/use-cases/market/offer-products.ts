@@ -14,6 +14,7 @@ interface OfferProductsUseCaseRequest {
     id: string;
     amount: number;
     price: number;
+    description?: string;
   };
 }
 
@@ -65,6 +66,7 @@ export class OfferProductsUseCase {
       product,
       price: offeredProduct.price,
       amount: offeredProduct.amount,
+      description: offeredProduct.description ?? null,
     };
 
     if (activeOffer) {

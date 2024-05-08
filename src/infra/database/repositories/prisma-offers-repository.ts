@@ -134,6 +134,7 @@ export class PrismaOffersRepository implements OffersRepository {
       product: PrismaProductMapper.toDomain(item.product),
       price: item.price.toNumber(),
       amount: item.amount,
+      description: item.description,
       created_at: item.created_at,
       updated_at: item.updated_at,
     }));
