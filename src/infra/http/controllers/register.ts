@@ -1,3 +1,4 @@
+import { Cpf } from "@/domain/entities/value-objects/cpf";
 import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
 import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
 import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
@@ -19,6 +20,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     registerBodySchema.parse(request.body);
 
   try {
+    Cpf.createFromText(cpf);
     const registerUseCase =
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
@@ -30,7 +32,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       password,
       first_name,
       last_name,
-      cpf,
+      cpf: cpf,
     });
 
     return reply.status(201).send();
