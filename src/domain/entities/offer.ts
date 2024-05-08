@@ -11,7 +11,7 @@ interface Item extends Optional<EntityProps, "created_at"> {
   product: Product;
   price: number;
   amount: number;
-  description?: string;
+  description: string | null;
 }
 
 interface OfferProps extends Optional<EntityProps, "created_at"> {

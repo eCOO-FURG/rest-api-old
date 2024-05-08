@@ -66,7 +66,7 @@ export class OfferProductsUseCase {
       product,
       price: offeredProduct.price,
       amount: offeredProduct.amount,
-      description: offeredProduct.description,
+      description: offeredProduct.description ?? null,
     };
 
     if (activeOffer) {
