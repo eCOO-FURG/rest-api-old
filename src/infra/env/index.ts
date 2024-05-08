@@ -2,7 +2,7 @@ import "dotenv/config";
 import { z } from "zod";
 
 const deployValidationSchema = z.object({
-  ENV: z.enum(["dev", "test", "homolog", "prod"]),
+  ENV: z.enum(["dev", "test", "staging", "prod"]),
   SERVER_URL: z.string().min(1),
   SERVER_PORT: z.coerce.number().default(3333),
   SERVER_REDIRECT_PORT: z.coerce.number(),

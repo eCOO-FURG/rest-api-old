@@ -6,7 +6,7 @@ import { prisma } from "../../src/infra/database/prisma-service";
 export async function seedCycles() {
   await prisma.cycle.deleteMany();
 
-  if (env.ENV === "prod" || env.ENV === "homolog") {
+  if (["prod, staging"].includes(env.ENV)) {
     const weekly = Cycle.create({
       alias: "Semanal",
       duration: 7,
@@ -15,18 +15,7 @@ export async function seedCycles() {
       dispatching: [5, 6],
     });
 
-    // const everyThursday = Cycle.create({
-    //   alias: "Quintas-feiras",
-    //   duration: 1,
-    //   offering: [5],
-    //   ordering: [5],
-    //   dispatching: [5],
-    // });
-
-    const cycles = [
-      weekly,
-      // everyThursday
-    ];
+    const cycles = [weekly];
 
     const prismaCycles = cycles.map((item) => PrismaCycleMapper.toPrisma(item));
 
