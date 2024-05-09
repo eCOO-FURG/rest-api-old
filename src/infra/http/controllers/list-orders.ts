@@ -1,8 +1,8 @@
 import { OrderPresenter } from "../presenters/order-presenter";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { ListOrdersUseCase } from "@/domain/use-cases/market/list-orders";
+import { handleErrors } from "./error/error-handler";
 
 export const listOrdersQuerySchema = z.object({
   cycle_id: z.string().min(1),
@@ -27,9 +27,7 @@ export async function listOrders(request: FastifyRequest, reply: FastifyReply) {
       .status(200)
       .send(orders.map((order) => OrderPresenter.toHttp(order)));
   } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: err.message });
-    }
+    handleErrors(err, reply);
     throw err;
   }
 }

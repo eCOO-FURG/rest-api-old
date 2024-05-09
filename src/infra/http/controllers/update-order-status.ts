@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { InvalidOrderStatusError } from "@/domain/use-cases/errors/invalid-order-status-error";
 import { UpdateOrderStatusUseCase } from "@/domain/use-cases/market/update-order-status";
+import { handleErrors } from "./error/error-handler";
 
 export const updateOrderStatusParamsSchema = z.object({
   order_id: z.string(),
@@ -33,12 +32,7 @@ export async function updateOrderStatus(
 
     return reply.status(200).send();
   } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: err.message });
-    }
-    if (err instanceof InvalidOrderStatusError) {
-      return reply.status(400).send({ message: err.message });
-    }
+    handleErrors(err, reply);
     throw err;
   }
 }

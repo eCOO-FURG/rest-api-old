@@ -1,8 +1,7 @@
-import { AlreadyAgribusinessAdminError } from "@/domain/use-cases/errors/already-agribusiness-admin-error";
-import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/market/register-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { handleErrors } from "./error/error-handler";
 
 export const registerAgribusinessBodySchema = z.object({
   caf: z.string(),
@@ -29,12 +28,7 @@ export async function registerAgribusiness(
 
     return reply.status(201).send();
   } catch (err) {
-    if (
-      err instanceof ResourceAlreadyExistsError ||
-      err instanceof AlreadyAgribusinessAdminError
-    ) {
-      return reply.status(409).send({ message: err.message });
-    }
+    handleErrors(err, reply);
     throw err;
   }
 }
