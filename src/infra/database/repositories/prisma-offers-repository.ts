@@ -68,6 +68,7 @@ export class PrismaOffersRepository implements OffersRepository {
           product_id: item.product.id.value,
           amount: item.amount,
           price: new Decimal(item.price),
+          description: item.description
         })),
       });
     });
