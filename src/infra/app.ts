@@ -1,13 +1,18 @@
 import "./container/";
+import "../infra/log/sentry";
+
+import * as Sentry from "@sentry/node";
+
 import fastify from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
+import cors from "@fastify/cors";
+
 import { env } from "./env";
-import { ZodError, ZodInvalidTypeIssue } from "zod";
+import { ZodError } from "zod";
 import { routes } from "./http/controllers/routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
 import { FastifySwaggerOptions } from "./helpers/swagger";
-import cors from "@fastify/cors";
 
 export const app = fastify();
 
@@ -20,10 +25,13 @@ app.register(fastifyAwilixPlugin, {
 });
 
 app.register(routes);
+
 app.register(swagger, FastifySwaggerOptions);
 app.register(swaggerUI, {
   prefix: "/docs",
 });
+
+Sentry.setupFastifyErrorHandler(app);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
@@ -35,11 +43,12 @@ app.setErrorHandler((error, _, reply) => {
     return reply.status(400).send({ message: "Erro de validação.", issues });
   }
 
-  if (env.ENV !== "prod") {
-    console.error(error);
+  Sentry.captureException(error);
+
+  if (["prod", "staging"].includes(env.ENV)) {
+    Sentry.captureException(error);
   } else {
     console.log(error);
-    // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
   }
 
   return reply.status(500).send({ message: "⚠️ Internal server error." });
