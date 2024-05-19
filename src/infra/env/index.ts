@@ -20,6 +20,7 @@ const deployValidationSchema = z.object({
 const devValidationSchema = deployValidationSchema.omit({
   SERVER_REDIRECT_PORT: true,
   ECOO_EMAIL_PASSWORD: true,
+  SENTRY_DSN: true,
 });
 
 const testValidationSchema = devValidationSchema.omit({
