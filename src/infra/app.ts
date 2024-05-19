@@ -1,5 +1,5 @@
-import "./container/";
-import "../infra/log/sentry";
+import "@/infra/container/";
+import "@/infra/log/sentry";
 
 import * as Sentry from "@sentry/node";
 
@@ -42,8 +42,6 @@ app.setErrorHandler((error, _, reply) => {
 
     return reply.status(400).send({ message: "Erro de validação.", issues });
   }
-
-  Sentry.captureException(error);
 
   if (["prod", "staging"].includes(env.ENV)) {
     Sentry.captureException(error);
