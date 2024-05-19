@@ -17,7 +17,10 @@ import { FastifySwaggerOptions } from "./helpers/swagger";
 export const app = fastify();
 
 app.register(cors, {
-  origin: true, //Todas as URLs de front-end podem acessar nosso back-end
+  origin:
+    env.ENV === "dev"
+      ? true
+      : "/^https?://(?:produtor|cdd)(?:.homolog)?.ecoo.org.br/",
 });
 
 app.register(fastifyAwilixPlugin, {
