@@ -1,7 +1,8 @@
 import { Email } from "@/domain/entities/email";
 import { Mailer } from "@/domain/mail/mailer";
 import { Transporter } from "nodemailer";
-import { env } from "../env";
+import { env } from "@/infra/env";
+import { Logger } from "@/infra/log/logger";
 
 export class Nodemailer implements Mailer {
   constructor(private transporter: Transporter) {}
@@ -15,7 +16,7 @@ export class Nodemailer implements Mailer {
         html: email.html,
       });
     } catch (error) {
-      console.log("Erro ao enviar email: ", error);
+      Logger.log(error);
     }
   }
 }
