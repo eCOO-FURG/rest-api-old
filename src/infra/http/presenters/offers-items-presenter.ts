@@ -20,6 +20,7 @@ export class OffersItemsPresenter {
         data[index].amount += item.amount;
         const total = data[index].price * data[index].amount;
         data[index].price = (total + item.price) / data[index].amount;
+        continue;
       }
 
       data.push({

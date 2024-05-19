@@ -134,9 +134,10 @@ model Offer {
 }
 
 model OfferProduct {
-  id     String  @id @default(uuid())
-  price  Decimal @db.Decimal(10, 2)
-  amount Int
+  id          String  @id @default(uuid())
+  price       Decimal @db.Decimal(10, 2)
+  amount      Int
+  description String? @db.VarChar(240)
 
   offer_id String
   offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)

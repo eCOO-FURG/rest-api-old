@@ -51,7 +51,7 @@ diContainer.register({
       port: env.SMTP_PORT,
     };
 
-    if (["prod", "homolog"].includes(env.ENV)) {
+    if (["prod", "staging"].includes(env.ENV)) {
       Object.assign(options, {
         auth: {
           user: env.ECOO_EMAIL,
