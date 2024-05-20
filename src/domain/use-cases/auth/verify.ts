@@ -35,5 +35,7 @@ export class VerifyUseCase {
     await this.usersRepository.update(user);
 
     DomainEvents.dispatchEventsForEntity(user.id);
+
+    return user;
   }
 }

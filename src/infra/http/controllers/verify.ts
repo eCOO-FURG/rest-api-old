@@ -16,13 +16,27 @@ export async function verify(request: FastifyRequest, reply: FastifyReply) {
     const verifyUseCase =
       request.diScope.resolve<VerifyUseCase>("verifyUseCase");
 
+    const user = await verifyUseCase.execute({
+      code,
+    });
+
     request.diScope.resolve("onUserVerified");
 
     await verifyUseCase.execute({
       code,
     });
 
-    return reply.redirect(301, `${env.FRONT_URL}/login`).send({});
+    let redirectUrl = `${env.CDD_FRONT_URL}`;
+
+    if (user!.roles.includes("ADMIN")) {
+      redirectUrl = `${env.CDD_FRONT_URL}`;
+    } else if (user!.roles.includes("PRODUCER")) {
+      redirectUrl = `${env.PRODUCER_FRONT_URL}`;
+    } else if (user!.roles.includes("USER")) {
+      redirectUrl = `${env.CDD_FRONT_URL}`;
+    }
+
+    return reply.redirect(301, redirectUrl).send({});
   } catch (err) {
     if (err instanceof InvalidValidationCodeError) {
       return reply.status(401).send({ message: err.message });
