@@ -17,7 +17,7 @@ export async function ensureAgribusinessAdmin(
     request.payload.agribusiness_id = agribusiness.id;
   } catch (err) {
     return reply
-      .status(401)
+      .status(403)
       .send({ message: "Não é um administrador de agronegócio." });
   }
 }

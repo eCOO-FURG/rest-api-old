@@ -18,6 +18,6 @@ export async function ensureAdministrator(
       throw new Error();
     }
   } catch (err) {
-    return reply.status(401).send({ message: "Não é um administrador." });
+    return reply.status(403).send({ message: "Não é um administrador." });
   }
 }

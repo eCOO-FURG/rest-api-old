@@ -14,11 +14,13 @@ const deployValidationSchema = z.object({
   ECOO_EMAIL: z.string().min(1),
   ECOO_EMAIL_PASSWORD: z.string().min(1),
   SESSION_DURATION_IN_DAYS: z.coerce.number().min(1),
+  SENTRY_DSN: z.string().min(1),
 });
 
 const devValidationSchema = deployValidationSchema.omit({
   SERVER_REDIRECT_PORT: true,
   ECOO_EMAIL_PASSWORD: true,
+  SENTRY_DSN: true,
 });
 
 const testValidationSchema = devValidationSchema.omit({

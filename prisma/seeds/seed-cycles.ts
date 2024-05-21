@@ -6,7 +6,7 @@ import { prisma } from "../../src/infra/database/prisma-service";
 export async function seedCycles() {
   await prisma.cycle.deleteMany();
 
-  if (["prod, staging"].includes(env.ENV)) {
+  if (["prod", "staging"].includes(env.ENV)) {
     const weekly = Cycle.create({
       alias: "Semanal",
       duration: 7,
