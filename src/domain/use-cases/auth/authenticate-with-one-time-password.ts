@@ -53,6 +53,7 @@ export class AuthenticateWithOneTimePasswordUseCase {
 
     return {
       token,
+      user,
     };
   }
 }

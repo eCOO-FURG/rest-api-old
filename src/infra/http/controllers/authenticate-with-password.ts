@@ -3,6 +3,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
+import { UserPresenter } from "../presenters/user-presenter";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -21,7 +22,7 @@ export async function authenticateWithPassword(
         "authenticateWithPasswordUseCase"
       );
 
-    const { token } = await authenticateWithPasswordUseCase.execute({
+    const { token, user } = await authenticateWithPasswordUseCase.execute({
       email,
       password,
       ip_address: request.ip,
@@ -30,6 +31,7 @@ export async function authenticateWithPassword(
 
     return reply.status(200).send({
       token,
+      user: UserPresenter.toHttp(user),
     });
   } catch (err) {
     if (

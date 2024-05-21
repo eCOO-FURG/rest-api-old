@@ -53,6 +53,7 @@ export class AuthenticateWithPasswordUseCase {
 
     return {
       token,
+      user,
     };
   }
 }

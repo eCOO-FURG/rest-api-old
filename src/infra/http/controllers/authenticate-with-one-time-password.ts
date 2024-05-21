@@ -3,6 +3,7 @@ import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verifie
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { UserPresenter } from "../presenters/user-presenter";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -23,7 +24,7 @@ export async function authenticateWithOneTimePassword(
         "authenticateWithOneTimePasswordUseCase"
       );
 
-    const { token } = await authenticateWithPasswordUseCase.execute({
+    const { token, user } = await authenticateWithPasswordUseCase.execute({
       email,
       one_time_password,
       ip_address: request.ip,
@@ -32,6 +33,7 @@ export async function authenticateWithOneTimePassword(
 
     return reply.status(200).send({
       token,
+      user: UserPresenter.toHttp(user),
     });
   } catch (err) {
     if (
