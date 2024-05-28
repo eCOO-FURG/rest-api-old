@@ -68,6 +68,9 @@ export class PrismaProductsRepository implements ProductsRepository {
           mode: "insensitive",
         },
       },
+      orderBy: {
+        name: "asc",
+      },
       skip,
       take: 20,
     });
