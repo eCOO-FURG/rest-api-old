@@ -24,7 +24,8 @@ export class InMemoryOffersRepository implements OffersRepository {
   async findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],
-    date: Date
+    date: Date,
+    page = 1
   ): Promise<Offer["items"]> {
     const items: Offer["items"] = [];
 
@@ -39,7 +40,10 @@ export class InMemoryOffersRepository implements OffersRepository {
       items.push(...match);
     }
 
-    return items;
+    const start = (page - 1) * 20;
+    const end = start + 20;
+
+    return items.slice(start, end);
   }
 
   async findActive(

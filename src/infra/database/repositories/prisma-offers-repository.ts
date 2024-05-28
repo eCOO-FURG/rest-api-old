@@ -68,7 +68,7 @@ export class PrismaOffersRepository implements OffersRepository {
           product_id: item.product.id.value,
           amount: item.amount,
           price: new Decimal(item.price),
-          description: item.description
+          description: item.description,
         })),
       });
     });
@@ -108,8 +108,11 @@ export class PrismaOffersRepository implements OffersRepository {
   async findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],
-    date: Date
+    date: Date,
+    page = 1
   ): Promise<Offer["items"]> {
+    const skip = (page - 1) * 20;
+
     const data = await prisma.offerProduct.findMany({
       where: {
         product_id: {
@@ -128,6 +131,8 @@ export class PrismaOffersRepository implements OffersRepository {
       include: {
         product: true,
       },
+      skip,
+      take: 20,
     });
 
     const items: Offer["items"] = data.map((item) => ({

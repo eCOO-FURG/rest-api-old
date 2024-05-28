@@ -33,7 +33,7 @@ export class Offer extends Entity<OfferProps> {
     return this.props.items;
   }
 
-  add(item: Optional<Item, "offer_id">) {
+  add(item: Optional<Item, "offer_id" | "description">) {
     const found = this.props.items.find((e) => e.product.equals(item.product));
 
     if (found) {
@@ -50,6 +50,8 @@ export class Offer extends Entity<OfferProps> {
 
     this.items.push({
       offer_id: this.id,
+      description: item.description ?? null,
+      created_at: new Date(),
       ...item,
     });
 
