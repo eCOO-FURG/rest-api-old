@@ -21,8 +21,8 @@ POST {{base_url}}/auth
 Content-Type: application/json
 
 {
-  "email": "admin@ecoo.com.br",
-  "password": "12345678"
+  "email": "timoteostifft@gmail.com",
+  "password": "password"
 }
 
 ###
@@ -99,11 +99,11 @@ Authorization: Bearer {{token}}
 
 {
   "shipping_address": "test address",
-  "cycle_id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
+  "cycle_id": "18cac3f7-e479-47ed-a631-bf42a0dfb36b",
   "payment_method": "ON_DELIVERY",
   "products": [
     {
-      "id": "0932460d-81c7-47ff-9ac7-1acb990e7cdc",
+      "id": "01a70ec5-b209-4bbb-9a5a-1dfc98557e5a",
       "amount": 50
     }
   ]
