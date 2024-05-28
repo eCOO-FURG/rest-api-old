@@ -15,6 +15,7 @@ export interface OffersRepository {
   findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
     cycle_id: string,
     product_ids: string[],
-    date: Date
+    date: Date,
+    page?: number
   ): Promise<Offer["items"]>;
 }
