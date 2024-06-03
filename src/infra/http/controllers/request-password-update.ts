@@ -1,7 +1,7 @@
 import { RequestPasswordUpdateUseCase } from "@/domain/use-cases/user/request-password-update";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const requestPasswordUpdateQuerySchema = z.object({
   email: z.string().email(),

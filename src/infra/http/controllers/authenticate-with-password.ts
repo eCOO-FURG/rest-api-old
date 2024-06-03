@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),

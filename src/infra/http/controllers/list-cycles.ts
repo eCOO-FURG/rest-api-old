@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { CyclePresenter } from "../presenters/cycle-presenter";
 import { ListCycleUseCase } from "@/domain/use-cases/market/list-cycles";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export async function listCycles(request: FastifyRequest, reply: FastifyReply) {
   try {

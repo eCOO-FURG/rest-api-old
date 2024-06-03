@@ -1,7 +1,7 @@
 import { RegisterAgribusinessUseCase } from "@/domain/use-cases/market/register-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const registerAgribusinessBodySchema = z.object({
   caf: z.string(),

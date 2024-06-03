@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ProductPresenter } from "../presenters/product-presenter";
 import { SearchProductsUseCase } from "@/domain/use-cases/market/search-products";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const searchProductsQuerySchema = z.object({
   name: z.string(),

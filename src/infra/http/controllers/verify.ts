@@ -2,7 +2,7 @@ import { VerifyUseCase } from "@/domain/use-cases/auth/verify";
 import { env } from "@/infra/env";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const vefiryQuerySchema = z.object({
   code: z.string(),

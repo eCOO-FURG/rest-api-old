@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ViewOrderUseCase } from "@/domain/use-cases/view-order";
 import { z } from "zod";
 import { OrderWithItemsPresenter } from "../presenters/order-with-items-presenter";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const viewOrderParamsSchema = z.object({
   order_id: z.string().min(1),

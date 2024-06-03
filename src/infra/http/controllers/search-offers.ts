@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { OffersItemsPresenter } from "../presenters/offers-items-presenter";
 import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const searchOffersQuerySchema = z.object({
   cycle_id: z.string(),

@@ -1,7 +1,7 @@
 import { OfferProductsUseCase } from "@/domain/use-cases/market/offer-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const offerProductsBodySchema = z.object({
   cycle_id: z.string(),

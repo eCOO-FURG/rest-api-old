@@ -1,7 +1,7 @@
 import { RegisterCycleUseCase } from "@/domain/use-cases/market/register-cycle";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const registerCycleBodySchema = z.object({
   alias: z.string(),

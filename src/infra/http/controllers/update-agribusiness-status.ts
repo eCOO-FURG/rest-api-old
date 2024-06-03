@@ -1,7 +1,7 @@
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/market/update-agribusiness-status";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 const updateAgribusinessStatusParamsSchema = z.object({
   agribusiness_id: z.string(),

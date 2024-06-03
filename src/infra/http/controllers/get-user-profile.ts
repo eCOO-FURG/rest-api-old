@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UserPresenter } from "../presenters/user-presenter";
 import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export async function getUserProfile(
   request: FastifyRequest,

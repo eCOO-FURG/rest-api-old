@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { OrderPresenter } from "../presenters/order-presenter";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string().nullable(),

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UpdateOrderStatusUseCase } from "@/domain/use-cases/market/update-order-status";
-import { HttpErrorHandler } from "./errors/error-handler";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const updateOrderStatusParamsSchema = z.object({
   order_id: z.string(),
