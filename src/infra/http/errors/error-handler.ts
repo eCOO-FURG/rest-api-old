@@ -17,7 +17,7 @@ import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentia
 
 type ErrorConstructor<T extends Error> = new (...args: any[]) => T;
 
-const HTTPStatusCodes: { [key: number]: Array<ErrorConstructor<Error>> } = {
+const HTTPStatusCodes: { [key: number]: ErrorConstructor<Error>[] } = {
   400: [
     InvalidCellphoneFormatError,
     InvalidCpfFormatError,
@@ -47,5 +47,6 @@ export class HttpErrorHandler {
         return reply.status(parseInt(code)).send({ message: error.message });
       }
     }
+    throw error;
   }
 }
