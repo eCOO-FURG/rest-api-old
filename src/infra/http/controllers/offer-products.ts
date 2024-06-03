@@ -1,7 +1,7 @@
 import { OfferProductsUseCase } from "@/domain/use-cases/market/offer-products";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const offerProductsBodySchema = z.object({
   cycle_id: z.string(),
@@ -38,7 +38,7 @@ export async function offerProducts(
 
     return reply.status(201).send();
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

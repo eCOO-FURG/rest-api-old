@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ProductPresenter } from "../presenters/product-presenter";
 import { SearchProductsUseCase } from "@/domain/use-cases/market/search-products";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const searchProductsQuerySchema = z.object({
   name: z.string(),
@@ -26,7 +26,7 @@ export async function searchProducts(
 
     return reply.status(200).send(ProductPresenter.toHttp(products));
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

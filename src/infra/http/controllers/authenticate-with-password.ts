@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -31,7 +31,7 @@ export async function authenticateWithPassword(
       token,
     });
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

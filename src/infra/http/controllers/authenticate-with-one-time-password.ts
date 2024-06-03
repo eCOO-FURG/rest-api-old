@@ -1,7 +1,7 @@
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-one-time-password";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -33,7 +33,7 @@ export async function authenticateWithOneTimePassword(
       token,
     });
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

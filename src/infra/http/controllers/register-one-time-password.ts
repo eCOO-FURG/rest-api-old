@@ -1,7 +1,7 @@
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/auth/register-one-time-password";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const registerOneTimePasswordBodySchema = z.object({
   email: z.string(),
@@ -27,7 +27,7 @@ export async function registerOneTimePassword(
 
     return reply.status(201).send();
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

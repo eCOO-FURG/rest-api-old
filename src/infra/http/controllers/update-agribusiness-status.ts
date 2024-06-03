@@ -1,7 +1,7 @@
 import { UpdateAgribusinessStatusUseCase } from "@/domain/use-cases/market/update-agribusiness-status";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 const updateAgribusinessStatusParamsSchema = z.object({
   agribusiness_id: z.string(),
@@ -25,7 +25,7 @@ export async function updateAgribusinessStatus(
       agribusiness_id,
     });
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

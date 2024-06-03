@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UpdateOrderStatusUseCase } from "@/domain/use-cases/market/update-order-status";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const updateOrderStatusParamsSchema = z.object({
   order_id: z.string(),
@@ -32,7 +32,7 @@ export async function updateOrderStatus(
 
     return reply.status(200).send();
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

@@ -1,3 +1,4 @@
+import { FastifyReply } from "fastify";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
 import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
@@ -13,36 +14,41 @@ import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-a
 import { SessionExpiredError } from "@/domain/use-cases/errors/session-expired-error";
 import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
-import { FastifyReply } from "fastify";
 
-export function handleErrors(err: any, reply: FastifyReply) {
-  if (
-    err instanceof WrongCredentialsError ||
-    err instanceof UserNotVerifiedError ||
-    err instanceof InvalidDescriptionError ||
-    err instanceof InvalidWeightError ||
-    err instanceof InsufficientProductQuantityOrWeightError ||
-    err instanceof SessionExpiredError ||
-    err instanceof InvalidCycleError ||
-    err instanceof InvalidCpfFormatError ||
-    err instanceof InvalidCellphoneFormatError ||
-    err instanceof InvalidOrderStatusError
-  ) {
-    return reply.status(400).send({ message: err.message });
-  }
-  if (err instanceof InvalidValidationCodeError) {
-    return reply.status(401).send({ message: err.message });
-  }
-  if (err instanceof InvalidDayForCycleActionError) {
-    return reply.status(403).send({ message: err.message });
-  }
-  if (err instanceof ResourceNotFoundError) {
-    return reply.status(404).send({ message: err.message });
-  }
-  if (
-    err instanceof ResourceAlreadyExistsError ||
-    err instanceof AlreadyAgribusinessAdminError
-  ) {
-    return reply.status(409).send({ message: err.message });
+const HTTPStatusCodes: { [key: string]: Array<new (...args: any[]) => Error> } =
+  {
+    400: [
+      InvalidCellphoneFormatError,
+      InvalidCpfFormatError,
+      InsufficientProductQuantityOrWeightError,
+      InvalidCycleError,
+      InvalidDescriptionError,
+      InvalidOrderStatusError,
+      InvalidWeightError,
+    ],
+    401: [
+      InvalidValidationCodeError,
+      SessionExpiredError,
+      WrongCredentialsError,
+    ],
+    403: [
+      AlreadyAgribusinessAdminError,
+      InvalidDayForCycleActionError,
+      ResourceAlreadyExistsError,
+      UserNotVerifiedError,
+    ],
+    404: [ResourceNotFoundError],
+  };
+
+export class HttpErrorHandler {
+  static handle(error: unknown, reply: FastifyReply) {
+    for (const code in HTTPStatusCodes) {
+      if (
+        HTTPStatusCodes[code].some((value) => error instanceof value) &&
+        error instanceof Error
+      ) {
+        return reply.status(parseInt(code)).send({ message: error.message });
+      }
+    }
   }
 }

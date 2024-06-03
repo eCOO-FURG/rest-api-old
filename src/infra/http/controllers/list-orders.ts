@@ -2,7 +2,7 @@ import { OrderPresenter } from "../presenters/order-presenter";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { ListOrdersUseCase } from "@/domain/use-cases/market/list-orders";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const listOrdersQuerySchema = z.object({
   cycle_id: z.string().min(1),
@@ -27,7 +27,7 @@ export async function listOrders(request: FastifyRequest, reply: FastifyReply) {
       .status(200)
       .send(orders.map((order) => OrderPresenter.toHttp(order)));
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

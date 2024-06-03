@@ -1,7 +1,7 @@
 import { RefreshUseCase } from "@/domain/use-cases/auth/refresh";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const refreshBodySchema = z.object({
   token: z.string(),
@@ -24,7 +24,7 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
       access_token: newToken,
     });
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

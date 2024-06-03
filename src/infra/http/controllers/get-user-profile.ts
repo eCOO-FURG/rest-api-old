@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UserPresenter } from "../presenters/user-presenter";
 import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export async function getUserProfile(
   request: FastifyRequest,
@@ -17,7 +17,7 @@ export async function getUserProfile(
 
     return reply.status(200).send(UserPresenter.toHttp(user));
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

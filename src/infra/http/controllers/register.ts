@@ -1,7 +1,7 @@
 import { RegisterUseCase } from "@/domain/use-cases/user/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const registerBodySchema = z.object({
   email: z.string().email(),
@@ -33,7 +33,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     return reply.status(201).send();
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

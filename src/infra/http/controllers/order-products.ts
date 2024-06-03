@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { OrderPresenter } from "../presenters/order-presenter";
 import { OrderProductsUseCase } from "@/domain/use-cases/user/order-products";
-import { handleErrors } from "./error/error-handler";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const orderProductsBodySchema = z.object({
   shipping_address: z.string().nullable(),
@@ -42,7 +42,7 @@ export async function orderProducts(
 
     return reply.status(201).send(OrderPresenter.toHttp(order));
   } catch (err) {
-    handleErrors(err, reply);
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }
