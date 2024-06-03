@@ -1,8 +1,6 @@
-import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-one-time-password";
-import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
+import { AuthenticateUseCase } from "@/domain/use-cases/auth/authenticate";
 import { RefreshUseCase } from "@/domain/use-cases/auth/refresh";
 import { RegisterOneTimePasswordUseCase } from "@/domain/use-cases/auth/register-one-time-password";
-import { RegisterSessionUseCase } from "@/domain/use-cases/auth/register-session";
 import { VerifyUseCase } from "@/domain/use-cases/auth/verify";
 import { ListCycleUseCase } from "@/domain/use-cases/market/list-cycles";
 import { ListOrdersUseCase } from "@/domain/use-cases/market/list-orders";
@@ -32,24 +30,20 @@ diContainer.register({
       lifetime: Lifetime.SCOPED,
     }
   ),
-  registerSessionUseCase: asFunction(
-    ({ sessionsRepository, encrypter }) =>
-      new RegisterSessionUseCase(sessionsRepository, encrypter)
-  ),
-  authenticateWithPasswordUseCase: asFunction(
-    ({ usersRepository, hasher, registerSessionUseCase }) =>
-      new AuthenticateWithPasswordUseCase(
+  authenticateUseCase: asFunction(
+    ({
+      usersRepository,
+      sessionsRepository,
+      oneTimePasswordsRepository,
+      encrypter,
+      hasher,
+    }) =>
+      new AuthenticateUseCase(
         usersRepository,
-        hasher,
-        registerSessionUseCase
-      )
-  ),
-  authenticateWithOneTimePasswordUseCase: asFunction(
-    ({ usersRepository, oneTimePasswordsRepository, registerSessionUseCase }) =>
-      new AuthenticateWithOneTimePasswordUseCase(
-        usersRepository,
+        sessionsRepository,
         oneTimePasswordsRepository,
-        registerSessionUseCase
+        encrypter,
+        hasher
       )
   ),
   getUserProfileUseCase: asFunction(

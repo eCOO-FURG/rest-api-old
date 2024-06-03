@@ -10,11 +10,11 @@ interface UserProps extends Optional<EntityProps, "created_at"> {
   first_name: string;
   last_name: string;
   email: string;
-  password?: string;
+  password: string | null;
   cpf: string;
   phone: string;
   roles: Role[];
-  verified_at?: Date;
+  verified_at: Date | null;
 }
 
 export class User extends Entity<UserProps> {
@@ -42,8 +42,12 @@ export class User extends Entity<UserProps> {
     this.props.email = email;
   }
 
-  get password() {
+  get password(): string | null {
     return this.props.password;
+  }
+
+  set password(value: string) {
+    this.props.password = value;
   }
 
   protect(password: string) {
@@ -84,12 +88,16 @@ export class User extends Entity<UserProps> {
     this.props.roles = roles;
   }
 
-  static create(props: Optional<UserProps, "roles" | "password">, id?: UUID) {
+  static create(
+    props: Optional<UserProps, "roles" | "password" | "verified_at">,
+    id?: UUID
+  ) {
     const user = new User(
       {
         ...props,
         roles: props.roles ?? ["USER"],
-        password: props.password,
+        password: props.password ?? null,
+        verified_at: props.verified_at ?? null,
       },
       id
     );

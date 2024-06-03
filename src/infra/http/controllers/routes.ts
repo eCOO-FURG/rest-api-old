@@ -1,30 +1,34 @@
+// Core
 import { FastifyInstance } from "fastify";
-import { register } from "./register";
-import { authenticateWithPassword } from "./authenticate-with-password";
-import { getUserProfile } from "./get-user-profile";
+
+// Controllers
+import { authenticate } from "@/infra/http/controllers/authenticate";
+import { register } from "@/infra/http/controllers/register";
+import { getUserProfile } from "@/infra/http/controllers/get-user-profile";
 import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
-import { refresh } from "./refresh";
-import { verify } from "./verify";
-import { offerProducts } from "./offer-products";
-import { registerAgribusiness } from "./register-agribusiness";
+import { refresh } from "@/infra/http/controllers/refresh";
+import { verify } from "@/infra/http/controllers/verify";
+import { offerProducts } from "@/infra/http/controllers/offer-products";
+import { registerAgribusiness } from "@/infra/http/controllers/register-agribusiness";
 import { ensureAgribusinessAdmin } from "../middlewares/ensure-agribusiness-admin";
-import { searchOffers } from "./search-offers";
-import { orderProducts } from "./order-products";
-import { updateAgribusiness } from "./update-agribusiness";
-import { updateAgribusinessStatus } from "./update-agribusiness-status";
+import { searchOffers } from "@/infra/http/controllers/search-offers";
+import { orderProducts } from "@/infra/http/controllers/order-products";
+import { updateAgribusiness } from "@/infra/http/controllers/update-agribusiness";
+import { updateAgribusinessStatus } from "@/infra/http/controllers/update-agribusiness-status";
 import { ensureAdministrator } from "../middlewares/ensure-administrator";
-import { registerOneTimePassword } from "./register-one-time-password";
-import { authenticateWithOneTimePassword } from "./authenticate-with-one-time-password";
-import { registerCycle } from "./register-cycle";
-import { searchProducts } from "./search-products";
-import { listCycles } from "./list-cycles";
-import { listOrders } from "./list-orders";
-import { viewOrder } from "./view-order";
-import { updateOrderStatus } from "./update-order-status";
-import { requestPasswordUpdate } from "./request-password-update";
-import { updatePassword } from "./update-password";
+import { registerOneTimePassword } from "@/infra/http/controllers/register-one-time-password";
+import { registerCycle } from "@/infra/http/controllers/register-cycle";
+import { searchProducts } from "@/infra/http/controllers/search-products";
+import { listCycles } from "@/infra/http/controllers/list-cycles";
+import { listOrders } from "@/infra/http/controllers/list-orders";
+import { viewOrder } from "@/infra/http/controllers/view-order";
+import { updateOrderStatus } from "@/infra/http/controllers/update-order-status";
+import { requestPasswordUpdate } from "@/infra/http/controllers/request-password-update";
+import { updatePassword } from "@/infra/http/controllers/update-password";
 
 export async function routes(app: FastifyInstance) {
+  app.post("/auth", authenticate);
+
   app.post("/users", register);
   app.get("/users/verify", verify);
   app.post("/users/otp", registerOneTimePassword);
@@ -37,8 +41,6 @@ export async function routes(app: FastifyInstance) {
     updatePassword
   );
 
-  app.post("/auth", authenticateWithPassword);
-  app.post("/auth/otp", authenticateWithOneTimePassword);
   app.post("/auth/refresh", refresh);
 
   app.post(
