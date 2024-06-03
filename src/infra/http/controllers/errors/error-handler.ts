@@ -15,30 +15,27 @@ import { SessionExpiredError } from "@/domain/use-cases/errors/session-expired-e
 import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
 import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 
-const HTTPStatusCodes: { [key: string]: Array<new (...args: any[]) => Error> } =
-  {
-    400: [
-      InvalidCellphoneFormatError,
-      InvalidCpfFormatError,
-      InsufficientProductQuantityOrWeightError,
-      InvalidCycleError,
-      InvalidDescriptionError,
-      InvalidOrderStatusError,
-      InvalidWeightError,
-    ],
-    401: [
-      InvalidValidationCodeError,
-      SessionExpiredError,
-      WrongCredentialsError,
-    ],
-    403: [
-      AlreadyAgribusinessAdminError,
-      InvalidDayForCycleActionError,
-      ResourceAlreadyExistsError,
-      UserNotVerifiedError,
-    ],
-    404: [ResourceNotFoundError],
-  };
+type ErrorConstructor<T extends Error> = new (...args: any[]) => T;
+
+const HTTPStatusCodes: { [key: number]: Array<ErrorConstructor<Error>> } = {
+  400: [
+    InvalidCellphoneFormatError,
+    InvalidCpfFormatError,
+    InsufficientProductQuantityOrWeightError,
+    InvalidCycleError,
+    InvalidDescriptionError,
+    InvalidOrderStatusError,
+    InvalidWeightError,
+  ],
+  401: [InvalidValidationCodeError, SessionExpiredError, WrongCredentialsError],
+  403: [
+    AlreadyAgribusinessAdminError,
+    InvalidDayForCycleActionError,
+    ResourceAlreadyExistsError,
+    UserNotVerifiedError,
+  ],
+  404: [ResourceNotFoundError],
+};
 
 export class HttpErrorHandler {
   static handle(error: unknown, reply: FastifyReply) {
