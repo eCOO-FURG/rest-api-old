@@ -1,7 +1,7 @@
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { RequestPasswordUpdateUseCase } from "@/domain/use-cases/user/request-password-update";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const requestPasswordUpdateQuerySchema = z.object({
   email: z.string().email(),
@@ -26,9 +26,7 @@ export async function requestPasswordUpdate(
 
     return reply.status(204).send();
   } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: err.message });
-    }
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

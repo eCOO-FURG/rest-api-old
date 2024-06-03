@@ -79,6 +79,7 @@ describe("search offers", () => {
     const result = await sut.execute({
       cycle_id: cycle.id.value,
       product: "banana",
+      page: 1,
     });
 
     expect(result.items).toHaveLength(1);

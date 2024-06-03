@@ -1,7 +1,7 @@
 import { RefreshUseCase } from "@/domain/use-cases/auth/refresh";
-import { SessionExpiredError } from "@/domain/use-cases/errors/session-expired-error";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export const refreshBodySchema = z.object({
   token: z.string(),
@@ -24,9 +24,7 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
       access_token: newToken,
     });
   } catch (err) {
-    if (err instanceof SessionExpiredError) {
-      return reply.status(400).send({ message: err.message });
-    }
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

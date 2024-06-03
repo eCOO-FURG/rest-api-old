@@ -1,7 +1,7 @@
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UserPresenter } from "../presenters/user-presenter";
 import { GetUserProfileUseCase } from "@/domain/use-cases/user/get-user-profile";
+import { HttpErrorHandler } from "../errors/error-handler";
 
 export async function getUserProfile(
   request: FastifyRequest,
@@ -17,9 +17,7 @@ export async function getUserProfile(
 
     return reply.status(200).send(UserPresenter.toHttp(user));
   } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: err.message });
-    }
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }
