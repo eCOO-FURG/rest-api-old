@@ -3,6 +3,8 @@ import { Hasher } from "../../cryptography/hasher";
 import { ResourceAlreadyExistsError } from "../errors/resource-already-exists-error";
 import { User } from "../../entities/user";
 import { UsersRepository } from "../../repositories/users-repository";
+import { Cpf } from "@/domain/entities/value-objects/cpf";
+import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
 
 interface RegisterUseCaseRequest {
   first_name: string;
@@ -43,6 +45,16 @@ export class RegisterUseCase {
 
     if (userWithSameCpf) {
       throw new ResourceAlreadyExistsError("CPF", cpf);
+    }
+    
+    try {
+      Cpf.createFromText(cpf);
+    } catch (error) {
+      if (error instanceof InvalidCpfFormatError) {
+        throw new Error("CPF inválido");
+      } else {
+        throw error;
+      }
     }
 
     const user = User.create({
