@@ -1,8 +1,7 @@
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-one-time-password";
-import { UserNotVerifiedError } from "@/domain/use-cases/errors/user-not-verified-error";
-import { WrongCredentialsError } from "@/domain/use-cases/errors/wrong-credentials-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -34,12 +33,7 @@ export async function authenticateWithOneTimePassword(
       token,
     });
   } catch (err) {
-    if (
-      err instanceof WrongCredentialsError ||
-      err instanceof UserNotVerifiedError
-    ) {
-      return reply.status(400).send({ message: err.message });
-    }
+    HttpErrorHandler.handle(err, reply);
     throw err;
   }
 }

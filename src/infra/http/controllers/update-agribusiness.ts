@@ -1,7 +1,7 @@
-import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UpdateAgribusinessUseCase } from "@/domain/use-cases/market/update-agribusiness";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { HttpErrorHandler } from "./errors/error-handler";
 
 export const updateAgribusinessBodySchema = z.object({
   caf: z.string(),
@@ -32,8 +32,7 @@ export async function updateAgribusiness(
       name,
     });
   } catch (err) {
-    if (err instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: err.message });
-    }
+    HttpErrorHandler.handle(err, reply);
+    throw err;
   }
 }
