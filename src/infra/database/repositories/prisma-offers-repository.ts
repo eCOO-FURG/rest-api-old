@@ -6,6 +6,8 @@ import { UUID } from "@/core/entities/uuid";
 import { PrismaProductMapper } from "../mappers/prisma-product-mapper";
 import { updateManyRawQuery } from "../utils/update-many-raw-query";
 import { Decimal } from "@prisma/client/runtime/library";
+import { OfferWithAgribusiness } from "@/domain/entities/value-objects/offer-with-agribusiness";
+import { PrismaAgribusinessMapper } from "../mappers/prisma-agribusiness-mapper";
 
 export class PrismaOffersRepository implements OffersRepository {
   async save(offer: Offer): Promise<void> {
@@ -175,5 +177,65 @@ export class PrismaOffersRepository implements OffersRepository {
     }
 
     return PrismaOfferMapper.toDomain(data);
+  }
+
+  async findManyActiveWithAgribusiness(
+    cycle_id: string,
+    target_date: Date,
+    page: number,
+    product_name?: string
+  ): Promise<OfferWithAgribusiness[]> {
+    const skip = (page - 1) * 20;
+
+    const data = await prisma.offer.findMany({
+      where: {
+        cycle_id,
+        created_at: {
+          gte: target_date,
+        },
+        items: {
+          some: {
+            product: {
+              name: {
+                contains: product_name,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        agribusiness: true,
+      },
+      skip,
+      take: 20,
+    });
+
+    const mapped = data.map((offer) =>
+      OfferWithAgribusiness.create({
+        id: new UUID(offer.id),
+        cycle_id: new UUID(offer.cycle_id),
+        items: offer.items.map((_) => ({
+          id: new UUID(_.id),
+          offer_id: new UUID(_.offer_id),
+          product: PrismaProductMapper.toDomain(_.product),
+          price: _.price.toNumber(),
+          description: _.description,
+          amount: _.amount,
+          created_at: _.created_at,
+          updated_at: _.updated_at,
+        })),
+        agribusiness: PrismaAgribusinessMapper.toDomain(offer.agribusiness),
+        created_at: offer.created_at,
+        updated_at: offer.updated_at,
+      })
+    );
+
+    return mapped;
   }
 }

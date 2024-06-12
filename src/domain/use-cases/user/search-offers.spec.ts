@@ -88,6 +88,6 @@ describe("search offers", () => {
       page: 1,
     });
 
-    expect(result).toHaveLength(1);
+    expect(result.offersWithAgribusiness).toHaveLength(1);
   });
 });

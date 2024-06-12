@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { OffersItemsPresenter } from "../presenters/offers-items-presenter";
 import { SearchOffersUseCase } from "@/domain/use-cases/user/search-offers";
 import { HttpErrorHandler } from "../errors/error-handler";
+import { OfferWithAgribusinessPresenter } from "../presenters/offer-with-agribusiness-presenter";
 
 export const searchOffersQuerySchema = z.object({
   cycle_id: z.string(),
@@ -23,13 +23,19 @@ export async function searchOffers(
       "searchOffersUseCase"
     );
 
-    const { items } = await searchOffersUseCase.execute({
+    const { offersWithAgribusiness } = await searchOffersUseCase.execute({
       cycle_id,
       product,
       page,
     });
 
-    return reply.status(200).send(OffersItemsPresenter.toHttp(items));
+    return reply
+      .status(200)
+      .send(
+        offersWithAgribusiness.map((offer) =>
+          OfferWithAgribusinessPresenter.toHttp(offer)
+        )
+      );
   } catch (err) {
     HttpErrorHandler.handle(err, reply);
     throw err;

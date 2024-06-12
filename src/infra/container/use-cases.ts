@@ -85,12 +85,8 @@ diContainer.register({
       )
   ),
   searchOffersUseCase: asFunction(
-    ({ validateCycleActionUseCase, productsRepository, offersRepository }) =>
-      new SearchOffersUseCase(
-        validateCycleActionUseCase,
-        productsRepository,
-        offersRepository
-      )
+    ({ validateCycleActionUseCase, offersRepository }) =>
+      new SearchOffersUseCase(validateCycleActionUseCase, offersRepository)
   ),
   orderProductsUseCase: asFunction(
     ({

@@ -30,6 +30,6 @@ export class SearchOffersUseCase {
         product
       );
 
-    return offersWithAgribusiness;
+    return { offersWithAgribusiness };
   }
 }
