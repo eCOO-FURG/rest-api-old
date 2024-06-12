@@ -1,12 +1,21 @@
+// Entities
+import { Session } from "@/domain/entities/session";
+import { User } from "@/domain/entities/user";
+
+// Services
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
+
+// Repositories
 import { InMemorySessionsRepository } from "test/repositories/in-memory-sessions-repository";
-import { RefreshUseCase } from "./refresh";
-import { Session } from "../../entities/session";
-import { SessionExpiredError } from "../errors/session-expired-error";
-import { Cellphone } from "../../entities/value-objects/cellphone";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { User } from "../../entities/user";
-import { UUID } from "@/core/entities/uuid";
+
+// Errors
+import { SessionExpiredError } from "@/domain/use-cases/errors/session-expired-error";
+
+// Use-cases
+import { RefreshUseCase } from "./refresh";
+
+// Env
 import { env } from "@/infra/env";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;

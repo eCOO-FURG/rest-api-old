@@ -4,8 +4,6 @@ import { Optional } from "@/core/types/optional";
 
 interface ProductTypeProps extends Optional<EntityProps, "created_at"> {
   name: string;
-  created_at: Date;
-  updated_at?: Date | null;
 }
 
 export class ProductType extends Entity<ProductTypeProps> {

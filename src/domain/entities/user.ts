@@ -1,12 +1,15 @@
+// Core
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
+
+// Events
 import { UserVerifiedEvent } from "../events/on-user-verified";
 import { UserRegisteredEvent } from "../events/on-user-registered";
 
 type Role = "USER" | "PRODUCER" | "ADMIN";
 
-interface UserProps extends Optional<EntityProps, "created_at"> {
+interface UserProps extends Optional<EntityProps, "created_at" | "updated_at"> {
   first_name: string;
   last_name: string;
   email: string;

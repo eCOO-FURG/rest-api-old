@@ -176,7 +176,7 @@ describe("authenticate", () => {
         password: "wrong",
         ip_address: "ip_address",
         user_agent: "mozila-firefox 5.0",
-        type: "OTP",
+        type: "BASIC",
       })
     ).rejects.toBeInstanceOf(PasswordNotSettedError);
   });

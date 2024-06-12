@@ -3,7 +3,8 @@ import { OneTimePasswordRegisteredEvent } from "../events/on-one-time-password-r
 import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 
-interface OneTimePasswordProps extends Optional<EntityProps, "created_at"> {
+interface OneTimePasswordProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   user_id: UUID;
   value: string;
   used: boolean;

@@ -54,8 +54,7 @@ export class RegisterUseCase {
     });
 
     if (password) {
-      const hashedPassword = await this.hasher.hash(password);
-      user.protect(hashedPassword);
+      user.password = await this.hasher.hash(password);
     }
 
     await this.usersRepository.save(user);

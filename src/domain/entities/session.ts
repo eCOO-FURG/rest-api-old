@@ -2,7 +2,8 @@ import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-interface SessionProps extends Optional<EntityProps, "created_at"> {
+interface SessionProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   user_id: UUID;
   ip_address: string;
   user_agent: string;

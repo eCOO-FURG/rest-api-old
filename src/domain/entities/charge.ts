@@ -2,7 +2,8 @@ import { Entity, EntityProps } from "@/core/entities/entity";
 import { UUID } from "@/core/entities/uuid";
 import { Optional } from "@/core/types/optional";
 
-export interface ChargeProps extends Optional<EntityProps, "created_at"> {
+export interface ChargeProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   order_id: UUID;
   value: number;
 }

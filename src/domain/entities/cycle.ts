@@ -2,7 +2,8 @@ import { Entity, EntityProps } from "../../core/entities/entity";
 import { UUID } from "../../core/entities/uuid";
 import { Optional } from "../../core/types/optional";
 
-interface CycleProps extends Optional<EntityProps, "created_at"> {
+interface CycleProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   alias: string;
   offering: number[];
   ordering: number[];

@@ -6,13 +6,14 @@ import { ResourceAlreadyExistsError } from "../use-cases/errors/resource-already
 import { InvalidWeightError } from "../use-cases/errors/invalid-weight-error";
 import { User } from "./user";
 
-interface Item extends Optional<EntityProps, "created_at"> {
+interface Item extends Optional<EntityProps, "created_at" | "updated_at"> {
   offer_id: UUID;
   product: Product;
   amount: number;
 }
 
-export interface OrderProps extends Optional<EntityProps, "created_at"> {
+export interface OrderProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   cycle_id: UUID;
   customer: User;
   shipping_address: string | null;

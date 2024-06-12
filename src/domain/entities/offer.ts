@@ -6,7 +6,7 @@ import { ResourceAlreadyExistsError } from "../use-cases/errors/resource-already
 import { InvalidWeightError } from "../use-cases/errors/invalid-weight-error";
 import { InvalidDescriptionError } from "../use-cases/errors/invalid-description-length.error";
 
-interface Item extends Optional<EntityProps, "created_at"> {
+interface Item extends Optional<EntityProps, "created_at" | "updated_at"> {
   offer_id: UUID;
   product: Product;
   price: number;
@@ -14,7 +14,8 @@ interface Item extends Optional<EntityProps, "created_at"> {
   description: string | null;
 }
 
-interface OfferProps extends Optional<EntityProps, "created_at"> {
+interface OfferProps
+  extends Optional<EntityProps, "created_at" | "updated_at"> {
   agribusiness_id: UUID;
   cycle_id: UUID;
   items: Item[];

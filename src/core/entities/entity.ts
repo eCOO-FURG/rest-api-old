@@ -1,11 +1,11 @@
-import { DomainEvent } from "../events/domain-event";
-import { DomainEvents } from "../events/domain-events";
-import { Optional } from "../types/optional";
-import { UUID } from "./uuid";
+import { DomainEvent } from "@/core/events/domain-event";
+import { DomainEvents } from "@/core/events/domain-events";
+import { Optional } from "@/core/types/optional";
+import { UUID } from "@/core/entities/uuid";
 
 export interface EntityProps {
   created_at: Date;
-  updated_at?: Date | null;
+  updated_at: Date | null;
 }
 
 export abstract class Entity<Props> {
@@ -56,14 +56,15 @@ export abstract class Entity<Props> {
   }
 
   protected constructor(
-    props: Props & Optional<EntityProps, "created_at">,
+    props: Props & Optional<EntityProps, "created_at" | "updated_at">,
     id?: UUID
   ) {
     this._id = id ?? new UUID();
 
     this.props = {
       ...props,
-      created_at: props.created_at ? props.created_at : new Date(),
+      created_at: props.created_at ?? new Date(),
+      updated_at: props.updated_at ?? null,
     };
   }
 }
