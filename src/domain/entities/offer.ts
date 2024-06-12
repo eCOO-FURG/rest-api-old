@@ -14,7 +14,7 @@ interface Item extends Optional<EntityProps, "created_at"> {
   description: string | null;
 }
 
-interface OfferProps extends Optional<EntityProps, "created_at"> {
+export interface OfferProps extends Optional<EntityProps, "created_at"> {
   agribusiness_id: UUID;
   cycle_id: UUID;
   items: Item[];

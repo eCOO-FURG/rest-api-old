@@ -1,13 +1,15 @@
 import { Offer } from "../entities/offer";
+import { OfferWithAgribusiness } from "../entities/value-objects/offer-with-agribusiness";
 
 export interface OffersRepository {
   save(offer: Offer): Promise<void>;
   update(offer: Offer): Promise<void>;
-  findActive(
-    agribusiness_id: string,
+  findManyActiveWithAgribusiness(
     cycle_id: string,
-    target_date: Date
-  ): Promise<Offer | null>;
+    target_date: Date,
+    page: number,
+    product_name?: string
+  ): Promise<OfferWithAgribusiness[]>;
   findManyByOffersIdsAndProductsIds(
     offers_ids: string[],
     products_ids: string[]

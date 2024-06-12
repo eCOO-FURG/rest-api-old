@@ -7,11 +7,16 @@ import { UUID } from "@/core/entities/uuid";
 import { Cycle } from "../../entities/cycle";
 import { InMemoryCyclesRepository } from "test/repositories/in-memory-cycles-repository";
 import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
+import { InMemoryAgribusinessesRepository } from "test/repositories/in-memory-agribusinesses-repository";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { Agribusiness } from "@/domain/entities/agribusiness";
 
 let inMemoryCyclesRepository: InMemoryCyclesRepository;
 let validateCycleUseCase: ValidateCycleActionUseCase;
 let inMemoryProductsRepository: InMemoryProductsRepository;
+let inMemoryAgribusinessRepository: InMemoryAgribusinessesRepository;
 let inMemoryOffersRepository: InMemoryOffersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let sut: SearchOffersUseCase;
 
 describe("search offers", () => {
@@ -21,15 +26,20 @@ describe("search offers", () => {
       inMemoryCyclesRepository
     );
     inMemoryProductsRepository = new InMemoryProductsRepository();
-    inMemoryOffersRepository = new InMemoryOffersRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryAgribusinessRepository = new InMemoryAgribusinessesRepository(
+      inMemoryUsersRepository
+    );
+    inMemoryOffersRepository = new InMemoryOffersRepository(
+      inMemoryAgribusinessRepository
+    );
     sut = new SearchOffersUseCase(
       validateCycleUseCase,
-      inMemoryProductsRepository,
       inMemoryOffersRepository
     );
   });
 
-  it("should be able to search offers by sematinc similarity that were offered before the last offering instant of the active cycle", async () => {
+  it("should be able search offers with their agribusinesses", async () => {
     const cycle = Cycle.create({
       alias: "Ciclo 1",
       duration: 7,
@@ -40,37 +50,33 @@ describe("search offers", () => {
 
     await inMemoryCyclesRepository.save(cycle);
 
-    const product1 = Product.create({
+    const agribusiness = Agribusiness.create({
+      name: "Agronegócio de Teste",
+      admin_id: new UUID(),
+      caf: "123123",
+      active: true,
+    });
+
+    inMemoryAgribusinessRepository.save(agribusiness);
+
+    const product = Product.create({
       image: "image",
       name: "banana",
       pricing: "WEIGHT",
       type_id: new UUID("fake-id"),
     });
 
-    await inMemoryProductsRepository.save(product1);
-
-    const product2 = Product.create({
-      image: "image",
-      name: "apple",
-      pricing: "UNIT",
-      type_id: new UUID("fake-id"),
-    });
+    inMemoryProductsRepository.save(product);
 
     const offer = Offer.create({
       cycle_id: cycle.id,
-      agribusiness_id: new UUID("fake-id"),
+      agribusiness_id: agribusiness.id,
       created_at: new Date(new Date().getTime() - 4 * 24 * 60 * 60 * 1000),
     });
 
     offer.add({
-      product: product1,
+      product,
       amount: 50,
-      price: 10.0,
-    });
-
-    offer.add({
-      product: product2,
-      amount: 10,
       price: 10.0,
     });
 
@@ -82,6 +88,6 @@ describe("search offers", () => {
       page: 1,
     });
 
-    expect(result.items).toHaveLength(1);
+    expect(result).toHaveLength(1);
   });
 });

@@ -1,18 +1,16 @@
-import { ProductsRepository } from "../../repositories/products-repository";
 import { OffersRepository } from "../../repositories/offers-repository";
 import { farthestDayBetween } from "../utils/fhartest-day-between";
 import { ValidateCycleActionUseCase } from "../market/validate-cycle-action";
 
 interface SearchOffersUseCaseRequest {
   cycle_id: string;
-  product: string;
+  product?: string;
   page: number;
 }
 
 export class SearchOffersUseCase {
   constructor(
     private validateCycleUseCase: ValidateCycleActionUseCase,
-    private productsRepository: ProductsRepository,
     private offersRepository: OffersRepository
   ) {}
 
@@ -22,21 +20,16 @@ export class SearchOffersUseCase {
       action: "ordering",
     });
 
-    const products = await this.productsRepository.searchManyByName(product);
-
-    const productsIds = products.map((product) => product.id.value);
-
     const firstOfferingDay = farthestDayBetween(cycle.offering);
 
-    const items =
-      await this.offersRepository.findManyItemsByCycleIdProductsIdsAndOfferCreatedAt(
+    const offersWithAgribusiness =
+      await this.offersRepository.findManyActiveWithAgribusiness(
         cycle.id.value,
-        productsIds,
-        firstOfferingDay
+        firstOfferingDay,
+        page,
+        product
       );
 
-    return {
-      items,
-    };
+    return offersWithAgribusiness;
   }
 }
