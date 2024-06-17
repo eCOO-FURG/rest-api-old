@@ -1,9 +1,11 @@
-import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
-import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
-import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
-import { RegisterUseCase } from "@/domain/use-cases/user/register";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+
+import { InvalidCellphoneFormatError } from "@/domain/entities/value-objects/errors/invalid-cellphone-format-error";
+import { InvalidCpfFormatError } from "@/domain/entities/value-objects/errors/invalid-cpf-format-error copy";
+import { CreateRegisterRedirectUseCase } from "@/domain/use-cases/apps/create-register-redirect";
+import { ResourceAlreadyExistsError } from "@/domain/use-cases/errors/resource-already-exists-error";
+import { RegisterUseCase } from "@/domain/use-cases/user/register";
 
 export const registerBodySchema = z.object({
   email: z.string().email(),
@@ -12,25 +14,42 @@ export const registerBodySchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   cpf: z.string().max(14),
+  redirect_url: z.string().optional(),
 });
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
-  const { email, cellphone, password, first_name, last_name, cpf } =
-    registerBodySchema.parse(request.body);
+  const {
+    email,
+    cellphone,
+    password,
+    first_name,
+    last_name,
+    cpf,
+    redirect_url,
+  } = registerBodySchema.parse(request.body);
 
   try {
+    const createRegisterRedirectUseCase =
+      request.diScope.resolve<CreateRegisterRedirectUseCase>(
+        "createRegisterRedirectUseCase"
+      );
     const registerUseCase =
       request.diScope.resolve<RegisterUseCase>("registerUseCase");
 
     request.diScope.resolve("onUserRegistered");
 
-    await registerUseCase.execute({
+    const { id } = await registerUseCase.execute({
       email,
       phone: cellphone,
       password,
       first_name,
       last_name,
       cpf,
+    });
+
+    await createRegisterRedirectUseCase.execute({
+      user_id: id,
+      url: redirect_url,
     });
 
     return reply.status(201).send();

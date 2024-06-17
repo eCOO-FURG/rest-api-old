@@ -8,8 +8,8 @@ export interface EntityProps {
   updated_at?: Date | null;
 }
 
-export abstract class Entity<Props> {
-  private _id: UUID;
+export abstract class Entity<Props, Id extends string | UUID = UUID> {
+  private _id: Id;
   protected props: Props & EntityProps;
 
   private _events: DomainEvent[] = [];
@@ -35,7 +35,7 @@ export abstract class Entity<Props> {
       return true;
     }
 
-    if (this._id.equals(entity.id)) {
+    if (this._id instanceof UUID && this._id.equals(entity.id)) {
       return true;
     }
 
@@ -57,9 +57,13 @@ export abstract class Entity<Props> {
 
   protected constructor(
     props: Props & Optional<EntityProps, "created_at">,
-    id?: UUID
+    id?: Id
   ) {
-    this._id = id ?? new UUID();
+    if (id !== undefined) {
+      this._id = id;
+    } else {
+      this._id = new UUID() as Id;
+    }
 
     this.props = {
       ...props,

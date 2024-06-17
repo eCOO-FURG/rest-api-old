@@ -27,7 +27,7 @@ export class VerifyUseCase {
     }
 
     if (user.verified_at) {
-      return;
+      return user;
     }
 
     user.verify();
@@ -35,5 +35,7 @@ export class VerifyUseCase {
     await this.usersRepository.update(user);
 
     DomainEvents.dispatchEventsForEntity(user.id);
+
+    return user;
   }
 }

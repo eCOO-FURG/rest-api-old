@@ -1,3 +1,5 @@
+import { CreateRegisterRedirectUseCase } from "@/domain/use-cases/apps/create-register-redirect";
+import { RetrieveRegisterRedirectUseCase } from "@/domain/use-cases/apps/retrieve-register-redirect";
 import { AuthenticateWithOneTimePasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-one-time-password";
 import { AuthenticateWithPasswordUseCase } from "@/domain/use-cases/auth/authenticate-with-password";
 import { RefreshUseCase } from "@/domain/use-cases/auth/refresh";
@@ -166,5 +168,13 @@ diContainer.register({
   updatePasswordUseCase: asFunction(
     ({ usersRepository, hasher }) =>
       new UpdatePasswordUseCase(usersRepository, hasher)
+  ),
+  createRegisterRedirectUseCase: asFunction(
+    ({ redirectsRepository }) =>
+      new CreateRegisterRedirectUseCase(redirectsRepository)
+  ),
+  retrieveRegisterRedirectUseCase: asFunction(
+    ({ redirectsRepository }) =>
+      new RetrieveRegisterRedirectUseCase(redirectsRepository)
   ),
 });

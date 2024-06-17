@@ -61,5 +61,7 @@ export class RegisterUseCase {
     await this.usersRepository.save(user);
 
     DomainEvents.dispatchEventsForEntity(user.id);
+
+    return user;
   }
 }

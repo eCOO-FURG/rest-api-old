@@ -251,3 +251,11 @@ model CycleActionDay {
 
   @@map("cycles_actions_days")
 }
+
+model Redirect {
+  id  String @id @default(uuid())
+  url String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+}

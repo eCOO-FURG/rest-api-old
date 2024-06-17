@@ -6,9 +6,9 @@ type DomainEventCallback = (event: any) => void;
 
 export class DomainEvents {
   private static handlersMap: Record<string, DomainEventCallback[]> = {};
-  private static markedEntities: Entity<any>[] = [];
+  private static markedEntities: Entity<any, any>[] = [];
 
-  public static markEntityForDispatch(entity: Entity<any>) {
+  public static markEntityForDispatch(entity: Entity<any, any>) {
     const entityFound = !!this.findMarkedEntityByID(entity.id);
 
     if (!entityFound) {
@@ -16,19 +16,19 @@ export class DomainEvents {
     }
   }
 
-  private static dispatchEntityEvents(entity: Entity<any>) {
+  private static dispatchEntityEvents(entity: Entity<any, any>) {
     entity.events.forEach((event: DomainEvent) => {
       this.dispatch(event);
     });
   }
 
-  private static removeEntityFromMarkedDispatchList(entity: Entity<any>) {
+  private static removeEntityFromMarkedDispatchList(entity: Entity<any, any>) {
     const index = this.markedEntities.findIndex((a) => a.equals(entity));
 
     this.markedEntities.splice(index, 1);
   }
 
-  private static findMarkedEntityByID(id: UUID): Entity<any> | undefined {
+  private static findMarkedEntityByID(id: UUID): Entity<any, any> | undefined {
     return this.markedEntities.find((entity) => entity.id.equals(id));
   }
 
