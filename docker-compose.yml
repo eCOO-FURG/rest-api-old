@@ -1,4 +1,3 @@
-version: "3"
 services:
   postgres:
     container_name: ecoo-postgres
@@ -10,6 +9,7 @@ services:
     ports:
       - "5432:5432"
     profiles: ["dev", "deploy"]
+    restart: always
 
   smtp4dev:
     container_name: ecoo-smtp
@@ -18,6 +18,7 @@ services:
       - "3010:80"
       - "2525:25"
     profiles: ["dev"]
+    restart: always
 
   server: &server
     container_name: ecoo-deploy-server
@@ -29,10 +30,10 @@ services:
       - ./test:/app/test
       - ./prisma:/app/prisma
     network_mode: "host"
-    restart: always
     depends_on:
       - postgres
     profiles: ["deploy"]
+    restart: always
 
   dev-server:
     <<: *server
@@ -40,3 +41,4 @@ services:
     depends_on:
       - smtp4dev
     profiles: ["dev"]
+    restart: always
