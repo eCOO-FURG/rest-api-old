@@ -214,6 +214,7 @@ export class PrismaOffersRepository implements OffersRepository {
       },
       skip,
       take: 20,
+      orderBy: { created_at: "asc" }
     });
 
     const mapped = data.map((offer) =>

@@ -47,35 +47,41 @@ export async function seedCycles() {
       data: prismaCycle,
     });
 
-    const account = await prisma.account.findUnique({
-      where: {
-        email: env.ECOO_EMAIL ?? "suporte@ecoo.org.br",
-      },
-    });
+    // const account = await prisma.account.findUnique({
+    //   where: {
+    //     email: env.ECOO_EMAIL ?? "suporte@ecoo.org.br",
+    //   },
+    // });
+
+    const accounts = await prisma.account.findMany();
 
     const products = await prisma.product.findMany();
 
-    await prisma.agribusiness.create({
-      data: {
-        caf: "471241087",
-        name: "Agronegócio do CDD",
-        admin_id: account!.id,
-        offers: {
-          create: {
-            cycle_id: cycle.id.value,
-            items: {
-              create: products.map((product) => ({
-                product_id: product.id,
-                price: "10",
-                amount:
-                  product.pricing === "UNIT"
-                    ? Math.floor(Math.random() * 20 + 1)
-                    : Math.floor(Math.random() * 20 + 1) * 50,
-              })),
+    let count = 0;
+    for(let account of accounts){
+      count+=1
+      await prisma.agribusiness.create({
+        data: {
+          caf: "471241087" + count,
+          name: "Produtor " + count,
+          admin_id: account!.id,
+          offers: {
+            create: {
+              cycle_id: cycle.id.value,
+              items: {
+                create: products.map((product) => ({
+                  product_id: product.id,
+                  price: "10",
+                  amount:
+                    product.pricing === "UNIT"
+                      ? Math.floor(Math.random() * 20 + 1)
+                      : Math.floor(Math.random() * 20 + 1) * 50,
+                })),
+              },
             },
           },
         },
-      },
-    });
+      });
+    }
   }
 }
